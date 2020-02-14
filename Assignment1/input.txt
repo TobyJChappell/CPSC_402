@@ -1,3 +1,1 @@
-abababcababab
-abccbabcbacba
-aaabbaabb
+ababccbaabb
