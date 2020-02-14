@@ -1,4 +1,8 @@
 # Assignment 1
+## Group Members
+
+This assignment was completed by Toby Chappell, Jin Jung, Irene Liu, and Rose Ramirez.
+
 ## Specification
 
 DFA diagrams for each question are found in this repository and titled 1.pdf, 2.pdf, and 3.pdf, each corresponding with their associated question number. The use of `*` is used to indicated an else branch, meaning it should be followed if no other branches can be taken.
