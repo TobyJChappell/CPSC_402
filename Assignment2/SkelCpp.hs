@@ -24,7 +24,7 @@ transArg x = case x of
 transStm :: Stm -> Result
 transStm x = case x of
   SExp exp -> failure x
-  SDecls type_ ids -> failure x
+  SDecls id type_ ids -> failure x
   SInit type_ id exp -> failure x
   SReturn exp -> failure x
   SReturnVoid -> failure x

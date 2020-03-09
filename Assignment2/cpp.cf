@@ -9,7 +9,7 @@ ADecl.   Arg    ::= Type Id ;
 separator Arg "," ;
 
 SExp.        Stm ::= Exp ";" ;
-SDecls.      Stm ::= Type [Id] ";" ;
+SDecls.      Stm ::= Id "::" Type [Id] ";" ;
 SInit.       Stm ::= Type Id "=" Exp ";" ;
 SReturn.     Stm ::= "return" Exp ";" ;
 SReturnVoid. Stm ::= "return" ";" ;

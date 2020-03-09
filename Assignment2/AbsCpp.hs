@@ -17,7 +17,7 @@ data Arg = ADecl Type Id
 
 data Stm
     = SExp Exp
-    | SDecls Type [Id]
+    | SDecls Id Type [Id]
     | SInit Type Id Exp
     | SReturn Exp
     | SReturnVoid

@@ -119,7 +119,7 @@ instance Print [AbsCpp.Arg] where
 instance Print AbsCpp.Stm where
   prt i e = case e of
     AbsCpp.SExp exp -> prPrec i 0 (concatD [prt 0 exp, doc (showString ";")])
-    AbsCpp.SDecls type_ ids -> prPrec i 0 (concatD [prt 0 type_, prt 0 ids, doc (showString ";")])
+    AbsCpp.SDecls id type_ ids -> prPrec i 0 (concatD [prt 0 id, doc (showString "::"), prt 0 type_, prt 0 ids, doc (showString ";")])
     AbsCpp.SInit type_ id exp -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "="), prt 0 exp, doc (showString ";")])
     AbsCpp.SReturn exp -> prPrec i 0 (concatD [doc (showString "return"), prt 0 exp, doc (showString ";")])
     AbsCpp.SReturnVoid -> prPrec i 0 (concatD [doc (showString "return"), doc (showString ";")])

@@ -42,7 +42,7 @@ The reserved words used in cpp are the following:
 
 The symbols used in cpp are the following:
   | ( | ) | { | }
-  | , | ; | = | ::
+  | , | ; | :: | =
   | << | ++ | -- | >>
   | * | / | + | -
   | < | > | <= | >=
@@ -66,7 +66,7 @@ All other symbols are terminals.
   |  |  **|**  | //Arg//
   |  |  **|**  | //Arg// ``,`` //[Arg]//
   | //Stm// | -> | //Exp// ``;``
-  |  |  **|**  | //Type// //[Id]// ``;``
+  |  |  **|**  | //Id// ``::`` //Type// //[Id]// ``;``
   |  |  **|**  | //Type// //Id// ``=`` //Exp// ``;``
   |  |  **|**  | ``return`` //Exp// ``;``
   |  |  **|**  | ``return`` ``;``

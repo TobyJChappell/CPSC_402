@@ -38,6 +38,7 @@ data Exp
     | ECout Exp Exp
     | EPIncr Exp
     | EPDecr Exp
+    | ECin Exp Exp
     | EIncr Exp
     | EDecr Exp
     | ETimes Exp Exp

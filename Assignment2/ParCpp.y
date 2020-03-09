@@ -106,7 +106,7 @@ ListArg : {- empty -} { [] }
         | Arg ',' ListArg { (:) $1 $3 }
 Stm :: { Stm }
 Stm : Exp ';' { AbsCpp.SExp $1 }
-    | Type ListId ';' { AbsCpp.SDecls $1 $2 }
+    | Id '::' Type ListId ';' { AbsCpp.SDecls $1 $3 $4 }
     | Type Id '=' Exp ';' { AbsCpp.SInit $1 $2 $4 }
     | 'return' Exp ';' { AbsCpp.SReturn $2 }
     | 'return' ';' { AbsCpp.SReturnVoid }

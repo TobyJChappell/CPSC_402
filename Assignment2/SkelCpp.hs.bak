@@ -44,6 +44,7 @@ transExp x = case x of
   ECout exp1 exp2 -> failure x
   EPIncr exp -> failure x
   EPDecr exp -> failure x
+  ECin exp1 exp2 -> failure x
   EIncr exp -> failure x
   EDecr exp -> failure x
   ETimes exp1 exp2 -> failure x
