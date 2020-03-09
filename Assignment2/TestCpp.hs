@@ -7,11 +7,11 @@ import System.Environment ( getArgs, getProgName )
 import System.Exit ( exitFailure, exitSuccess )
 import Control.Monad (when)
 
-import LexGrammar
-import ParGrammar
-import SkelGrammar
-import PrintGrammar
-import AbsGrammar
+import LexCpp
+import ParCpp
+import SkelCpp
+import PrintCpp
+import AbsCpp
 
 
 
@@ -65,9 +65,9 @@ main = do
   args <- getArgs
   case args of
     ["--help"] -> usage
-    [] -> getContents >>= run 2 pDir
-    "-s":fs -> mapM_ (runFile 0 pDir) fs
-    fs -> mapM_ (runFile 2 pDir) fs
+    [] -> getContents >>= run 2 pProgram
+    "-s":fs -> mapM_ (runFile 0 pProgram) fs
+    fs -> mapM_ (runFile 2 pProgram) fs
 
 
 

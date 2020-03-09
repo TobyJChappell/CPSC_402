@@ -6,12 +6,12 @@
 
 # Default goal.
 
-all : TestGrammar
+all : TestCpp
 
 # Rules for building the parser.
 
-ErrM.hs LexGrammar.x PrintGrammar.hs ParGrammar.y TestGrammar.hs : Grammar.cf
-	bnfc --haskell Grammar.cf
+ErrM.hs LexCpp.x PrintCpp.hs ParCpp.y TestCpp.hs : cpp.cf
+	bnfc --haskell cpp.cf
 
 %.hs : %.y
 	happy --ghc --coerce --array --info $<
@@ -19,7 +19,7 @@ ErrM.hs LexGrammar.x PrintGrammar.hs ParGrammar.y TestGrammar.hs : Grammar.cf
 %.hs : %.x
 	alex --ghc $<
 
-TestGrammar : TestGrammar.hs ErrM.hs LexGrammar.hs ParGrammar.hs PrintGrammar.hs
+TestCpp : TestCpp.hs ErrM.hs LexCpp.hs ParCpp.hs PrintCpp.hs
 	ghc --make $< -o $@
 
 # Rules for cleaning generated files.
@@ -28,7 +28,7 @@ clean :
 	-rm -f *.hi *.o *.log *.aux *.dvi
 
 distclean : clean
-	-rm -f AbsGrammar.hs AbsGrammar.hs.bak ComposOp.hs ComposOp.hs.bak DocGrammar.txt DocGrammar.txt.bak ErrM.hs ErrM.hs.bak LayoutGrammar.hs LayoutGrammar.hs.bak LexGrammar.x LexGrammar.x.bak ParGrammar.y ParGrammar.y.bak PrintGrammar.hs PrintGrammar.hs.bak SharedString.hs SharedString.hs.bak SkelGrammar.hs SkelGrammar.hs.bak TestGrammar.hs TestGrammar.hs.bak XMLGrammar.hs XMLGrammar.hs.bak ASTGrammar.agda ASTGrammar.agda.bak ParserGrammar.agda ParserGrammar.agda.bak IOLib.agda IOLib.agda.bak Main.agda Main.agda.bak Grammar.dtd Grammar.dtd.bak TestGrammar LexGrammar.hs ParGrammar.hs ParGrammar.info ParDataGrammar.hs Makefile
+	-rm -f AbsCpp.hs AbsCpp.hs.bak ComposOp.hs ComposOp.hs.bak DocCpp.txt DocCpp.txt.bak ErrM.hs ErrM.hs.bak LayoutCpp.hs LayoutCpp.hs.bak LexCpp.x LexCpp.x.bak ParCpp.y ParCpp.y.bak PrintCpp.hs PrintCpp.hs.bak SharedString.hs SharedString.hs.bak SkelCpp.hs SkelCpp.hs.bak TestCpp.hs TestCpp.hs.bak XMLCpp.hs XMLCpp.hs.bak ASTCpp.agda ASTCpp.agda.bak ParserCpp.agda ParserCpp.agda.bak IOLib.agda IOLib.agda.bak Main.agda Main.agda.bak cpp.dtd cpp.dtd.bak TestCpp LexCpp.hs ParCpp.hs ParCpp.info ParDataCpp.hs Makefile
 
 
 # EOF

@@ -3,7 +3,7 @@
 {
 {-# OPTIONS -fno-warn-incomplete-patterns #-}
 {-# OPTIONS_GHC -w #-}
-module LexGrammar where
+module LexCpp where
 
 
 
@@ -21,14 +21,18 @@ $i = [$l $d _ ']     -- identifier character
 $u = [. \n]          -- universal: any character
 
 @rsyms =    -- symbols and non-identifier-like reserved words
-   \# "include" | \< | \> | \( \) | \{ | \} | \; | \< \< | \: \:
+   \( | \) | \{ | \} | \, | \; | \= | \: \: | \< \< | \+ \+ | \- \- | \> \> | \* | \/ | \+ | \- | \< | \> | \< \= | \> \= | \= \= | \! \= | \& \& | \| \|
 
 :-
+"#" [.]* ; -- Toss single line comments
 "//" [.]* ; -- Toss single line comments
+"/*" ([$u # \*] | \*+ [$u # [\* \/]])* ("*")+ "/" ;
 
 $white+ ;
 @rsyms
     { tok (\p s -> PT p (eitherResIdent (TV . share) s)) }
+$l ($l | $d | \_)*
+    { tok (\p s -> PT p (eitherResIdent (T_Id . share) s)) }
 
 $l $i*
     { tok (\p s -> PT p (eitherResIdent (TV . share) s)) }
@@ -37,7 +41,8 @@ $l $i*
 
 $d+
     { tok (\p s -> PT p (TI $ share s))    }
-
+$d+ \. $d+ (e (\-)? $d+)?
+    { tok (\p s -> PT p (TD $ share s)) }
 
 {
 
@@ -54,6 +59,7 @@ data Tok =
  | TV !String         -- identifiers
  | TD !String         -- double precision float literals
  | TC !String         -- character literals
+ | T_Id !String
 
  deriving (Eq,Show,Ord)
 
@@ -91,6 +97,7 @@ prToken t = case t of
   PT _ (TD s)   -> s
   PT _ (TC s)   -> s
   Err _         -> "#error"
+  PT _ (T_Id s) -> s
 
 
 data BTree = N | B String Tok BTree BTree deriving (Show)
@@ -104,7 +111,7 @@ eitherResIdent tv s = treeFind resWords
                               | s == a = t
 
 resWords :: BTree
-resWords = b "<<" 6 (b "::" 3 (b "()" 2 (b "#include" 1 N N) N) (b "<" 5 (b ";" 4 N N) N)) (b "return" 9 (b "int" 8 (b ">" 7 N N) N) (b "}" 11 (b "{" 10 N N) N))
+resWords = b "==" 18 (b "-" 9 (b "*" 5 (b "(" 3 (b "&&" 2 (b "!=" 1 N N) N) (b ")" 4 N N)) (b "++" 7 (b "+" 6 N N) (b "," 8 N N))) (b "<" 14 (b "::" 12 (b "/" 11 (b "--" 10 N N) N) (b ";" 13 N N)) (b "<=" 16 (b "<<" 15 N N) (b "=" 17 N N)))) (b "int" 27 (b "double" 23 (b ">>" 21 (b ">=" 20 (b ">" 19 N N) N) (b "bool" 22 N N)) (b "false" 25 (b "else" 24 N N) (b "if" 26 N N))) (b "while" 32 (b "true" 30 (b "string" 29 (b "return" 28 N N) N) (b "void" 31 N N)) (b "||" 34 (b "{" 33 N N) (b "}" 35 N N))))
    where b s n = let bs = id s
                   in B bs (TS bs n)
 
