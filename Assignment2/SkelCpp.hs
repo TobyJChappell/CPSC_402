@@ -24,13 +24,20 @@ transArg x = case x of
 transStm :: Stm -> Result
 transStm x = case x of
   SExp exp -> failure x
-  SDecls id type_ ids -> failure x
+  SDecls type_ ids -> failure x
   SInit type_ id exp -> failure x
   SReturn exp -> failure x
   SReturnVoid -> failure x
   SWhile exp stm -> failure x
   SBlock stms -> failure x
   SIfElse exp stm1 stm2 -> failure x
+  SFunc id1 id2 exps -> failure x
+transType :: Type -> Result
+transType x = case x of
+  TNs type_1 type_2 -> failure x
+  TBrac type_1 type_2 -> failure x
+  TId id -> failure x
+  TAlias type_ -> failure x
 transExp :: Exp -> Result
 transExp x = case x of
   ETrue -> failure x
@@ -41,7 +48,7 @@ transExp x = case x of
   EId id -> failure x
   ENs id1 id2 -> failure x
   EApp id exps -> failure x
-  ECout exp1 exp2 -> failure x
+  ECout exp exps -> failure x
   EPIncr exp -> failure x
   EPDecr exp -> failure x
   ECin exp1 exp2 -> failure x
@@ -61,11 +68,4 @@ transExp x = case x of
   EOr exp1 exp2 -> failure x
   EAss exp1 exp2 -> failure x
   ETyped exp type_ -> failure x
-transType :: Type -> Result
-transType x = case x of
-  Type_bool -> failure x
-  Type_int -> failure x
-  Type_double -> failure x
-  Type_void -> failure x
-  Type_string -> failure x
 

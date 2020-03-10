@@ -15,6 +15,7 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
+%name pType Type
 %name pExp15 Exp15
 %name pExp14 Exp14
 %name pExp13 Exp13
@@ -32,7 +33,7 @@ import ErrM
 %name pExp7 Exp7
 %name pExp10 Exp10
 %name pListExp ListExp
-%name pType Type
+%name pListExp15 ListExp15
 %name pListId ListId
 -- no lexer declaration
 %monad { Err } { thenM } { returnM }
@@ -48,31 +49,28 @@ import ErrM
   ',' { PT _ (TS _ 8) }
   '-' { PT _ (TS _ 9) }
   '--' { PT _ (TS _ 10) }
-  '/' { PT _ (TS _ 11) }
-  '::' { PT _ (TS _ 12) }
-  ';' { PT _ (TS _ 13) }
-  '<' { PT _ (TS _ 14) }
-  '<<' { PT _ (TS _ 15) }
-  '<=' { PT _ (TS _ 16) }
-  '=' { PT _ (TS _ 17) }
-  '==' { PT _ (TS _ 18) }
-  '>' { PT _ (TS _ 19) }
-  '>=' { PT _ (TS _ 20) }
-  '>>' { PT _ (TS _ 21) }
-  'bool' { PT _ (TS _ 22) }
-  'double' { PT _ (TS _ 23) }
-  'else' { PT _ (TS _ 24) }
-  'false' { PT _ (TS _ 25) }
-  'if' { PT _ (TS _ 26) }
-  'int' { PT _ (TS _ 27) }
-  'return' { PT _ (TS _ 28) }
-  'string' { PT _ (TS _ 29) }
-  'true' { PT _ (TS _ 30) }
-  'void' { PT _ (TS _ 31) }
-  'while' { PT _ (TS _ 32) }
-  '{' { PT _ (TS _ 33) }
-  '||' { PT _ (TS _ 34) }
-  '}' { PT _ (TS _ 35) }
+  '.' { PT _ (TS _ 11) }
+  '/' { PT _ (TS _ 12) }
+  '::' { PT _ (TS _ 13) }
+  ';' { PT _ (TS _ 14) }
+  '<' { PT _ (TS _ 15) }
+  '<<' { PT _ (TS _ 16) }
+  '<=' { PT _ (TS _ 17) }
+  '=' { PT _ (TS _ 18) }
+  '==' { PT _ (TS _ 19) }
+  '>' { PT _ (TS _ 20) }
+  '>=' { PT _ (TS _ 21) }
+  '>>' { PT _ (TS _ 22) }
+  'else' { PT _ (TS _ 23) }
+  'false' { PT _ (TS _ 24) }
+  'if' { PT _ (TS _ 25) }
+  'return' { PT _ (TS _ 26) }
+  'true' { PT _ (TS _ 27) }
+  'typedef' { PT _ (TS _ 28) }
+  'while' { PT _ (TS _ 29) }
+  '{' { PT _ (TS _ 30) }
+  '||' { PT _ (TS _ 31) }
+  '}' { PT _ (TS _ 32) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
   L_quoted { PT _ (TL $$) }
@@ -106,15 +104,21 @@ ListArg : {- empty -} { [] }
         | Arg ',' ListArg { (:) $1 $3 }
 Stm :: { Stm }
 Stm : Exp ';' { AbsCpp.SExp $1 }
-    | Id '::' Type ListId ';' { AbsCpp.SDecls $1 $3 $4 }
+    | Type ListId ';' { AbsCpp.SDecls $1 $2 }
     | Type Id '=' Exp ';' { AbsCpp.SInit $1 $2 $4 }
     | 'return' Exp ';' { AbsCpp.SReturn $2 }
     | 'return' ';' { AbsCpp.SReturnVoid }
     | 'while' '(' Exp ')' Stm { AbsCpp.SWhile $3 $5 }
     | '{' ListStm '}' { AbsCpp.SBlock (reverse $2) }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCpp.SIfElse $3 $5 $7 }
+    | Id '.' Id '(' ListExp ')' ';' { AbsCpp.SFunc $1 $3 $5 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
+Type :: { Type }
+Type : Type '::' Type { AbsCpp.TNs $1 $3 }
+     | Type '<' Type '>' { AbsCpp.TBrac $1 $3 }
+     | Id { AbsCpp.TId $1 }
+     | 'typedef' Type { AbsCpp.TAlias $2 }
 Exp15 :: { Exp }
 Exp15 : 'true' { AbsCpp.ETrue }
       | 'false' { AbsCpp.EFalse }
@@ -126,7 +130,7 @@ Exp15 : 'true' { AbsCpp.ETrue }
       | Id '(' ListExp ')' { AbsCpp.EApp $1 $3 }
       | '(' Exp ')' { $2 }
 Exp14 :: { Exp }
-Exp14 : Exp14 '<<' Exp15 { AbsCpp.ECout $1 $3 }
+Exp14 : Exp14 '<<' ListExp15 { AbsCpp.ECout $1 (reverse $3) }
       | Exp15 '++' { AbsCpp.EPIncr $1 }
       | Exp15 '--' { AbsCpp.EPDecr $1 }
       | Exp15 { $1 }
@@ -175,12 +179,8 @@ ListExp :: { [Exp] }
 ListExp : {- empty -} { [] }
         | Exp { (:[]) $1 }
         | Exp ',' ListExp { (:) $1 $3 }
-Type :: { Type }
-Type : 'bool' { AbsCpp.Type_bool }
-     | 'int' { AbsCpp.Type_int }
-     | 'double' { AbsCpp.Type_double }
-     | 'void' { AbsCpp.Type_void }
-     | 'string' { AbsCpp.Type_string }
+ListExp15 :: { [Exp] }
+ListExp15 : {- empty -} { [] } | ListExp15 Exp15 { flip (:) $1 $2 }
 ListId :: { [Id] }
 ListId : Id { (:[]) $1 } | Id ',' ListId { (:) $1 $3 }
 {

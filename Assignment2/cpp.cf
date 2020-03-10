@@ -9,15 +9,21 @@ ADecl.   Arg    ::= Type Id ;
 separator Arg "," ;
 
 SExp.        Stm ::= Exp ";" ;
-SDecls.      Stm ::= Id "::" Type [Id] ";" ;
+SDecls.      Stm ::= Type [Id] ";" ;
 SInit.       Stm ::= Type Id "=" Exp ";" ;
 SReturn.     Stm ::= "return" Exp ";" ;
 SReturnVoid. Stm ::= "return" ";" ;
 SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
+SFunc.	     Stm ::= Id "." Id "(" [Exp] ")" ";" ;
 
 terminator Stm "" ;
+
+TNs. 	     Type ::= Type "::" Type ;
+TBrac. 	     Type ::= Type "<" Type ">" ;
+TId. 	     Type ::= Id ;
+TAlias.      Type ::= "typedef" Type ;
 
 ETrue.   Exp15  ::= "true" ;
 EFalse.  Exp15  ::= "false" ;
@@ -29,7 +35,7 @@ ENs.     Exp15 ::= Id "::" Id ;
 
 EApp.    Exp15  ::= Id "(" [Exp] ")" ;
 
-ECout.   Exp14 ::= Exp14 "<<" Exp15 ;
+ECout.   Exp14 ::= Exp14 "<<" [Exp15] ;
 
 EPIncr.  Exp14  ::= Exp15 "++" ;
 EPDecr.  Exp14  ::= Exp15 "--" ;
@@ -59,7 +65,7 @@ coercions Exp 15 ;
 
 separator Exp "," ;
 
-rules Type   ::= "bool" | "int" | "double" | "void" | "string" ;
+separator Exp15 "" ;
 
 token Id (letter (letter | digit | '_')*) ;
 
@@ -68,4 +74,4 @@ separator nonempty Id "," ;
 comment "#" ;
 comment "//" ;
 comment "/*" "*/" ;
-
+comment "using" ;

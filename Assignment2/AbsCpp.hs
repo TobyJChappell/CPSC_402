@@ -17,13 +17,17 @@ data Arg = ADecl Type Id
 
 data Stm
     = SExp Exp
-    | SDecls Id Type [Id]
+    | SDecls Type [Id]
     | SInit Type Id Exp
     | SReturn Exp
     | SReturnVoid
     | SWhile Exp Stm
     | SBlock [Stm]
     | SIfElse Exp Stm Stm
+    | SFunc Id Id [Exp]
+  deriving (Eq, Ord, Show, Read)
+
+data Type = TNs Type Type | TBrac Type Type | TId Id | TAlias Type
   deriving (Eq, Ord, Show, Read)
 
 data Exp
@@ -35,7 +39,7 @@ data Exp
     | EId Id
     | ENs Id Id
     | EApp Id [Exp]
-    | ECout Exp Exp
+    | ECout Exp [Exp]
     | EPIncr Exp
     | EPDecr Exp
     | ECin Exp Exp
@@ -55,9 +59,5 @@ data Exp
     | EOr Exp Exp
     | EAss Exp Exp
     | ETyped Exp Type
-  deriving (Eq, Ord, Show, Read)
-
-data Type
-    = Type_bool | Type_int | Type_double | Type_void | Type_string
   deriving (Eq, Ord, Show, Read)
 
