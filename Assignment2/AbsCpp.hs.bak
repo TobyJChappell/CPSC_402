@@ -23,26 +23,28 @@ data Stm
     | SReturnVoid
     | SWhile Exp Stm
     | SBlock [Stm]
+    | SIf Exp Stm
     | SIfElse Exp Stm Stm
-    | SFunc Id Id [Exp]
+    | SFunc Mem [Exp]
   deriving (Eq, Ord, Show, Read)
 
-data Type
-    = T2 Type Type
-    | TNs Type Type
-    | TBrac Type Type
-    | TId Id
-    | TAlias Type
+data Mem = MId Id | MCall Mem Mem
+  deriving (Eq, Ord, Show, Read)
+
+data Type = TNs [Type] | TBrac Type Type | TId Id | TAlias Type
   deriving (Eq, Ord, Show, Read)
 
 data Exp
-    = ETrue
+    = EFunc Mem [Exp]
+    | EIf Exp Exp Exp
+    | ETrue
     | EFalse
     | EInt Integer
     | EDouble Double
     | EString String
     | EId Id
     | ENs Id Id
+    | EArray Id Exp
     | EApp Id [Exp]
     | ECout Exp [Exp]
     | EPIncr Exp
@@ -52,6 +54,7 @@ data Exp
     | EDecr Exp
     | ETimes Exp Exp
     | EDiv Exp Exp
+    | EMod Exp Exp
     | EPlus Exp Exp
     | EMinus Exp Exp
     | ELt Exp Exp

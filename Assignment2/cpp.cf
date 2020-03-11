@@ -15,23 +15,32 @@ SReturn.     Stm ::= "return" Exp ";" ;
 SReturnVoid. Stm ::= "return" ";" ;
 SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
+SIf.     		 Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
-SFunc.	     Stm ::= Id "." Id "(" [Exp] ")" ";" ;
+SFunc.	     Stm ::= Mem "(" [Exp] ")" ";" ;
 
 terminator Stm "" ;
 
-TNs. 	     Type ::= Type "::" Type ;
-TBrac. 	     Type ::= Type "<" Type ">" ;
+MId. 				 Mem ::= Id ;
+MCall.			 Mem ::= Mem "." Mem ;
+
+
+TNs. 	     Type ::= Type "::" Type;
+TBrac. 	   Type ::= Type "<" Type ">" ;
 TId. 	     Type ::= Id ;
-TAlias.      Type ::= "typedef" Type ;
+TAlias.    Type ::= "typedef" Type ;
+
+EFunc.	 Exp ::= Mem "(" [Exp] ")" ;
+EIf.     Exp ::= Exp "?" Exp ":" Exp ;
 
 ETrue.   Exp15  ::= "true" ;
 EFalse.  Exp15  ::= "false" ;
 EInt.    Exp15  ::= Integer ;
 EDouble. Exp15  ::= Double ;
 EString. Exp15  ::= String ;
-EId.     Exp15  ::= Id ; 
-ENs.     Exp15 ::= Id "::" Id ;
+EId.     Exp15  ::= Id ;
+ENs.     Exp15  ::= Id "::" Id ;
+EArray.  Exp15  ::= Id "[" Exp "]" ;
 
 EApp.    Exp15  ::= Id "(" [Exp] ")" ;
 
@@ -47,6 +56,7 @@ EDecr.   Exp13  ::= "--" Exp14 ;
 
 ETimes.  Exp12  ::= Exp12 "*"  Exp13 ;
 EDiv.    Exp12  ::= Exp12 "/"  Exp13 ;
+EMod.    Exp12  ::= Exp12 "%"  Exp13 ;
 EPlus.   Exp11  ::= Exp11 "+"  Exp12 ;
 EMinus.  Exp11  ::= Exp11 "-"  Exp12 ;
 ELt.     Exp9   ::= Exp9  "<"  Exp10 ;
