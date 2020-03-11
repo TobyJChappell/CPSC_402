@@ -15,9 +15,12 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
+%name pMem2 Mem2
 %name pMem Mem
+%name pMem1 Mem1
 %name pType2 Type2
 %name pType Type
+%name pListType ListType
 %name pType1 Type1
 %name pExp Exp
 %name pExp15 Exp15
@@ -44,41 +47,43 @@ import ErrM
 %token
   '!=' { PT _ (TS _ 1) }
   '%' { PT _ (TS _ 2) }
-  '&&' { PT _ (TS _ 3) }
-  '(' { PT _ (TS _ 4) }
-  ')' { PT _ (TS _ 5) }
-  '*' { PT _ (TS _ 6) }
-  '+' { PT _ (TS _ 7) }
-  '++' { PT _ (TS _ 8) }
-  ',' { PT _ (TS _ 9) }
-  '-' { PT _ (TS _ 10) }
-  '--' { PT _ (TS _ 11) }
-  '.' { PT _ (TS _ 12) }
-  '/' { PT _ (TS _ 13) }
-  ':' { PT _ (TS _ 14) }
-  '::' { PT _ (TS _ 15) }
-  ';' { PT _ (TS _ 16) }
-  '<' { PT _ (TS _ 17) }
-  '<<' { PT _ (TS _ 18) }
-  '<=' { PT _ (TS _ 19) }
-  '=' { PT _ (TS _ 20) }
-  '==' { PT _ (TS _ 21) }
-  '>' { PT _ (TS _ 22) }
-  '>=' { PT _ (TS _ 23) }
-  '>>' { PT _ (TS _ 24) }
-  '?' { PT _ (TS _ 25) }
-  '[' { PT _ (TS _ 26) }
-  ']' { PT _ (TS _ 27) }
-  'else' { PT _ (TS _ 28) }
-  'false' { PT _ (TS _ 29) }
-  'if' { PT _ (TS _ 30) }
-  'return' { PT _ (TS _ 31) }
-  'true' { PT _ (TS _ 32) }
-  'typedef' { PT _ (TS _ 33) }
-  'while' { PT _ (TS _ 34) }
-  '{' { PT _ (TS _ 35) }
-  '||' { PT _ (TS _ 36) }
-  '}' { PT _ (TS _ 37) }
+  '&' { PT _ (TS _ 3) }
+  '&&' { PT _ (TS _ 4) }
+  '(' { PT _ (TS _ 5) }
+  ')' { PT _ (TS _ 6) }
+  '*' { PT _ (TS _ 7) }
+  '+' { PT _ (TS _ 8) }
+  '++' { PT _ (TS _ 9) }
+  ',' { PT _ (TS _ 10) }
+  '-' { PT _ (TS _ 11) }
+  '--' { PT _ (TS _ 12) }
+  '.' { PT _ (TS _ 13) }
+  '/' { PT _ (TS _ 14) }
+  ':' { PT _ (TS _ 15) }
+  '::' { PT _ (TS _ 16) }
+  ';' { PT _ (TS _ 17) }
+  '<' { PT _ (TS _ 18) }
+  '<<' { PT _ (TS _ 19) }
+  '<=' { PT _ (TS _ 20) }
+  '=' { PT _ (TS _ 21) }
+  '==' { PT _ (TS _ 22) }
+  '>' { PT _ (TS _ 23) }
+  '>=' { PT _ (TS _ 24) }
+  '>>' { PT _ (TS _ 25) }
+  '?' { PT _ (TS _ 26) }
+  '[' { PT _ (TS _ 27) }
+  ']' { PT _ (TS _ 28) }
+  'const' { PT _ (TS _ 29) }
+  'else' { PT _ (TS _ 30) }
+  'false' { PT _ (TS _ 31) }
+  'if' { PT _ (TS _ 32) }
+  'return' { PT _ (TS _ 33) }
+  'true' { PT _ (TS _ 34) }
+  'typedef' { PT _ (TS _ 35) }
+  'while' { PT _ (TS _ 36) }
+  '{' { PT _ (TS _ 37) }
+  '||' { PT _ (TS _ 38) }
+  '}' { PT _ (TS _ 39) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
   L_quoted { PT _ (TL $$) }
@@ -121,18 +126,29 @@ Stm : Exp ';' { AbsCpp.SExp $1 }
     | 'if' '(' Exp ')' Stm { AbsCpp.SIf $3 $5 }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCpp.SIfElse $3 $5 $7 }
     | Mem '(' ListExp ')' ';' { AbsCpp.SFunc $1 $3 }
+    | Type Id '(' ListType ')' '{' Stm '}' { AbsCpp.SMethod $1 $2 $4 $7 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
+Mem2 :: { Mem }
+Mem2 : Id { AbsCpp.MId $1 } | '(' Mem ')' { $2 }
 Mem :: { Mem }
-Mem : Id { AbsCpp.MId $1 } | Mem '.' Mem { AbsCpp.MCall $1 $3 }
+Mem : Mem '.' Mem2 { AbsCpp.MCall $1 $3 } | Mem1 { $1 }
+Mem1 :: { Mem }
+Mem1 : Mem2 { $1 }
 Type2 :: { Type }
 Type2 : Id { AbsCpp.TId $1 }
       | Id '::' Id { AbsCpp.TIds $1 $3 }
+      | 'const' Type { AbsCpp.TCons $2 }
+      | Type '&' { AbsCpp.TAmp $1 }
       | Type '<' Type '>' { AbsCpp.TBrac $1 $3 }
       | 'typedef' Type { AbsCpp.TAlias $2 }
       | '(' Type ')' { $2 }
 Type :: { Type }
 Type : Type '::' Type2 { AbsCpp.TNs $1 $3 } | Type1 { $1 }
+ListType :: { [Type] }
+ListType : {- empty -} { [] }
+         | Type { (:[]) $1 }
+         | Type ',' ListType { (:) $1 $3 }
 Type1 :: { Type }
 Type1 : Type2 { $1 }
 Exp :: { Exp }

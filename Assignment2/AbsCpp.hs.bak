@@ -34,9 +34,11 @@ data Mem = MId Id | MCall Mem Mem
 data Type
     = TId Id
     | TIds Id Id
-    | TNs Type Type
+    | TCons Type
+    | TAmp Type
     | TBrac Type Type
     | TAlias Type
+    | TNs Type Type
   deriving (Eq, Ord, Show, Read)
 
 data Exp

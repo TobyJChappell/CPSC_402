@@ -39,10 +39,11 @@ transMem x = case x of
   MCall mem1 mem2 -> failure x
 transType :: Type -> Result
 transType x = case x of
-  TNs type_1 type_2 -> failure x
-  TBrac type_1 type_2 -> failure x
   TId id -> failure x
+  TIds id1 id2 -> failure x
+  TBrac type_1 type_2 -> failure x
   TAlias type_ -> failure x
+  TNs type_1 type_2 -> failure x
 transExp :: Exp -> Result
 transExp x = case x of
   EFunc mem exps -> failure x

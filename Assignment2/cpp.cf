@@ -18,18 +18,24 @@ SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.     		 Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
 SFunc.	     Stm ::= Mem "(" [Exp] ")" ";" ;
+SMethod.	   Stm ::= Type Id "(" [Type] ")" "{" Stm "}" ;
 
 terminator Stm "" ;
 
-MId. 				 Mem ::= Id ;
-MCall.			 Mem ::= Mem "." Mem ;
+MId. 				 Mem2 ::= Id ;
+MCall.			 Mem ::= Mem "." Mem2 ;
+
+coercions Mem 2 ;
 
 TId. 	     Type2 ::= Id ;
 TIds. 		 Type2 ::= Id "::" Id;
+TCons.	   Type2 ::= "const" Type ;
+TAmp.      Type2 ::= Type "&" ;
 TBrac. 	   Type2 ::= Type "<" Type ">" ;
 TAlias.    Type2 ::= "typedef" Type ;
 TNs. 	     Type ::= Type "::" Type2;
 
+separator Type "," ;
 coercions Type 2 ;
 
 EFunc.	 Exp ::= Mem "(" [Exp] ")" ;

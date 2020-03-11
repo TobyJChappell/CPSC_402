@@ -128,6 +128,7 @@ instance Print AbsCpp.Stm where
     AbsCpp.SIf exp stm -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 exp, doc (showString ")"), prt 0 stm])
     AbsCpp.SIfElse exp stm1 stm2 -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 exp, doc (showString ")"), prt 0 stm1, doc (showString "else"), prt 0 stm2])
     AbsCpp.SFunc mem exps -> prPrec i 0 (concatD [prt 0 mem, doc (showString "("), prt 0 exps, doc (showString ")"), doc (showString ";")])
+    AbsCpp.SMethod type_ id types stm -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 types, doc (showString ")"), doc (showString "{"), prt 0 stm, doc (showString "}")])
   prtList _ [] = concatD []
   prtList _ (x:xs) = concatD [prt 0 x, prt 0 xs]
 
@@ -141,11 +142,19 @@ instance Print AbsCpp.Mem where
 
 instance Print AbsCpp.Type where
   prt i e = case e of
-    AbsCpp.TId id -> prPrec i 3 (concatD [prt 0 id])
-    AbsCpp.TIds id1 id2 -> prPrec i 3 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
-    AbsCpp.TNs type_1 type_2 -> prPrec i 2 (concatD [prt 2 type_1, doc (showString "::"), prt 3 type_2])
-    AbsCpp.TBrac type_1 type_2 -> prPrec i 0 (concatD [prt 0 type_1, doc (showString "<"), prt 0 type_2, doc (showString ">")])
-    AbsCpp.TAlias type_ -> prPrec i 0 (concatD [doc (showString "typedef"), prt 0 type_])
+    AbsCpp.TId id -> prPrec i 2 (concatD [prt 0 id])
+    AbsCpp.TIds id1 id2 -> prPrec i 2 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
+    AbsCpp.TCons type_ -> prPrec i 2 (concatD [doc (showString "const"), prt 0 type_])
+    AbsCpp.TAmp type_ -> prPrec i 2 (concatD [prt 0 type_, doc (showString "&")])
+    AbsCpp.TBrac type_1 type_2 -> prPrec i 2 (concatD [prt 0 type_1, doc (showString "<"), prt 0 type_2, doc (showString ">")])
+    AbsCpp.TAlias type_ -> prPrec i 2 (concatD [doc (showString "typedef"), prt 0 type_])
+    AbsCpp.TNs type_1 type_2 -> prPrec i 0 (concatD [prt 0 type_1, doc (showString "::"), prt 2 type_2])
+  prtList _ [] = concatD []
+  prtList _ [x] = concatD [prt 0 x]
+  prtList _ (x:xs) = concatD [prt 0 x, doc (showString ","), prt 0 xs]
+
+instance Print [AbsCpp.Type] where
+  prt = prtList
 
 instance Print AbsCpp.Exp where
   prt i e = case e of

@@ -36,18 +36,18 @@ Id literals are recognized by the regular expression
 The set of reserved words is the set of terminals appearing in the grammar. Those reserved words that consist of non-letter characters are called symbols, and they are treated in a different way from those that are similar to identifiers. The lexer follows rules familiar from languages like Haskell, C, and Java, including longest match and spacing conventions.
 
 The reserved words used in cpp are the following:
-  | ``else`` | ``false`` | ``if`` | ``return``
-  | ``true`` | ``typedef`` | ``while`` |
+  | ``const`` | ``else`` | ``false`` | ``if``
+  | ``return`` | ``true`` | ``typedef`` | ``while``
 
 The symbols used in cpp are the following:
   | ( | ) | { | }
   | , | ; | = | .
-  | :: | < | > | ?
-  | : | [ | ] | <<
-  | ++ | -- | >> | *
-  | / | % | + | -
-  | <= | >= | == | !=
-  | && | || |  |
+  | :: | & | < | >
+  | ? | : | [ | ]
+  | << | ++ | -- | >>
+  | * | / | % | +
+  | - | <= | >= | ==
+  | != | && | || |
 
 ===Comments===
 Single-line comments begin with #, //, using.Multiple-line comments are  enclosed with /* and */.
@@ -76,18 +76,23 @@ All other symbols are terminals.
   |  |  **|**  | ``if`` ``(`` //Exp// ``)`` //Stm//
   |  |  **|**  | ``if`` ``(`` //Exp// ``)`` //Stm// ``else`` //Stm//
   |  |  **|**  | //Mem// ``(`` //[Exp]// ``)`` ``;``
+  |  |  **|**  | //Type// //Id// ``(`` //[Type]// ``)`` ``{`` //Stm// ``}``
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// //[Stm]//
   | //Mem// | -> | //Id//
   |  |  **|**  | //Mem// ``.`` //Mem//
-  | //Type3// | -> | //Id//
+  | //Type2// | -> | //Id//
   |  |  **|**  | //Id// ``::`` //Id//
-  |  |  **|**  | ``(`` //Type// ``)``
-  | //Type2// | -> | //Type2// ``::`` //Type3//
-  |  |  **|**  | //Type3//
-  | //Type// | -> | //Type// ``<`` //Type// ``>``
+  |  |  **|**  | ``const`` //Type//
+  |  |  **|**  | //Type// ``&``
+  |  |  **|**  | //Type// ``<`` //Type// ``>``
   |  |  **|**  | ``typedef`` //Type//
+  |  |  **|**  | ``(`` //Type// ``)``
+  | //Type// | -> | //Type// ``::`` //Type2//
   |  |  **|**  | //Type1//
+  | //[Type]// | -> | **eps**
+  |  |  **|**  | //Type//
+  |  |  **|**  | //Type// ``,`` //[Type]//
   | //Type1// | -> | //Type2//
   | //Exp// | -> | //Mem// ``(`` //[Exp]// ``)``
   |  |  **|**  | //Exp// ``?`` //Exp// ``:`` //Exp//

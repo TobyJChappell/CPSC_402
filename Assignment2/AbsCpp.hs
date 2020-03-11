@@ -26,6 +26,7 @@ data Stm
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
     | SFunc Mem [Exp]
+    | SMethod Type Id [Type] Stm
   deriving (Eq, Ord, Show, Read)
 
 data Mem = MId Id | MCall Mem Mem
@@ -34,6 +35,8 @@ data Mem = MId Id | MCall Mem Mem
 data Type
     = TId Id
     | TIds Id Id
+    | TCons Type
+    | TAmp Type
     | TBrac Type Type
     | TAlias Type
     | TNs Type Type

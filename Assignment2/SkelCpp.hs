@@ -33,6 +33,7 @@ transStm x = case x of
   SIf exp stm -> failure x
   SIfElse exp stm1 stm2 -> failure x
   SFunc mem exps -> failure x
+  SMethod type_ id types stm -> failure x
 transMem :: Mem -> Result
 transMem x = case x of
   MId id -> failure x
@@ -41,6 +42,8 @@ transType :: Type -> Result
 transType x = case x of
   TId id -> failure x
   TIds id1 id2 -> failure x
+  TCons type_ -> failure x
+  TAmp type_ -> failure x
   TBrac type_1 type_2 -> failure x
   TAlias type_ -> failure x
   TNs type_1 type_2 -> failure x
