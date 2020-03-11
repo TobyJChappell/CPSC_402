@@ -141,10 +141,11 @@ instance Print AbsCpp.Mem where
 
 instance Print AbsCpp.Type where
   prt i e = case e of
-    AbsCpp.TNs type_1 type_2 -> prPrec i 0 (concatD [prt 0 type_1, doc (showString "::"), prt 0 type_2])
-    AbsCpp.TBrac type_1 type_2 -> prPrec i 0 (concatD [prt 0 type_1, doc (showString "<"), prt 0 type_2, doc (showString ">")])
-    AbsCpp.TId id -> prPrec i 0 (concatD [prt 0 id])
-    AbsCpp.TAlias type_ -> prPrec i 0 (concatD [doc (showString "typedef"), prt 0 type_])
+    AbsCpp.TId id -> prPrec i 2 (concatD [prt 0 id])
+    AbsCpp.TIds id1 id2 -> prPrec i 2 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
+    AbsCpp.TBrac type_1 type_2 -> prPrec i 2 (concatD [prt 0 type_1, doc (showString "<"), prt 0 type_2, doc (showString ">")])
+    AbsCpp.TAlias type_ -> prPrec i 2 (concatD [doc (showString "typedef"), prt 0 type_])
+    AbsCpp.TNs type_1 type_2 -> prPrec i 0 (concatD [prt 0 type_1, doc (showString "::"), prt 2 type_2])
 
 instance Print AbsCpp.Exp where
   prt i e = case e of

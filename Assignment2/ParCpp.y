@@ -16,7 +16,9 @@ import ErrM
 %name pStm Stm
 %name pListStm ListStm
 %name pMem Mem
+%name pType2 Type2
 %name pType Type
+%name pType1 Type1
 %name pExp Exp
 %name pExp15 Exp15
 %name pExp14 Exp14
@@ -123,11 +125,16 @@ ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
 Mem :: { Mem }
 Mem : Id { AbsCpp.MId $1 } | Mem '.' Mem { AbsCpp.MCall $1 $3 }
+Type2 :: { Type }
+Type2 : Id { AbsCpp.TId $1 }
+      | Id '::' Id { AbsCpp.TIds $1 $3 }
+      | Type '<' Type '>' { AbsCpp.TBrac $1 $3 }
+      | 'typedef' Type { AbsCpp.TAlias $2 }
+      | '(' Type ')' { $2 }
 Type :: { Type }
-Type : Type '::' Type { AbsCpp.TNs $1 $3 }
-     | Type '<' Type '>' { AbsCpp.TBrac $1 $3 }
-     | Id { AbsCpp.TId $1 }
-     | 'typedef' Type { AbsCpp.TAlias $2 }
+Type : Type '::' Type2 { AbsCpp.TNs $1 $3 } | Type1 { $1 }
+Type1 :: { Type }
+Type1 : Type2 { $1 }
 Exp :: { Exp }
 Exp : Mem '(' ListExp ')' { AbsCpp.EFunc $1 $3 }
     | Exp '?' Exp ':' Exp { AbsCpp.EIf $1 $3 $5 }

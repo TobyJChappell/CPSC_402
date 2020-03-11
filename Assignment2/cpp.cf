@@ -24,11 +24,13 @@ terminator Stm "" ;
 MId. 				 Mem ::= Id ;
 MCall.			 Mem ::= Mem "." Mem ;
 
+TId. 	     Type2 ::= Id ;
+TIds. 		 Type2 ::= Id "::" Id;
+TBrac. 	   Type2 ::= Type "<" Type ">" ;
+TAlias.    Type2 ::= "typedef" Type ;
+TNs. 	     Type ::= Type "::" Type2;
 
-TNs. 	     Type ::= Type "::" Type;
-TBrac. 	   Type ::= Type "<" Type ">" ;
-TId. 	     Type ::= Id ;
-TAlias.    Type ::= "typedef" Type ;
+coercions Type 2 ;
 
 EFunc.	 Exp ::= Mem "(" [Exp] ")" ;
 EIf.     Exp ::= Exp "?" Exp ":" Exp ;
