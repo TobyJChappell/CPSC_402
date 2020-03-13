@@ -122,6 +122,7 @@ Def :: { Def }
 Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DFunc $1 $2 $4 (reverse $7) }
     | Type ListId ';' { AbsCpp.DDecl $1 $2 }
     | 'using' Type ';' { AbsCpp.DUse $2 }
+    | Type Id '(' ListType ')' ';' { AbsCpp.DProt $1 $2 $4 }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }

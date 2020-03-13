@@ -17,10 +17,13 @@ transProgram x = case x of
   PDefs defs -> failure x
 transDef :: Def -> Result
 transDef x = case x of
-  DFunc type_ id args stms -> failure x
+  DFunc type_ id args term -> failure x
   DDecl type_ ids -> failure x
   DUse type_ -> failure x
-  DProt type_ id types -> failure x
+transTerm :: Term -> Result
+transTerm x = case x of
+  T1 stms -> failure x
+  T2 -> failure x
 transArg :: Arg -> Result
 transArg x = case x of
   ADecl type_ id -> failure x

@@ -26,7 +26,6 @@ $u = [. \n]          -- universal: any character
 :-
 "#" [.]* ; -- Toss single line comments
 "//" [.]* ; -- Toss single line comments
-"using" [.]* ; -- Toss single line comments
 "/*" ([$u # \*] | \*+ [$u # [\* \/]])* ("*")+ "/" ;
 
 $white+ ;

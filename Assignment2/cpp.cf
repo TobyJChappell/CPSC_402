@@ -1,9 +1,10 @@
+
 PDefs.   Program ::= [Def] ;
 
-DFunc.    Def    ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
+DFunc.    Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DDecl.		Def ::= Type [Id] ";" ;
 DUse.			Def ::= "using" Type ";" ;
-DProt.		Def ::= Type Id "(" [Type] ")" ";" ;
+--DProt.		Def ::= Type Id "(" [Type] ")" ";" ;
 
 terminator Def "" ;
 

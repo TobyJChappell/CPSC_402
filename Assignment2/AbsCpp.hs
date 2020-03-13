@@ -9,11 +9,10 @@ newtype Id = Id String
 data Program = PDefs [Def]
   deriving (Eq, Ord, Show, Read)
 
-data Def
-    = DFunc Type Id [Arg] [Stm]
-    | DDecl Type [Id]
-    | DUse Type
-    | DProt Type Id [Type]
+data Def = DFunc Type Id [Arg] Term | DDecl Type [Id] | DUse Type
+  deriving (Eq, Ord, Show, Read)
+
+data Term = T1 [Stm] | T2
   deriving (Eq, Ord, Show, Read)
 
 data Arg = ADecl Type Id

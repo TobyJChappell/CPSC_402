@@ -99,15 +99,19 @@ instance Print AbsCpp.Program where
 
 instance Print AbsCpp.Def where
   prt i e = case e of
-    AbsCpp.DFunc type_ id args stms -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "{"), prt 0 stms, doc (showString "}")])
+    AbsCpp.DFunc type_ id args term -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 args, doc (showString ")"), prt 0 term])
     AbsCpp.DDecl type_ ids -> prPrec i 0 (concatD [prt 0 type_, prt 0 ids, doc (showString ";")])
     AbsCpp.DUse type_ -> prPrec i 0 (concatD [doc (showString "using"), prt 0 type_, doc (showString ";")])
-    AbsCpp.DProt type_ id types -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 types, doc (showString ")"), doc (showString ";")])
   prtList _ [] = concatD []
   prtList _ (x:xs) = concatD [prt 0 x, prt 0 xs]
 
 instance Print [AbsCpp.Def] where
   prt = prtList
+
+instance Print AbsCpp.Term where
+  prt i e = case e of
+    AbsCpp.T1 stms -> prPrec i 0 (concatD [doc (showString "{"), prt 0 stms, doc (showString "}")])
+    AbsCpp.T2 -> prPrec i 0 (concatD [doc (showString ";")])
 
 instance Print AbsCpp.Arg where
   prt i e = case e of
