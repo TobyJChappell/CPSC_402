@@ -18,28 +18,30 @@ SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.     		 Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
 SFunc.	     Stm ::= Mem "(" [Exp] ")" ";" ;
-SMethod.	   Stm ::= Type Id "(" [Type] ")" "{" Stm "}" ;
+SMethod.	   Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
+SThrow.			 Stm ::= "throw" Id "(" Exp ")" ";" ;
 
 terminator Stm "" ;
 
-MId. 				 Mem2 ::= Id ;
-MCall.			 Mem ::= Mem "." Mem2 ;
+MId. 				 Mem3 ::= Id ;
+MIds.				 Mem2 ::= Id "." Id ;
+MCall.			 Mem2 ::= Mem2 "." Mem3 ;
 
-coercions Mem 2 ;
+coercions Mem 3 ;
 
-TId. 	     Type2 ::= Id ;
-TIds. 		 Type2 ::= Id "::" Id;
-TCons.	   Type2 ::= "const" Type ;
-TAmp.      Type2 ::= Type "&" ;
-TBrac. 	   Type2 ::= Type "<" Type ">" ;
-TAlias.    Type2 ::= "typedef" Type ;
-TNs. 	     Type ::= Type "::" Type2;
+TId. 	     Type5 ::= Id ;
+TIds.			 Type5 ::= Id "::" Id ;
+TBrac. 	   Type4 ::= Type4 "<" Type5 ">" ;
+TNs. 	     Type4 ::= Type4 "::" Type5;
+TCons.	   Type3 ::= "const" Type4 ;
+TAlias.    Type3 ::= "typedef" Type4 ;
+TAmp.      Type2 ::= Type3 "&" ;
 
 separator Type "," ;
-coercions Type 2 ;
+coercions Type 5 ;
 
-EFunc.	 Exp ::= Mem "(" [Exp] ")" ;
-EIf.     Exp ::= Exp "?" Exp ":" Exp ;
+EArray.  Exp16  ::= Mem "[" Exp "]" ;
+EFunc.	 Exp16 ::= Mem "(" [Exp] ")" ;
 
 ETrue.   Exp15  ::= "true" ;
 EFalse.  Exp15  ::= "false" ;
@@ -48,9 +50,6 @@ EDouble. Exp15  ::= Double ;
 EString. Exp15  ::= String ;
 EId.     Exp15  ::= Id ;
 ENs.     Exp15  ::= Id "::" Id ;
-EArray.  Exp15  ::= Id "[" Exp "]" ;
-
-EApp.    Exp15  ::= Id "(" [Exp] ")" ;
 
 ECout.   Exp14 ::= Exp14 "<<" [Exp15] ;
 
@@ -76,12 +75,15 @@ ENEq.    Exp8   ::= Exp8  "!=" Exp9 ;
 EAnd.    Exp4   ::= Exp4  "&&" Exp5 ;
 EOr.     Exp3   ::= Exp3  "||" Exp4 ;
 EAss.    Exp2   ::= Exp3 "=" Exp2 ;
+EIf.     Exp ::= Exp2 "?" Exp2 ":" Exp2 ;
 
-internal ETyped. Exp15 ::= "(" Exp ":" Type ")" ;
+internal ETyped. Exp16 ::= "(" Exp ":" Type ")" ;
 
-coercions Exp 15 ;
+coercions Exp 16 ;
 
 separator Exp "," ;
+
+separator Exp14 "," ;
 
 separator Exp15 "" ;
 

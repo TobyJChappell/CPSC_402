@@ -15,14 +15,18 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
+%name pMem3 Mem3
 %name pMem2 Mem2
 %name pMem Mem
 %name pMem1 Mem1
+%name pType5 Type5
+%name pType4 Type4
+%name pType3 Type3
 %name pType2 Type2
-%name pType Type
 %name pListType ListType
+%name pType Type
 %name pType1 Type1
-%name pExp Exp
+%name pExp16 Exp16
 %name pExp15 Exp15
 %name pExp14 Exp14
 %name pExp13 Exp13
@@ -33,12 +37,14 @@ import ErrM
 %name pExp4 Exp4
 %name pExp3 Exp3
 %name pExp2 Exp2
+%name pExp Exp
 %name pExp1 Exp1
 %name pExp5 Exp5
 %name pExp6 Exp6
 %name pExp7 Exp7
 %name pExp10 Exp10
 %name pListExp ListExp
+%name pListExp14 ListExp14
 %name pListExp15 ListExp15
 %name pListId ListId
 -- no lexer declaration
@@ -78,12 +84,13 @@ import ErrM
   'false' { PT _ (TS _ 31) }
   'if' { PT _ (TS _ 32) }
   'return' { PT _ (TS _ 33) }
-  'true' { PT _ (TS _ 34) }
-  'typedef' { PT _ (TS _ 35) }
-  'while' { PT _ (TS _ 36) }
-  '{' { PT _ (TS _ 37) }
-  '||' { PT _ (TS _ 38) }
-  '}' { PT _ (TS _ 39) }
+  'throw' { PT _ (TS _ 34) }
+  'true' { PT _ (TS _ 35) }
+  'typedef' { PT _ (TS _ 36) }
+  'while' { PT _ (TS _ 37) }
+  '{' { PT _ (TS _ 38) }
+  '||' { PT _ (TS _ 39) }
+  '}' { PT _ (TS _ 40) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
   L_quoted { PT _ (TL $$) }
@@ -126,35 +133,46 @@ Stm : Exp ';' { AbsCpp.SExp $1 }
     | 'if' '(' Exp ')' Stm { AbsCpp.SIf $3 $5 }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCpp.SIfElse $3 $5 $7 }
     | Mem '(' ListExp ')' ';' { AbsCpp.SFunc $1 $3 }
-    | Type Id '(' ListType ')' '{' Stm '}' { AbsCpp.SMethod $1 $2 $4 $7 }
+    | Type Id '(' ListArg ')' '{' Stm '}' { AbsCpp.SMethod $1 $2 $4 $7 }
+    | 'throw' Id '(' Exp ')' ';' { AbsCpp.SThrow $2 $4 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
+Mem3 :: { Mem }
+Mem3 : Id { AbsCpp.MId $1 } | '(' Mem ')' { $2 }
 Mem2 :: { Mem }
-Mem2 : Id { AbsCpp.MId $1 } | '(' Mem ')' { $2 }
+Mem2 : Id '.' Id { AbsCpp.MIds $1 $3 }
+     | Mem2 '.' Mem3 { AbsCpp.MCall $1 $3 }
+     | Mem3 { $1 }
 Mem :: { Mem }
-Mem : Mem '.' Mem2 { AbsCpp.MCall $1 $3 } | Mem1 { $1 }
+Mem : Mem1 { $1 }
 Mem1 :: { Mem }
 Mem1 : Mem2 { $1 }
-Type2 :: { Type }
-Type2 : Id { AbsCpp.TId $1 }
+Type5 :: { Type }
+Type5 : Id { AbsCpp.TId $1 }
       | Id '::' Id { AbsCpp.TIds $1 $3 }
-      | 'const' Type { AbsCpp.TCons $2 }
-      | Type '&' { AbsCpp.TAmp $1 }
-      | Type '<' Type '>' { AbsCpp.TBrac $1 $3 }
-      | 'typedef' Type { AbsCpp.TAlias $2 }
       | '(' Type ')' { $2 }
-Type :: { Type }
-Type : Type '::' Type2 { AbsCpp.TNs $1 $3 } | Type1 { $1 }
+Type4 :: { Type }
+Type4 : Type4 '<' Type5 '>' { AbsCpp.TBrac $1 $3 }
+      | Type4 '::' Type5 { AbsCpp.TNs $1 $3 }
+      | Type5 { $1 }
+Type3 :: { Type }
+Type3 : 'const' Type4 { AbsCpp.TCons $2 }
+      | 'typedef' Type4 { AbsCpp.TAlias $2 }
+      | Type4 { $1 }
+Type2 :: { Type }
+Type2 : Type3 '&' { AbsCpp.TAmp $1 } | Type3 { $1 }
 ListType :: { [Type] }
 ListType : {- empty -} { [] }
          | Type { (:[]) $1 }
          | Type ',' ListType { (:) $1 $3 }
+Type :: { Type }
+Type : Type1 { $1 }
 Type1 :: { Type }
 Type1 : Type2 { $1 }
-Exp :: { Exp }
-Exp : Mem '(' ListExp ')' { AbsCpp.EFunc $1 $3 }
-    | Exp '?' Exp ':' Exp { AbsCpp.EIf $1 $3 $5 }
-    | Exp1 { $1 }
+Exp16 :: { Exp }
+Exp16 : Mem '[' Exp ']' { AbsCpp.EArray $1 $3 }
+      | Mem '(' ListExp ')' { AbsCpp.EFunc $1 $3 }
+      | '(' Exp ')' { $2 }
 Exp15 :: { Exp }
 Exp15 : 'true' { AbsCpp.ETrue }
       | 'false' { AbsCpp.EFalse }
@@ -163,9 +181,7 @@ Exp15 : 'true' { AbsCpp.ETrue }
       | String { AbsCpp.EString $1 }
       | Id { AbsCpp.EId $1 }
       | Id '::' Id { AbsCpp.ENs $1 $3 }
-      | Id '[' Exp ']' { AbsCpp.EArray $1 $3 }
-      | Id '(' ListExp ')' { AbsCpp.EApp $1 $3 }
-      | '(' Exp ')' { $2 }
+      | Exp16 { $1 }
 Exp14 :: { Exp }
 Exp14 : Exp14 '<<' ListExp15 { AbsCpp.ECout $1 (reverse $3) }
       | Exp15 '++' { AbsCpp.EPIncr $1 }
@@ -201,6 +217,8 @@ Exp3 :: { Exp }
 Exp3 : Exp3 '||' Exp4 { AbsCpp.EOr $1 $3 } | Exp4 { $1 }
 Exp2 :: { Exp }
 Exp2 : Exp3 '=' Exp2 { AbsCpp.EAss $1 $3 } | Exp3 { $1 }
+Exp :: { Exp }
+Exp : Exp2 '?' Exp2 ':' Exp2 { AbsCpp.EIf $1 $3 $5 } | Exp1 { $1 }
 Exp1 :: { Exp }
 Exp1 : Exp2 { $1 }
 Exp5 :: { Exp }
@@ -215,6 +233,10 @@ ListExp :: { [Exp] }
 ListExp : {- empty -} { [] }
         | Exp { (:[]) $1 }
         | Exp ',' ListExp { (:) $1 $3 }
+ListExp14 :: { [Exp] }
+ListExp14 : {- empty -} { [] }
+          | Exp14 { (:[]) $1 }
+          | Exp14 ',' ListExp14 { (:) $1 $3 }
 ListExp15 :: { [Exp] }
 ListExp15 : {- empty -} { [] } | ListExp15 Exp15 { flip (:) $1 $2 }
 ListId :: { [Id] }

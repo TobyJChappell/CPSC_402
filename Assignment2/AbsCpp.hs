@@ -26,25 +26,26 @@ data Stm
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
     | SFunc Mem [Exp]
-    | SMethod Type Id [Type] Stm
+    | SMethod Type Id [Arg] Stm
+    | SThrow Id Exp
   deriving (Eq, Ord, Show, Read)
 
-data Mem = MId Id | MCall Mem Mem
+data Mem = MId Id | MIds Id Id | MCall Mem Mem
   deriving (Eq, Ord, Show, Read)
 
 data Type
     = TId Id
     | TIds Id Id
-    | TCons Type
-    | TAmp Type
     | TBrac Type Type
-    | TAlias Type
     | TNs Type Type
+    | TCons Type
+    | TAlias Type
+    | TAmp Type
   deriving (Eq, Ord, Show, Read)
 
 data Exp
-    = EFunc Mem [Exp]
-    | EIf Exp Exp Exp
+    = EArray Mem Exp
+    | EFunc Mem [Exp]
     | ETrue
     | EFalse
     | EInt Integer
@@ -52,8 +53,6 @@ data Exp
     | EString String
     | EId Id
     | ENs Id Id
-    | EArray Id Exp
-    | EApp Id [Exp]
     | ECout Exp [Exp]
     | EPIncr Exp
     | EPDecr Exp
@@ -74,6 +73,7 @@ data Exp
     | EAnd Exp Exp
     | EOr Exp Exp
     | EAss Exp Exp
+    | EIf Exp Exp Exp
     | ETyped Exp Type
   deriving (Eq, Ord, Show, Read)
 
