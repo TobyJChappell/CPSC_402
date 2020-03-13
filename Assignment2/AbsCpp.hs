@@ -51,14 +51,13 @@ data Exp
     | EString String
     | EId Id
     | EIds Id Id
+    | ENs Exp Exp
     | EArray Mem Exp
-    | EFunc Mem [Exp]
-    | ECout Exp [Exp]
     | EPIncr Exp
     | EPDecr Exp
-    | ECin Exp Exp
     | EIncr Exp
     | EDecr Exp
+    | EFunc Mem [Exp]
     | ETimes Exp Exp
     | EDiv Exp Exp
     | EMod Exp Exp
@@ -73,6 +72,8 @@ data Exp
     | EAnd Exp Exp
     | EOr Exp Exp
     | EAss Exp Exp
+    | ECout Exp [Exp]
+    | ECin Exp Exp
     | EIf Exp Exp Exp
     | ETyped Exp Type
   deriving (Eq, Ord, Show, Read)

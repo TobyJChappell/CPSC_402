@@ -58,14 +58,13 @@ transExp x = case x of
   EString string -> failure x
   EId id -> failure x
   EIds id1 id2 -> failure x
+  ENs exp1 exp2 -> failure x
   EArray mem exp -> failure x
-  EFunc mem exps -> failure x
-  ECout exp exps -> failure x
   EPIncr exp -> failure x
   EPDecr exp -> failure x
-  ECin exp1 exp2 -> failure x
   EIncr exp -> failure x
   EDecr exp -> failure x
+  EFunc mem exps -> failure x
   ETimes exp1 exp2 -> failure x
   EDiv exp1 exp2 -> failure x
   EMod exp1 exp2 -> failure x
@@ -80,6 +79,8 @@ transExp x = case x of
   EAnd exp1 exp2 -> failure x
   EOr exp1 exp2 -> failure x
   EAss exp1 exp2 -> failure x
+  ECout exp exps -> failure x
+  ECin exp1 exp2 -> failure x
   EIf exp1 exp2 exp3 -> failure x
   ETyped exp type_ -> failure x
 

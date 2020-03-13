@@ -33,6 +33,9 @@ data Stm
 data Mem = MId Id | MIds Id Id | MCall Mem Mem
   deriving (Eq, Ord, Show, Read)
 
+data Acc = AId Id | AIds Id Id | ACall Acc Acc
+  deriving (Eq, Ord, Show, Read)
+
 data Type
     = TId Id
     | TIds Id Id
@@ -53,13 +56,11 @@ data Exp
     | EIds Id Id
     | ENs Exp Exp
     | EArray Mem Exp
-    | EFunc Mem [Exp]
-    | ECout Exp [Exp]
     | EPIncr Exp
     | EPDecr Exp
-    | ECin Exp Exp
     | EIncr Exp
     | EDecr Exp
+    | EFunc Acc [Exp]
     | ETimes Exp Exp
     | EDiv Exp Exp
     | EMod Exp Exp
@@ -74,6 +75,8 @@ data Exp
     | EAnd Exp Exp
     | EOr Exp Exp
     | EAss Exp Exp
+    | ECout Exp [Exp]
+    | ECin Exp Exp
     | EIf Exp Exp Exp
     | ETyped Exp Type
   deriving (Eq, Ord, Show, Read)
