@@ -1,6 +1,9 @@
 PDefs.   Program ::= [Def] ;
 
-DFun.    Def    ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
+DFunc.    Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
+DDecl.		Def ::= Type [Id] ";" ;
+DUse.	    Def ::= "using" Type ";" ;
+--DProt.	    Def ::= Type Id "(" [Type] ")" ";" ;
 
 terminator Def "" ;
 
@@ -15,46 +18,54 @@ SReturn.     Stm ::= "return" Exp ";" ;
 SReturnVoid. Stm ::= "return" ";" ;
 SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
-SIf.     		 Stm ::= "if" "(" Exp ")" Stm ;
+SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
 SFunc.	     Stm ::= Mem "(" [Exp] ")" ";" ;
+SMethod.	 	 Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
+SThrow.	     Stm ::= "throw" Id "(" Exp ")" ";" ;
 
 terminator Stm "" ;
 
-MId. 				 Mem ::= Id ;
-MCall.			 Mem ::= Mem "." Mem ;
+MId.         Mem3 ::= Id ;
+MIds.	     	 Mem3 ::= Id "." Id ;
+MCall.	     Mem2 ::= Mem2 "." Mem3 ;
 
-TId. 	     Type2 ::= Id ;
-TIds. 		 Type2 ::= Id "::" Id;
-TBrac. 	   Type2 ::= Type "<" Type ">" ;
-TAlias.    Type2 ::= "typedef" Type ;
-TNs. 	     Type ::= Type "::" Type2;
+coercions Mem 3 ;
 
-coercions Type 2 ;
+TId. 	     Type5 ::= Id ;
+TIds.		   Type5 ::= Id "::" Id ;
+TBrac. 	   Type4 ::= Type4 "<" [Type5] ">" ;
+TNs. 	     Type4 ::= Type4 "::" Type5 ;
+TCons.	   Type3 ::= "const" Type4 ;
+TAlias.    Type3 ::= "typedef" Type4 ;
+TAmp.      Type2 ::= Type3 "&" ;
 
-EFunc.	 Exp ::= Mem "(" [Exp] ")" ;
-EIf.     Exp ::= Exp "?" Exp ":" Exp ;
+separator Type "," ;
+separator Type5 "," ;
+coercions Type 5 ;
 
-ETrue.   Exp15  ::= "true" ;
-EFalse.  Exp15  ::= "false" ;
-EInt.    Exp15  ::= Integer ;
-EDouble. Exp15  ::= Double ;
-EString. Exp15  ::= String ;
-EId.     Exp15  ::= Id ;
-ENs.     Exp15  ::= Id "::" Id ;
-EArray.  Exp15  ::= Id "[" Exp "]" ;
+ETrue.   Exp19  ::= "true" ;
+EFalse.  Exp19  ::= "false" ;
+EInt.    Exp19  ::= Integer ;
+EDouble. Exp19  ::= Double ;
+EString. Exp19  ::= String ;
+EId.     Exp19  ::= Id ;
+EIds.    Exp19  ::= Id "::" Id ;
+EDot.		 Exp19  ::= Mem ;
 
-EApp.    Exp15  ::= Id "(" [Exp] ")" ;
+ENs. 	   Exp18  ::= Exp18 "::" Exp19 ;
 
-ECout.   Exp14 ::= Exp14 "<<" [Exp15] ;
+EArray.  Exp17  ::= Mem "[" Exp11 "]" ;
 
-EPIncr.  Exp14  ::= Exp15 "++" ;
-EPDecr.  Exp14  ::= Exp15 "--" ;
+EPIncr.  Exp16  ::= Exp17 "++" ;
+EPDecr.  Exp16  ::= Exp17 "--" ;
 
-ECin. 	 Exp13 ::= Exp13 ">>" Exp14 ;
+EIncr.   Exp15  ::= "++" Exp16 ;
+EDecr.   Exp15  ::= "--" Exp16 ;
 
-EIncr.   Exp13  ::= "++" Exp14 ;
-EDecr.   Exp13  ::= "--" Exp14 ;
+EFunc.	 Exp14 ::= Mem "(" [Exp5] ")" ;
+
+ENot.    Exp13  ::= "!" Exp14 ;
 
 ETimes.  Exp12  ::= Exp12 "*"  Exp13 ;
 EDiv.    Exp12  ::= Exp12 "/"  Exp13 ;
@@ -67,17 +78,26 @@ ELtEq.   Exp9   ::= Exp9  "<=" Exp10 ;
 EGtEq.   Exp9   ::= Exp9  ">=" Exp10 ;
 EEq.     Exp8   ::= Exp8  "==" Exp9 ;
 ENEq.    Exp8   ::= Exp8  "!=" Exp9 ;
-EAnd.    Exp4   ::= Exp4  "&&" Exp5 ;
-EOr.     Exp3   ::= Exp3  "||" Exp4 ;
-EAss.    Exp2   ::= Exp3 "=" Exp2 ;
 
-internal ETyped. Exp15 ::= "(" Exp ":" Type ")" ;
+EAnd.    Exp7   ::= Exp7  "&&" Exp8 ;
+EOr.     Exp6   ::= Exp6  "||" Exp7 ;
+EAss.    Exp5   ::= Exp6 "=" Exp5 ;
 
-coercions Exp 15 ;
+ECout.   Exp3 ::= Exp3 "<<" [Exp4] ;
+
+ECin. 	 Exp2 ::= Exp2 ">>" Exp3 ;
+
+EIf.     Exp ::= Exp2 "?" Exp2 ":" Exp2 ;
+
+internal ETyped. Exp18 ::= "(" Exp ":" Type ")" ;
+
+coercions Exp 19 ;
 
 separator Exp "," ;
 
-separator Exp15 "" ;
+separator Exp4 "" ;
+
+separator Exp5 "," ;
 
 token Id (letter (letter | digit | '_')*) ;
 
@@ -86,4 +106,3 @@ separator nonempty Id "," ;
 comment "#" ;
 comment "//" ;
 comment "/*" "*/" ;
-comment "using" ;

@@ -15,11 +15,22 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
+%name pMem3 Mem3
+%name pMem2 Mem2
 %name pMem Mem
+%name pMem1 Mem1
+%name pType5 Type5
+%name pType4 Type4
+%name pType3 Type3
 %name pType2 Type2
+%name pListType ListType
+%name pListType5 ListType5
 %name pType Type
 %name pType1 Type1
-%name pExp Exp
+%name pExp19 Exp19
+%name pExp18 Exp18
+%name pExp17 Exp17
+%name pExp16 Exp16
 %name pExp15 Exp15
 %name pExp14 Exp14
 %name pExp13 Exp13
@@ -27,58 +38,65 @@ import ErrM
 %name pExp11 Exp11
 %name pExp9 Exp9
 %name pExp8 Exp8
-%name pExp4 Exp4
+%name pExp7 Exp7
+%name pExp6 Exp6
+%name pExp5 Exp5
 %name pExp3 Exp3
 %name pExp2 Exp2
+%name pExp Exp
 %name pExp1 Exp1
-%name pExp5 Exp5
-%name pExp6 Exp6
-%name pExp7 Exp7
+%name pExp4 Exp4
 %name pExp10 Exp10
 %name pListExp ListExp
-%name pListExp15 ListExp15
+%name pListExp4 ListExp4
+%name pListExp5 ListExp5
 %name pListId ListId
 -- no lexer declaration
 %monad { Err } { thenM } { returnM }
 %tokentype {Token}
 %token
-  '!=' { PT _ (TS _ 1) }
-  '%' { PT _ (TS _ 2) }
-  '&&' { PT _ (TS _ 3) }
-  '(' { PT _ (TS _ 4) }
-  ')' { PT _ (TS _ 5) }
-  '*' { PT _ (TS _ 6) }
-  '+' { PT _ (TS _ 7) }
-  '++' { PT _ (TS _ 8) }
-  ',' { PT _ (TS _ 9) }
-  '-' { PT _ (TS _ 10) }
-  '--' { PT _ (TS _ 11) }
-  '.' { PT _ (TS _ 12) }
-  '/' { PT _ (TS _ 13) }
-  ':' { PT _ (TS _ 14) }
-  '::' { PT _ (TS _ 15) }
-  ';' { PT _ (TS _ 16) }
-  '<' { PT _ (TS _ 17) }
-  '<<' { PT _ (TS _ 18) }
-  '<=' { PT _ (TS _ 19) }
-  '=' { PT _ (TS _ 20) }
-  '==' { PT _ (TS _ 21) }
-  '>' { PT _ (TS _ 22) }
-  '>=' { PT _ (TS _ 23) }
-  '>>' { PT _ (TS _ 24) }
-  '?' { PT _ (TS _ 25) }
-  '[' { PT _ (TS _ 26) }
-  ']' { PT _ (TS _ 27) }
-  'else' { PT _ (TS _ 28) }
-  'false' { PT _ (TS _ 29) }
-  'if' { PT _ (TS _ 30) }
-  'return' { PT _ (TS _ 31) }
-  'true' { PT _ (TS _ 32) }
-  'typedef' { PT _ (TS _ 33) }
-  'while' { PT _ (TS _ 34) }
-  '{' { PT _ (TS _ 35) }
-  '||' { PT _ (TS _ 36) }
-  '}' { PT _ (TS _ 37) }
+  '!' { PT _ (TS _ 1) }
+  '!=' { PT _ (TS _ 2) }
+  '%' { PT _ (TS _ 3) }
+  '&' { PT _ (TS _ 4) }
+  '&&' { PT _ (TS _ 5) }
+  '(' { PT _ (TS _ 6) }
+  ')' { PT _ (TS _ 7) }
+  '*' { PT _ (TS _ 8) }
+  '+' { PT _ (TS _ 9) }
+  '++' { PT _ (TS _ 10) }
+  ',' { PT _ (TS _ 11) }
+  '-' { PT _ (TS _ 12) }
+  '--' { PT _ (TS _ 13) }
+  '.' { PT _ (TS _ 14) }
+  '/' { PT _ (TS _ 15) }
+  ':' { PT _ (TS _ 16) }
+  '::' { PT _ (TS _ 17) }
+  ';' { PT _ (TS _ 18) }
+  '<' { PT _ (TS _ 19) }
+  '<<' { PT _ (TS _ 20) }
+  '<=' { PT _ (TS _ 21) }
+  '=' { PT _ (TS _ 22) }
+  '==' { PT _ (TS _ 23) }
+  '>' { PT _ (TS _ 24) }
+  '>=' { PT _ (TS _ 25) }
+  '>>' { PT _ (TS _ 26) }
+  '?' { PT _ (TS _ 27) }
+  '[' { PT _ (TS _ 28) }
+  ']' { PT _ (TS _ 29) }
+  'const' { PT _ (TS _ 30) }
+  'else' { PT _ (TS _ 31) }
+  'false' { PT _ (TS _ 32) }
+  'if' { PT _ (TS _ 33) }
+  'return' { PT _ (TS _ 34) }
+  'throw' { PT _ (TS _ 35) }
+  'true' { PT _ (TS _ 36) }
+  'typedef' { PT _ (TS _ 37) }
+  'using' { PT _ (TS _ 38) }
+  'while' { PT _ (TS _ 39) }
+  '{' { PT _ (TS _ 40) }
+  '||' { PT _ (TS _ 41) }
+  '}' { PT _ (TS _ 42) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
   L_quoted { PT _ (TL $$) }
@@ -101,7 +119,9 @@ Id  : L_Id { Id ($1)}
 Program :: { Program }
 Program : ListDef { AbsCPP.PDefs (reverse $1) }
 Def :: { Def }
-Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCPP.DFun $1 $2 $4 (reverse $7) }
+Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCPP.DFunc $1 $2 $4 (reverse $7) }
+    | Type ListId ';' { AbsCPP.DDecl $1 $2 }
+    | 'using' Type ';' { AbsCPP.DUse $2 }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }
@@ -121,45 +141,72 @@ Stm : Exp ';' { AbsCPP.SExp $1 }
     | 'if' '(' Exp ')' Stm { AbsCPP.SIf $3 $5 }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCPP.SIfElse $3 $5 $7 }
     | Mem '(' ListExp ')' ';' { AbsCPP.SFunc $1 $3 }
+    | Type Id '(' ListArg ')' '{' Stm '}' { AbsCPP.SMethod $1 $2 $4 $7 }
+    | 'throw' Id '(' Exp ')' ';' { AbsCPP.SThrow $2 $4 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
+Mem3 :: { Mem }
+Mem3 : Id { AbsCPP.MId $1 }
+     | Id '.' Id { AbsCPP.MIds $1 $3 }
+     | '(' Mem ')' { $2 }
+Mem2 :: { Mem }
+Mem2 : Mem2 '.' Mem3 { AbsCPP.MCall $1 $3 } | Mem3 { $1 }
 Mem :: { Mem }
-Mem : Id { AbsCPP.MId $1 } | Mem '.' Mem { AbsCPP.MCall $1 $3 }
-Type2 :: { Type }
-Type2 : Id { AbsCPP.TId $1 }
+Mem : Mem1 { $1 }
+Mem1 :: { Mem }
+Mem1 : Mem2 { $1 }
+Type5 :: { Type }
+Type5 : Id { AbsCPP.TId $1 }
       | Id '::' Id { AbsCPP.TIds $1 $3 }
-      | Type '<' Type '>' { AbsCPP.TBrac $1 $3 }
-      | 'typedef' Type { AbsCPP.TAlias $2 }
       | '(' Type ')' { $2 }
+Type4 :: { Type }
+Type4 : Type4 '<' ListType5 '>' { AbsCPP.TBrac $1 $3 }
+      | Type4 '::' Type5 { AbsCPP.TNs $1 $3 }
+      | Type5 { $1 }
+Type3 :: { Type }
+Type3 : 'const' Type4 { AbsCPP.TCons $2 }
+      | 'typedef' Type4 { AbsCPP.TAlias $2 }
+      | Type4 { $1 }
+Type2 :: { Type }
+Type2 : Type3 '&' { AbsCPP.TAmp $1 } | Type3 { $1 }
+ListType :: { [Type] }
+ListType : {- empty -} { [] }
+         | Type { (:[]) $1 }
+         | Type ',' ListType { (:) $1 $3 }
+ListType5 :: { [Type] }
+ListType5 : {- empty -} { [] }
+          | Type5 { (:[]) $1 }
+          | Type5 ',' ListType5 { (:) $1 $3 }
 Type :: { Type }
-Type : Type '::' Type2 { AbsCPP.TNs $1 $3 } | Type1 { $1 }
+Type : Type1 { $1 }
 Type1 :: { Type }
 Type1 : Type2 { $1 }
-Exp :: { Exp }
-Exp : Mem '(' ListExp ')' { AbsCPP.EFunc $1 $3 }
-    | Exp '?' Exp ':' Exp { AbsCPP.EIf $1 $3 $5 }
-    | Exp1 { $1 }
-Exp15 :: { Exp }
-Exp15 : 'true' { AbsCPP.ETrue }
+Exp19 :: { Exp }
+Exp19 : 'true' { AbsCPP.ETrue }
       | 'false' { AbsCPP.EFalse }
       | Integer { AbsCPP.EInt $1 }
       | Double { AbsCPP.EDouble $1 }
       | String { AbsCPP.EString $1 }
       | Id { AbsCPP.EId $1 }
-      | Id '::' Id { AbsCPP.ENs $1 $3 }
-      | Id '[' Exp ']' { AbsCPP.EArray $1 $3 }
-      | Id '(' ListExp ')' { AbsCPP.EApp $1 $3 }
+      | Id '::' Id { AbsCPP.EIds $1 $3 }
+      | Mem { AbsCPP.EDot $1 }
       | '(' Exp ')' { $2 }
+Exp18 :: { Exp }
+Exp18 : Exp18 '::' Exp19 { AbsCPP.ENs $1 $3 } | Exp19 { $1 }
+Exp17 :: { Exp }
+Exp17 : Mem '[' Exp11 ']' { AbsCPP.EArray $1 $3 } | Exp18 { $1 }
+Exp16 :: { Exp }
+Exp16 : Exp17 '++' { AbsCPP.EPIncr $1 }
+      | Exp17 '--' { AbsCPP.EPDecr $1 }
+      | Exp17 { $1 }
+Exp15 :: { Exp }
+Exp15 : '++' Exp16 { AbsCPP.EIncr $2 }
+      | '--' Exp16 { AbsCPP.EDecr $2 }
+      | Exp16 { $1 }
 Exp14 :: { Exp }
-Exp14 : Exp14 '<<' ListExp15 { AbsCPP.ECout $1 (reverse $3) }
-      | Exp15 '++' { AbsCPP.EPIncr $1 }
-      | Exp15 '--' { AbsCPP.EPDecr $1 }
-      | Exp15 { $1 }
+Exp14 : Mem '(' ListExp5 ')' { AbsCPP.EFunc $1 $3 } | Exp15 { $1 }
 Exp13 :: { Exp }
-Exp13 : Exp13 '>>' Exp14 { AbsCPP.ECin $1 $3 }
-      | '++' Exp14 { AbsCPP.EIncr $2 }
-      | '--' Exp14 { AbsCPP.EDecr $2 }
-      | Exp14 { $1 }
+Exp13 : '!' Exp14 { AbsCPP.ENot $2 } | Exp14 { $1 }
 Exp12 :: { Exp }
 Exp12 : Exp12 '*' Exp13 { AbsCPP.ETimes $1 $3 }
       | Exp12 '/' Exp13 { AbsCPP.EDiv $1 $3 }
@@ -179,28 +226,35 @@ Exp8 :: { Exp }
 Exp8 : Exp8 '==' Exp9 { AbsCPP.EEq $1 $3 }
      | Exp8 '!=' Exp9 { AbsCPP.ENEq $1 $3 }
      | Exp9 { $1 }
-Exp4 :: { Exp }
-Exp4 : Exp4 '&&' Exp5 { AbsCPP.EAnd $1 $3 } | Exp5 { $1 }
+Exp7 :: { Exp }
+Exp7 : Exp7 '&&' Exp8 { AbsCPP.EAnd $1 $3 } | Exp8 { $1 }
+Exp6 :: { Exp }
+Exp6 : Exp6 '||' Exp7 { AbsCPP.EOr $1 $3 } | Exp7 { $1 }
+Exp5 :: { Exp }
+Exp5 : Exp6 '=' Exp5 { AbsCPP.EAss $1 $3 } | Exp6 { $1 }
 Exp3 :: { Exp }
-Exp3 : Exp3 '||' Exp4 { AbsCPP.EOr $1 $3 } | Exp4 { $1 }
+Exp3 : Exp3 '<<' ListExp4 { AbsCPP.ECout $1 (reverse $3) }
+     | Exp4 { $1 }
 Exp2 :: { Exp }
-Exp2 : Exp3 '=' Exp2 { AbsCPP.EAss $1 $3 } | Exp3 { $1 }
+Exp2 : Exp2 '>>' Exp3 { AbsCPP.ECin $1 $3 } | Exp3 { $1 }
+Exp :: { Exp }
+Exp : Exp2 '?' Exp2 ':' Exp2 { AbsCPP.EIf $1 $3 $5 } | Exp1 { $1 }
 Exp1 :: { Exp }
 Exp1 : Exp2 { $1 }
-Exp5 :: { Exp }
-Exp5 : Exp6 { $1 }
-Exp6 :: { Exp }
-Exp6 : Exp7 { $1 }
-Exp7 :: { Exp }
-Exp7 : Exp8 { $1 }
+Exp4 :: { Exp }
+Exp4 : Exp5 { $1 }
 Exp10 :: { Exp }
 Exp10 : Exp11 { $1 }
 ListExp :: { [Exp] }
 ListExp : {- empty -} { [] }
         | Exp { (:[]) $1 }
         | Exp ',' ListExp { (:) $1 $3 }
-ListExp15 :: { [Exp] }
-ListExp15 : {- empty -} { [] } | ListExp15 Exp15 { flip (:) $1 $2 }
+ListExp4 :: { [Exp] }
+ListExp4 : {- empty -} { [] } | ListExp4 Exp4 { flip (:) $1 $2 }
+ListExp5 :: { [Exp] }
+ListExp5 : {- empty -} { [] }
+         | Exp5 { (:[]) $1 }
+         | Exp5 ',' ListExp5 { (:) $1 $3 }
 ListId :: { [Id] }
 ListId : Id { (:[]) $1 } | Id ',' ListId { (:) $1 $3 }
 {
