@@ -51,15 +51,15 @@ transType x = case x of
   TAmp type_ -> failure x
 transExp :: Exp -> Result
 transExp x = case x of
-  EArray mem exp -> failure x
-  EFunc mem exps -> failure x
   ETrue -> failure x
   EFalse -> failure x
   EInt integer -> failure x
   EDouble double -> failure x
   EString string -> failure x
   EId id -> failure x
-  ENs id1 id2 -> failure x
+  EIds id1 id2 -> failure x
+  EArray mem exp -> failure x
+  EFunc mem exps -> failure x
   ECout exp exps -> failure x
   EPIncr exp -> failure x
   EPDecr exp -> failure x

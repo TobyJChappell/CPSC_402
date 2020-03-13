@@ -44,15 +44,15 @@ data Type
   deriving (Eq, Ord, Show, Read)
 
 data Exp
-    = EArray Mem Exp
-    | EFunc Mem [Exp]
-    | ETrue
+    = ETrue
     | EFalse
     | EInt Integer
     | EDouble Double
     | EString String
     | EId Id
-    | ENs Id Id
+    | EIds Id Id
+    | EArray Mem Exp
+    | EFunc Mem [Exp]
     | ECout Exp [Exp]
     | EPIncr Exp
     | EPDecr Exp

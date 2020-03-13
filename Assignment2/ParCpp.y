@@ -44,8 +44,8 @@ import ErrM
 %name pExp7 Exp7
 %name pExp10 Exp10
 %name pListExp ListExp
-%name pListExp14 ListExp14
 %name pListExp15 ListExp15
+%name pListExp2 ListExp2
 %name pListId ListId
 -- no lexer declaration
 %monad { Err } { thenM } { returnM }
@@ -138,11 +138,11 @@ Stm : Exp ';' { AbsCpp.SExp $1 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
 Mem3 :: { Mem }
-Mem3 : Id { AbsCpp.MId $1 } | '(' Mem ')' { $2 }
+Mem3 : Id { AbsCpp.MId $1 }
+     | Id '.' Id { AbsCpp.MIds $1 $3 }
+     | '(' Mem ')' { $2 }
 Mem2 :: { Mem }
-Mem2 : Id '.' Id { AbsCpp.MIds $1 $3 }
-     | Mem2 '.' Mem3 { AbsCpp.MCall $1 $3 }
-     | Mem3 { $1 }
+Mem2 : Mem2 '.' Mem3 { AbsCpp.MCall $1 $3 } | Mem3 { $1 }
 Mem :: { Mem }
 Mem : Mem1 { $1 }
 Mem1 :: { Mem }
@@ -170,17 +170,17 @@ Type : Type1 { $1 }
 Type1 :: { Type }
 Type1 : Type2 { $1 }
 Exp16 :: { Exp }
-Exp16 : Mem '[' Exp ']' { AbsCpp.EArray $1 $3 }
-      | Mem '(' ListExp ')' { AbsCpp.EFunc $1 $3 }
-      | '(' Exp ')' { $2 }
-Exp15 :: { Exp }
-Exp15 : 'true' { AbsCpp.ETrue }
+Exp16 : 'true' { AbsCpp.ETrue }
       | 'false' { AbsCpp.EFalse }
       | Integer { AbsCpp.EInt $1 }
       | Double { AbsCpp.EDouble $1 }
       | String { AbsCpp.EString $1 }
       | Id { AbsCpp.EId $1 }
-      | Id '::' Id { AbsCpp.ENs $1 $3 }
+      | Id '::' Id { AbsCpp.EIds $1 $3 }
+      | '(' Exp ')' { $2 }
+Exp15 :: { Exp }
+Exp15 : Mem '[' Exp2 ']' { AbsCpp.EArray $1 $3 }
+      | Mem '(' ListExp2 ')' { AbsCpp.EFunc $1 $3 }
       | Exp16 { $1 }
 Exp14 :: { Exp }
 Exp14 : Exp14 '<<' ListExp15 { AbsCpp.ECout $1 (reverse $3) }
@@ -233,12 +233,12 @@ ListExp :: { [Exp] }
 ListExp : {- empty -} { [] }
         | Exp { (:[]) $1 }
         | Exp ',' ListExp { (:) $1 $3 }
-ListExp14 :: { [Exp] }
-ListExp14 : {- empty -} { [] }
-          | Exp14 { (:[]) $1 }
-          | Exp14 ',' ListExp14 { (:) $1 $3 }
 ListExp15 :: { [Exp] }
 ListExp15 : {- empty -} { [] } | ListExp15 Exp15 { flip (:) $1 $2 }
+ListExp2 :: { [Exp] }
+ListExp2 : {- empty -} { [] }
+         | Exp2 { (:[]) $1 }
+         | Exp2 ',' ListExp2 { (:) $1 $3 }
 ListId :: { [Id] }
 ListId : Id { (:[]) $1 } | Id ',' ListId { (:) $1 $3 }
 {

@@ -30,7 +30,7 @@ data Stm
     | SThrow Id Exp
   deriving (Eq, Ord, Show, Read)
 
-data Mem = MId Id | MIds [Mem]
+data Mem = MId Id | MIds Id Id | MCall Mem Mem
   deriving (Eq, Ord, Show, Read)
 
 data Type
@@ -44,15 +44,16 @@ data Type
   deriving (Eq, Ord, Show, Read)
 
 data Exp
-    = EArray Mem Exp
-    | EFunc Mem [Exp]
-    | ETrue
+    = ETrue
     | EFalse
     | EInt Integer
     | EDouble Double
     | EString String
     | EId Id
-    | ENs Id Id
+    | EIds Id Id
+    | ENs Exp Exp
+    | EArray Mem Exp
+    | EFunc Mem [Exp]
     | ECout Exp [Exp]
     | EPIncr Exp
     | EPDecr Exp

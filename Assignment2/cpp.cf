@@ -24,7 +24,7 @@ SThrow.			 Stm ::= "throw" Id "(" Exp ")" ";" ;
 terminator Stm "" ;
 
 MId. 				 Mem3 ::= Id ;
-MIds.				 Mem2 ::= Id "." Id ;
+MIds.				 Mem3 ::= Id "." Id ;
 MCall.			 Mem2 ::= Mem2 "." Mem3 ;
 
 coercions Mem 3 ;
@@ -40,16 +40,16 @@ TAmp.      Type2 ::= Type3 "&" ;
 separator Type "," ;
 coercions Type 5 ;
 
-EArray.  Exp16  ::= Mem "[" Exp "]" ;
-EFunc.	 Exp16 ::= Mem "(" [Exp] ")" ;
+ETrue.   Exp16  ::= "true" ;
+EFalse.  Exp16  ::= "false" ;
+EInt.    Exp16  ::= Integer ;
+EDouble. Exp16  ::= Double ;
+EString. Exp16  ::= String ;
+EId.     Exp16  ::= Id ;
+EIds.    Exp16  ::= Id "::" Id ;
 
-ETrue.   Exp15  ::= "true" ;
-EFalse.  Exp15  ::= "false" ;
-EInt.    Exp15  ::= Integer ;
-EDouble. Exp15  ::= Double ;
-EString. Exp15  ::= String ;
-EId.     Exp15  ::= Id ;
-ENs.     Exp15  ::= Id "::" Id ;
+EArray.  Exp15  ::= Mem "[" Exp2 "]" ;
+EFunc.	 Exp15 ::= Mem "(" [Exp2] ")" ;
 
 ECout.   Exp14 ::= Exp14 "<<" [Exp15] ;
 
@@ -83,9 +83,9 @@ coercions Exp 16 ;
 
 separator Exp "," ;
 
-separator Exp14 "," ;
-
 separator Exp15 "" ;
+
+separator Exp2 "," ;
 
 token Id (letter (letter | digit | '_')*) ;
 
