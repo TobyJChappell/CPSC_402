@@ -1,6 +1,9 @@
 PDefs.   Program ::= [Def] ;
 
-DFun.    Def    ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
+DFunc.    Def    ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
+DDecl.		Def ::= Type [Id] ";" ;
+DUse.			Def ::= "using" Type ";" ;
+DProt.		Def ::= Type Id "(" [Type] ")" ";" ;
 
 terminator Def "" ;
 
@@ -31,34 +34,37 @@ coercions Mem 3 ;
 
 TId. 	     Type5 ::= Id ;
 TIds.			 Type5 ::= Id "::" Id ;
-TBrac. 	   Type4 ::= Type4 "<" Type5 ">" ;
+TBrac. 	   Type4 ::= Type4 "<" [Type5] ">" ;
 TNs. 	     Type4 ::= Type4 "::" Type5 ;
 TCons.	   Type3 ::= "const" Type4 ;
 TAlias.    Type3 ::= "typedef" Type4 ;
 TAmp.      Type2 ::= Type3 "&" ;
 
 separator Type "," ;
+separator Type5 "," ;
 coercions Type 5 ;
 
-ETrue.   Exp18  ::= "true" ;
-EFalse.  Exp18  ::= "false" ;
-EInt.    Exp18  ::= Integer ;
-EDouble. Exp18  ::= Double ;
-EString. Exp18  ::= String ;
-EId.     Exp18  ::= Id ;
-EIds.    Exp18  ::= Id "::" Id ;
+ETrue.   Exp19  ::= "true" ;
+EFalse.  Exp19  ::= "false" ;
+EInt.    Exp19  ::= Integer ;
+EDouble. Exp19  ::= Double ;
+EString. Exp19  ::= String ;
+EId.     Exp19  ::= Id ;
+EIds.    Exp19  ::= Id "::" Id ;
 
-ENs. 	   Exp17 ::= Exp17 "::" Exp18 ;
+ENs. 	   Exp18 ::= Exp18 "::" Exp19 ;
 
-EArray.  Exp16  ::= Mem "[" Exp11 "]" ;
+EArray.  Exp17  ::= Mem "[" Exp11 "]" ;
 
-EPIncr.  Exp15  ::= Exp16 "++" ;
-EPDecr.  Exp15  ::= Exp16 "--" ;
+EPIncr.  Exp16  ::= Exp17 "++" ;
+EPDecr.  Exp16  ::= Exp17 "--" ;
 
-EIncr.   Exp14  ::= "++" Exp15 ;
-EDecr.   Exp14  ::= "--" Exp15 ;
+EIncr.   Exp15  ::= "++" Exp16 ;
+EDecr.   Exp15  ::= "--" Exp16 ;
 
-EFunc.	 Exp13 ::= Mem "(" [Exp5] ")" ;
+EFunc.	 Exp14 ::= Mem "(" [Exp5] ")" ;
+
+ENot.		 Exp13  ::= "!" Exp14 ;
 
 ETimes.  Exp12  ::= Exp12 "*"  Exp13 ;
 EDiv.    Exp12  ::= Exp12 "/"  Exp13 ;
@@ -84,7 +90,7 @@ EIf.     Exp ::= Exp2 "?" Exp2 ":" Exp2 ;
 
 internal ETyped. Exp18 ::= "(" Exp ":" Type ")" ;
 
-coercions Exp 18 ;
+coercions Exp 19 ;
 
 separator Exp "," ;
 
@@ -99,4 +105,3 @@ separator nonempty Id "," ;
 comment "#" ;
 comment "//" ;
 comment "/*" "*/" ;
-comment "using" ;
