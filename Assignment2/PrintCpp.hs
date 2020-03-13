@@ -99,7 +99,7 @@ instance Print AbsCpp.Program where
 
 instance Print AbsCpp.Def where
   prt i e = case e of
-    AbsCpp.DFunc type_ id args term -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 args, doc (showString ")"), prt 0 term])
+    AbsCpp.DFunc type_ id args stms -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "{"), prt 0 stms, doc (showString "}")])
     AbsCpp.DDecl type_ ids -> prPrec i 0 (concatD [prt 0 type_, prt 0 ids, doc (showString ";")])
     AbsCpp.DUse type_ -> prPrec i 0 (concatD [doc (showString "using"), prt 0 type_, doc (showString ";")])
   prtList _ [] = concatD []
@@ -107,11 +107,6 @@ instance Print AbsCpp.Def where
 
 instance Print [AbsCpp.Def] where
   prt = prtList
-
-instance Print AbsCpp.Term where
-  prt i e = case e of
-    AbsCpp.T1 stms -> prPrec i 0 (concatD [doc (showString "{"), prt 0 stms, doc (showString "}")])
-    AbsCpp.T2 -> prPrec i 0 (concatD [doc (showString ";")])
 
 instance Print AbsCpp.Arg where
   prt i e = case e of
@@ -177,6 +172,7 @@ instance Print AbsCpp.Exp where
     AbsCpp.EString str -> prPrec i 19 (concatD [prt 0 str])
     AbsCpp.EId id -> prPrec i 19 (concatD [prt 0 id])
     AbsCpp.EIds id1 id2 -> prPrec i 19 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
+    AbsCpp.EDot mem -> prPrec i 19 (concatD [prt 0 mem])
     AbsCpp.ENs exp1 exp2 -> prPrec i 18 (concatD [prt 18 exp1, doc (showString "::"), prt 19 exp2])
     AbsCpp.EArray mem exp -> prPrec i 17 (concatD [prt 0 mem, doc (showString "["), prt 11 exp, doc (showString "]")])
     AbsCpp.EPIncr exp -> prPrec i 16 (concatD [prt 17 exp, doc (showString "++")])

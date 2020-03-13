@@ -9,11 +9,7 @@ newtype Id = Id String
 data Program = PDefs [Def]
   deriving (Eq, Ord, Show, Read)
 
-data Def
-    = DFunc Type Id [Arg] [Stm]
-    | DDecl Type [Id]
-    | DUse Type
-    | DProt Type Id [Type]
+data Def = DFunc Type Id [Arg] [Stm] | DDecl Type [Id] | DUse Type
   deriving (Eq, Ord, Show, Read)
 
 data Arg = ADecl Type Id
@@ -55,7 +51,9 @@ data Exp
     | EString String
     | EId Id
     | EIds Id Id
+    | EDot Id Id
     | ENs Exp Exp
+    | EMem Exp Exp
     | EArray Mem Exp
     | EPIncr Exp
     | EPDecr Exp

@@ -41,8 +41,8 @@ The reserved words used in cpp are the following:
   | ``using`` | ``while`` |  |
 
 The symbols used in cpp are the following:
-  | ( | ) | ; | {
-  | } | , | = | .
+  | ( | ) | { | }
+  | ; | , | = | .
   | :: | < | > | &
   | [ | ] | ++ | --
   | ! | * | / | %
@@ -60,13 +60,11 @@ and **eps** (empty rule) belong to the BNF notation.
 All other symbols are terminals.
 
   | //Program// | -> | //[Def]//
-  | //Def// | -> | //Type// //Id// ``(`` //[Arg]// ``)`` //Term//
+  | //Def// | -> | //Type// //Id// ``(`` //[Arg]// ``)`` ``{`` //[Stm]// ``}``
   |  |  **|**  | //Type// //[Id]// ``;``
   |  |  **|**  | ``using`` //Type// ``;``
   | //[Def]// | -> | **eps**
   |  |  **|**  | //Def// //[Def]//
-  | //Term// | -> | ``{`` //[Stm]// ``}``
-  |  |  **|**  | ``;``
   | //Arg// | -> | //Type// //Id//
   | //[Arg]// | -> | **eps**
   |  |  **|**  | //Arg//
@@ -118,6 +116,7 @@ All other symbols are terminals.
   |  |  **|**  | //String//
   |  |  **|**  | //Id//
   |  |  **|**  | //Id// ``::`` //Id//
+  |  |  **|**  | //Mem//
   |  |  **|**  | ``(`` //Exp// ``)``
   | //Exp18// | -> | //Exp18// ``::`` //Exp19//
   |  |  **|**  | //Exp19//

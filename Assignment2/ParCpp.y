@@ -11,7 +11,6 @@ import ErrM
 %name pProgram Program
 %name pDef Def
 %name pListDef ListDef
-%name pTerm Term
 %name pArg Arg
 %name pListArg ListArg
 %name pStm Stm
@@ -120,14 +119,11 @@ Id  : L_Id { Id ($1)}
 Program :: { Program }
 Program : ListDef { AbsCpp.PDefs (reverse $1) }
 Def :: { Def }
-Def : Type Id '(' ListArg ')' Term { AbsCpp.DFunc $1 $2 $4 $6 }
+Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DFunc $1 $2 $4 (reverse $7) }
     | Type ListId ';' { AbsCpp.DDecl $1 $2 }
     | 'using' Type ';' { AbsCpp.DUse $2 }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
-Term :: { Term }
-Term : '{' ListStm '}' { AbsCpp.T1 (reverse $2) }
-     | ';' { AbsCpp.T2 }
 Arg :: { Arg }
 Arg : Type Id { AbsCpp.ADecl $1 $2 }
 ListArg :: { [Arg] }
@@ -193,6 +189,7 @@ Exp19 : 'true' { AbsCpp.ETrue }
       | String { AbsCpp.EString $1 }
       | Id { AbsCpp.EId $1 }
       | Id '::' Id { AbsCpp.EIds $1 $3 }
+      | Mem { AbsCpp.EDot $1 }
       | '(' Exp ')' { $2 }
 Exp18 :: { Exp }
 Exp18 : Exp18 '::' Exp19 { AbsCpp.ENs $1 $3 } | Exp19 { $1 }
