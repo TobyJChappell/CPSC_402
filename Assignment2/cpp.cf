@@ -20,7 +20,6 @@ SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
-SFunc.	     Stm ::= Mem "(" [Exp] ")" ";" ;
 SMethod.	 	 Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
 SThrow.	     Stm ::= "throw" Id "(" Exp ")" ";" ;
 
@@ -55,7 +54,7 @@ EDot.		 Exp19  ::= Mem ;
 
 ENs. 	   Exp18  ::= Exp18 "::" Exp19 ;
 
-EArray.  Exp17  ::= Mem "[" Exp11 "]" ;
+EArray.  Exp17  ::= Exp18 "[" Exp11 "]" ;
 
 EPIncr.  Exp16  ::= Exp17 "++" ;
 EPDecr.  Exp16  ::= Exp17 "--" ;
@@ -63,7 +62,7 @@ EPDecr.  Exp16  ::= Exp17 "--" ;
 EIncr.   Exp15  ::= "++" Exp16 ;
 EDecr.   Exp15  ::= "--" Exp16 ;
 
-EFunc.	 Exp14 ::= Mem "(" [Exp5] ")" ;
+EFunc.	 Exp15 ::= Exp17 "(" [Exp5] ")" ;
 
 ENot.    Exp13  ::= "!" Exp14 ;
 
