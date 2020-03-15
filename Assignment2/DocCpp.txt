@@ -42,8 +42,8 @@ The reserved words used in cpp are the following:
 
 The symbols used in cpp are the following:
   | ( | ) | { | }
-  | ; | , | = | .
-  | :: | < | > | &
+  | ; | , | = | ::
+  | < | > | & | .
   | [ | ] | ++ | --
   | ! | * | / | %
   | + | - | <= | >=
@@ -82,13 +82,6 @@ All other symbols are terminals.
   |  |  **|**  | ``throw`` //Id// ``(`` //Exp// ``)`` ``;``
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// //[Stm]//
-  | //Mem3// | -> | //Id//
-  |  |  **|**  | //Id// ``.`` //Id//
-  |  |  **|**  | ``(`` //Mem// ``)``
-  | //Mem2// | -> | //Mem2// ``.`` //Mem3//
-  |  |  **|**  | //Mem3//
-  | //Mem// | -> | //Mem1//
-  | //Mem1// | -> | //Mem2//
   | //Type5// | -> | //Id//
   |  |  **|**  | //Id// ``::`` //Id//
   |  |  **|**  | ``(`` //Type// ``)``
@@ -115,9 +108,9 @@ All other symbols are terminals.
   |  |  **|**  | //String//
   |  |  **|**  | //Id//
   |  |  **|**  | //Id// ``::`` //Id//
-  |  |  **|**  | //Mem//
   |  |  **|**  | ``(`` //Exp// ``)``
   | //Exp18// | -> | //Exp18// ``::`` //Exp19//
+  |  |  **|**  | //Exp18// ``.`` //Exp19//
   |  |  **|**  | //Exp19//
   | //Exp17// | -> | //Exp18// ``[`` //Exp11// ``]``
   |  |  **|**  | //Exp18//

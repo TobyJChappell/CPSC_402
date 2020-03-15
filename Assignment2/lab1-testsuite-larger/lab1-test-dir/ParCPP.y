@@ -15,10 +15,6 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
-%name pMem3 Mem3
-%name pMem2 Mem2
-%name pMem Mem
-%name pMem1 Mem1
 %name pType5 Type5
 %name pType4 Type4
 %name pType3 Type3
@@ -32,7 +28,6 @@ import ErrM
 %name pExp17 Exp17
 %name pExp16 Exp16
 %name pExp15 Exp15
-%name pExp14 Exp14
 %name pExp13 Exp13
 %name pExp12 Exp12
 %name pExp11 Exp11
@@ -47,6 +42,7 @@ import ErrM
 %name pExp1 Exp1
 %name pExp4 Exp4
 %name pExp10 Exp10
+%name pExp14 Exp14
 %name pListExp ListExp
 %name pListExp4 ListExp4
 %name pListExp5 ListExp5
@@ -140,21 +136,10 @@ Stm : Exp ';' { AbsCPP.SExp $1 }
     | '{' ListStm '}' { AbsCPP.SBlock (reverse $2) }
     | 'if' '(' Exp ')' Stm { AbsCPP.SIf $3 $5 }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCPP.SIfElse $3 $5 $7 }
-    | Mem '(' ListExp ')' ';' { AbsCPP.SFunc $1 $3 }
     | Type Id '(' ListArg ')' '{' Stm '}' { AbsCPP.SMethod $1 $2 $4 $7 }
     | 'throw' Id '(' Exp ')' ';' { AbsCPP.SThrow $2 $4 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
-Mem3 :: { Mem }
-Mem3 : Id { AbsCPP.MId $1 }
-     | Id '.' Id { AbsCPP.MIds $1 $3 }
-     | '(' Mem ')' { $2 }
-Mem2 :: { Mem }
-Mem2 : Mem2 '.' Mem3 { AbsCPP.MCall $1 $3 } | Mem3 { $1 }
-Mem :: { Mem }
-Mem : Mem1 { $1 }
-Mem1 :: { Mem }
-Mem1 : Mem2 { $1 }
 Type5 :: { Type }
 Type5 : Id { AbsCPP.TId $1 }
       | Id '::' Id { AbsCPP.TIds $1 $3 }
@@ -189,12 +174,13 @@ Exp19 : 'true' { AbsCPP.ETrue }
       | String { AbsCPP.EString $1 }
       | Id { AbsCPP.EId $1 }
       | Id '::' Id { AbsCPP.EIds $1 $3 }
-      | Mem { AbsCPP.EDot $1 }
       | '(' Exp ')' { $2 }
 Exp18 :: { Exp }
-Exp18 : Exp18 '::' Exp19 { AbsCPP.ENs $1 $3 } | Exp19 { $1 }
+Exp18 : Exp18 '::' Exp19 { AbsCPP.ENs $1 $3 }
+      | Exp18 '.' Exp19 { AbsCPP.EMem $1 $3 }
+      | Exp19 { $1 }
 Exp17 :: { Exp }
-Exp17 : Mem '[' Exp11 ']' { AbsCPP.EArray $1 $3 } | Exp18 { $1 }
+Exp17 : Exp18 '[' Exp11 ']' { AbsCPP.EArray $1 $3 } | Exp18 { $1 }
 Exp16 :: { Exp }
 Exp16 : Exp17 '++' { AbsCPP.EPIncr $1 }
       | Exp17 '--' { AbsCPP.EPDecr $1 }
@@ -202,9 +188,8 @@ Exp16 : Exp17 '++' { AbsCPP.EPIncr $1 }
 Exp15 :: { Exp }
 Exp15 : '++' Exp16 { AbsCPP.EIncr $2 }
       | '--' Exp16 { AbsCPP.EDecr $2 }
+      | Exp17 '(' ListExp5 ')' { AbsCPP.EFunc $1 $3 }
       | Exp16 { $1 }
-Exp14 :: { Exp }
-Exp14 : Mem '(' ListExp5 ')' { AbsCPP.EFunc $1 $3 } | Exp15 { $1 }
 Exp13 :: { Exp }
 Exp13 : '!' Exp14 { AbsCPP.ENot $2 } | Exp14 { $1 }
 Exp12 :: { Exp }
@@ -245,6 +230,8 @@ Exp4 :: { Exp }
 Exp4 : Exp5 { $1 }
 Exp10 :: { Exp }
 Exp10 : Exp11 { $1 }
+Exp14 :: { Exp }
+Exp14 : Exp15 { $1 }
 ListExp :: { [Exp] }
 ListExp : {- empty -} { [] }
         | Exp { (:[]) $1 }

@@ -15,10 +15,6 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
-%name pMem3 Mem3
-%name pMem2 Mem2
-%name pMem Mem
-%name pMem1 Mem1
 %name pType5 Type5
 %name pType4 Type4
 %name pType3 Type3
@@ -144,16 +140,6 @@ Stm : Exp ';' { AbsCpp.SExp $1 }
     | 'throw' Id '(' Exp ')' ';' { AbsCpp.SThrow $2 $4 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
-Mem3 :: { Mem }
-Mem3 : Id { AbsCpp.MId $1 }
-     | Id '.' Id { AbsCpp.MIds $1 $3 }
-     | '(' Mem ')' { $2 }
-Mem2 :: { Mem }
-Mem2 : Mem2 '.' Mem3 { AbsCpp.MCall $1 $3 } | Mem3 { $1 }
-Mem :: { Mem }
-Mem : Mem1 { $1 }
-Mem1 :: { Mem }
-Mem1 : Mem2 { $1 }
 Type5 :: { Type }
 Type5 : Id { AbsCpp.TId $1 }
       | Id '::' Id { AbsCpp.TIds $1 $3 }
@@ -188,10 +174,11 @@ Exp19 : 'true' { AbsCpp.ETrue }
       | String { AbsCpp.EString $1 }
       | Id { AbsCpp.EId $1 }
       | Id '::' Id { AbsCpp.EIds $1 $3 }
-      | Mem { AbsCpp.EDot $1 }
       | '(' Exp ')' { $2 }
 Exp18 :: { Exp }
-Exp18 : Exp18 '::' Exp19 { AbsCpp.ENs $1 $3 } | Exp19 { $1 }
+Exp18 : Exp18 '::' Exp19 { AbsCpp.ENs $1 $3 }
+      | Exp18 '.' Exp19 { AbsCpp.EMem $1 $3 }
+      | Exp19 { $1 }
 Exp17 :: { Exp }
 Exp17 : Exp18 '[' Exp11 ']' { AbsCpp.EArray $1 $3 } | Exp18 { $1 }
 Exp16 :: { Exp }

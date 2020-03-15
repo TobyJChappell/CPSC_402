@@ -9,7 +9,7 @@ newtype Id = Id String
 data Program = PDefs [Def]
   deriving (Eq, Ord, Show, Read)
 
-data Def = DFun Type Id [Arg] [Stm]
+data Def = DFunc Type Id [Arg] [Stm] | DDecl Type [Id] | DUse Type
   deriving (Eq, Ord, Show, Read)
 
 data Arg = ADecl Type Id
@@ -26,37 +26,40 @@ data Stm
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
     | SFunc Mem [Exp]
+    | SMethod Type Id [Arg] Stm
+    | SThrow Id Exp
   deriving (Eq, Ord, Show, Read)
 
-data Mem = MId Id | MCall Mem Mem
+data Mem = MId Id | MIds Id Id | MCall Mem Mem
   deriving (Eq, Ord, Show, Read)
 
 data Type
     = TId Id
     | TIds Id Id
-    | TBrac Type Type
-    | TAlias Type
+    | TBrac Type [Type]
     | TNs Type Type
+    | TCons Type
+    | TAlias Type
+    | TAmp Type
   deriving (Eq, Ord, Show, Read)
 
 data Exp
-    = EFunc Mem [Exp]
-    | EIf Exp Exp Exp
-    | ETrue
+    = ETrue
     | EFalse
     | EInt Integer
     | EDouble Double
     | EString String
     | EId Id
-    | ENs Id Id
-    | EArray Id Exp
-    | EApp Id [Exp]
-    | ECout Exp [Exp]
+    | EIds Id Id
+    | EDot Mem
+    | ENs Exp Exp
+    | EArray Mem Exp
     | EPIncr Exp
     | EPDecr Exp
-    | ECin Exp Exp
     | EIncr Exp
     | EDecr Exp
+    | EFunc Mem [Exp]
+    | ENot Exp
     | ETimes Exp Exp
     | EDiv Exp Exp
     | EMod Exp Exp
@@ -71,6 +74,9 @@ data Exp
     | EAnd Exp Exp
     | EOr Exp Exp
     | EAss Exp Exp
+    | ECout Exp [Exp]
+    | ECin Exp Exp
+    | EIf Exp Exp Exp
     | ETyped Exp Type
   deriving (Eq, Ord, Show, Read)
 
