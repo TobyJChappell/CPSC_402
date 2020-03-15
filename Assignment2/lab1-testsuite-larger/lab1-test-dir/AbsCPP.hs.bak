@@ -25,12 +25,8 @@ data Stm
     | SBlock [Stm]
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
-    | SFunc Mem [Exp]
     | SMethod Type Id [Arg] Stm
     | SThrow Id Exp
-  deriving (Eq, Ord, Show, Read)
-
-data Mem = MId Id | MIds Id Id | MCall Mem Mem
   deriving (Eq, Ord, Show, Read)
 
 data Type
@@ -51,14 +47,14 @@ data Exp
     | EString String
     | EId Id
     | EIds Id Id
-    | EDot Mem
     | ENs Exp Exp
-    | EArray Mem Exp
+    | EMem Exp Exp
+    | EArray Exp Exp
     | EPIncr Exp
     | EPDecr Exp
     | EIncr Exp
     | EDecr Exp
-    | EFunc Mem [Exp]
+    | EFunc Exp [Exp]
     | ENot Exp
     | ETimes Exp Exp
     | EDiv Exp Exp

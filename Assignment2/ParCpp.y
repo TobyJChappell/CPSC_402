@@ -28,6 +28,7 @@ import ErrM
 %name pExp17 Exp17
 %name pExp16 Exp16
 %name pExp15 Exp15
+%name pExp14 Exp14
 %name pExp13 Exp13
 %name pExp12 Exp12
 %name pExp11 Exp11
@@ -42,7 +43,6 @@ import ErrM
 %name pExp1 Exp1
 %name pExp4 Exp4
 %name pExp10 Exp10
-%name pExp14 Exp14
 %name pListExp ListExp
 %name pListExp4 ListExp4
 %name pListExp5 ListExp5
@@ -188,8 +188,10 @@ Exp16 : Exp17 '++' { AbsCpp.EPIncr $1 }
 Exp15 :: { Exp }
 Exp15 : '++' Exp16 { AbsCpp.EIncr $2 }
       | '--' Exp16 { AbsCpp.EDecr $2 }
-      | Exp17 '(' ListExp5 ')' { AbsCpp.EFunc $1 $3 }
       | Exp16 { $1 }
+Exp14 :: { Exp }
+Exp14 : Exp17 '(' ListExp5 ')' { AbsCpp.EFunc $1 $3 }
+      | Exp15 { $1 }
 Exp13 :: { Exp }
 Exp13 : '!' Exp14 { AbsCpp.ENot $2 } | Exp14 { $1 }
 Exp12 :: { Exp }
@@ -230,8 +232,6 @@ Exp4 :: { Exp }
 Exp4 : Exp5 { $1 }
 Exp10 :: { Exp }
 Exp10 : Exp11 { $1 }
-Exp14 :: { Exp }
-Exp14 : Exp15 { $1 }
 ListExp :: { [Exp] }
 ListExp : {- empty -} { [] }
         | Exp { (:[]) $1 }

@@ -34,14 +34,8 @@ transStm x = case x of
   SBlock stms -> failure x
   SIf exp stm -> failure x
   SIfElse exp stm1 stm2 -> failure x
-  SFunc mem exps -> failure x
   SMethod type_ id args stm -> failure x
   SThrow id exp -> failure x
-transMem :: Mem -> Result
-transMem x = case x of
-  MId id -> failure x
-  MIds id1 id2 -> failure x
-  MCall mem1 mem2 -> failure x
 transType :: Type -> Result
 transType x = case x of
   TId id -> failure x
@@ -60,14 +54,14 @@ transExp x = case x of
   EString string -> failure x
   EId id -> failure x
   EIds id1 id2 -> failure x
-  EDot mem -> failure x
   ENs exp1 exp2 -> failure x
-  EArray mem exp -> failure x
+  EMem exp1 exp2 -> failure x
+  EArray exp1 exp2 -> failure x
   EPIncr exp -> failure x
   EPDecr exp -> failure x
   EIncr exp -> failure x
   EDecr exp -> failure x
-  EFunc mem exps -> failure x
+  EFunc exp exps -> failure x
   ENot exp -> failure x
   ETimes exp1 exp2 -> failure x
   EDiv exp1 exp2 -> failure x

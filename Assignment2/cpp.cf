@@ -1,9 +1,9 @@
 PDefs.   Program ::= [Def] ;
 
-DFunc.    Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
-DDecl.		Def ::= Type [Id] ";" ;
+DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
+DDecl.	    Def ::= Type [Id] ";" ;
 DUse.	    Def ::= "using" Type ";" ;
---DProt.	    Def ::= Type Id "(" [Type] ")" ";" ;
+--DProt.    Def ::= Type Id "(" [Type] ")" ";" ;
 
 terminator Def "" ;
 
@@ -20,15 +20,15 @@ SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
-SMethod.	 	 Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
+SMethod.     Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
 SThrow.	     Stm ::= "throw" Id "(" Exp ")" ";" ;
 
 terminator Stm "" ;
 
-TId. 	     Type5 ::= Id ;
-TIds.		   Type5 ::= Id "::" Id ;
+TId. 	   Type5 ::= Id ;
+TIds.	   Type5 ::= Id "::" Id ;
 TBrac. 	   Type4 ::= Type4 "<" [Type5] ">" ;
-TNs. 	     Type4 ::= Type4 "::" Type5 ;
+TNs. 	   Type4 ::= Type4 "::" Type5 ;
 TCons.	   Type3 ::= "const" Type4 ;
 TAlias.    Type3 ::= "typedef" Type4 ;
 TAmp.      Type2 ::= Type3 "&" ;
@@ -45,7 +45,7 @@ EString. Exp19  ::= String ;
 EId.     Exp19  ::= Id ;
 EIds.    Exp19  ::= Id "::" Id ;
 
-ENs. 	   Exp18  ::= Exp18 "::" Exp19 ;
+ENs. 	 Exp18  ::= Exp18 "::" Exp19 ;
 EDot. 	 Exp18  ::= Exp18 "." Exp19 ;
 
 EArray.  Exp17  ::= Exp18 "[" Exp11 "]" ;
@@ -56,7 +56,7 @@ EPDecr.  Exp16  ::= Exp17 "--" ;
 EIncr.   Exp15  ::= "++" Exp16 ;
 EDecr.   Exp15  ::= "--" Exp16 ;
 
-EFunc.	 Exp15 ::= Exp17 "(" [Exp5] ")" ;
+EFunc.	 Exp14 ::= Exp17 "(" [Exp5] ")" ;
 
 ENot.    Exp13  ::= "!" Exp14 ;
 

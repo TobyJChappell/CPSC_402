@@ -172,7 +172,7 @@ instance Print AbsCpp.Exp where
     AbsCpp.EPDecr exp -> prPrec i 16 (concatD [prt 17 exp, doc (showString "--")])
     AbsCpp.EIncr exp -> prPrec i 15 (concatD [doc (showString "++"), prt 16 exp])
     AbsCpp.EDecr exp -> prPrec i 15 (concatD [doc (showString "--"), prt 16 exp])
-    AbsCpp.EFunc exp exps -> prPrec i 15 (concatD [prt 17 exp, doc (showString "("), prt 5 exps, doc (showString ")")])
+    AbsCpp.EFunc exp exps -> prPrec i 14 (concatD [prt 17 exp, doc (showString "("), prt 5 exps, doc (showString ")")])
     AbsCpp.ENot exp -> prPrec i 13 (concatD [doc (showString "!"), prt 14 exp])
     AbsCpp.ETimes exp1 exp2 -> prPrec i 12 (concatD [prt 12 exp1, doc (showString "*"), prt 13 exp2])
     AbsCpp.EDiv exp1 exp2 -> prPrec i 12 (concatD [prt 12 exp1, doc (showString "/"), prt 13 exp2])

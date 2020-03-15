@@ -29,9 +29,6 @@ data Stm
     | SThrow Id Exp
   deriving (Eq, Ord, Show, Read)
 
-data Mem = MId Id | MIds Id Id | MCall Mem Mem
-  deriving (Eq, Ord, Show, Read)
-
 data Type
     = TId Id
     | TIds Id Id
@@ -76,6 +73,5 @@ data Exp
     | ECout Exp [Exp]
     | ECin Exp Exp
     | EIf Exp Exp Exp
-    | ETyped Exp Type
   deriving (Eq, Ord, Show, Read)
 

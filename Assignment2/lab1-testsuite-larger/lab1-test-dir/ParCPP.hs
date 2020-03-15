@@ -3724,7 +3724,7 @@ happyReduction_94 (HappyAbsSyn61  happy_var_3)
 	_
 	(HappyAbsSyn61  happy_var_1)
 	 =  HappyAbsSyn61
-		 (AbsCPP.EMem happy_var_1 happy_var_3
+		 (AbsCPP.EDot happy_var_1 happy_var_3
 	)
 happyReduction_94 _ _ _  = notHappyAtAll 
 
