@@ -177,7 +177,7 @@ Exp19 : 'true' { AbsCpp.ETrue }
       | '(' Exp ')' { $2 }
 Exp18 :: { Exp }
 Exp18 : Exp18 '::' Exp19 { AbsCpp.ENs $1 $3 }
-      | Exp18 '.' Exp19 { AbsCpp.EMem $1 $3 }
+      | Exp18 '.' Exp19 { AbsCpp.EDot $1 $3 }
       | Exp19 { $1 }
 Exp17 :: { Exp }
 Exp17 : Exp18 '[' Exp11 ']' { AbsCpp.EArray $1 $3 } | Exp18 { $1 }

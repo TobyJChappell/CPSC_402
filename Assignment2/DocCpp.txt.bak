@@ -42,8 +42,8 @@ The reserved words used in cpp are the following:
 
 The symbols used in cpp are the following:
   | ( | ) | { | }
-  | ; | , | = | ::
-  | < | > | & | .
+  | ; | , | = | .
+  | :: | < | > | &
   | [ | ] | ++ | --
   | ! | * | / | %
   | + | - | <= | >=
@@ -63,7 +63,6 @@ All other symbols are terminals.
   | //Def// | -> | //Type// //Id// ``(`` //[Arg]// ``)`` ``{`` //[Stm]// ``}``
   |  |  **|**  | //Type// //[Id]// ``;``
   |  |  **|**  | ``using`` //Type// ``;``
-  |  |  **|**  | //Type// //Id// ``(`` //[Type]// ``)`` ``;``
   | //[Def]// | -> | **eps**
   |  |  **|**  | //Def// //[Def]//
   | //Arg// | -> | //Type// //Id//
@@ -83,6 +82,13 @@ All other symbols are terminals.
   |  |  **|**  | ``throw`` //Id// ``(`` //Exp// ``)`` ``;``
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// //[Stm]//
+  | //Mem3// | -> | //Id//
+  |  |  **|**  | //Id// ``.`` //Id//
+  |  |  **|**  | ``(`` //Mem// ``)``
+  | //Mem2// | -> | //Mem2// ``.`` //Mem3//
+  |  |  **|**  | //Mem3//
+  | //Mem// | -> | //Mem1//
+  | //Mem1// | -> | //Mem2//
   | //Type5// | -> | //Id//
   |  |  **|**  | //Id// ``::`` //Id//
   |  |  **|**  | ``(`` //Type// ``)``

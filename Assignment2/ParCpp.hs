@@ -969,7 +969,7 @@ happyReduction_94 happy_x_3
 	 =  case happyOut62 happy_x_1 of { (HappyWrap62 happy_var_1) -> 
 	case happyOut61 happy_x_3 of { (HappyWrap61 happy_var_3) -> 
 	happyIn62
-		 (AbsCpp.EMem happy_var_1 happy_var_3
+		 (AbsCpp.EDot happy_var_1 happy_var_3
 	)}}
 
 happyReduce_95 = happySpecReduce_1  20# happyReduction_95

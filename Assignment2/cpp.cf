@@ -3,7 +3,7 @@ PDefs.   Program ::= [Def] ;
 DFunc.    Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DDecl.		Def ::= Type [Id] ";" ;
 DUse.	    Def ::= "using" Type ";" ;
---DProt.	  Def ::= Type Id "(" [Type] ")" ";" ;
+--DProt.	    Def ::= Type Id "(" [Type] ")" ";" ;
 
 terminator Def "" ;
 
@@ -43,10 +43,10 @@ EInt.    Exp19  ::= Integer ;
 EDouble. Exp19  ::= Double ;
 EString. Exp19  ::= String ;
 EId.     Exp19  ::= Id ;
-EIds. 	 Exp19 ::= Id "::" Id ;
+EIds.    Exp19  ::= Id "::" Id ;
 
-ENs. 	   Exp18 ::= Exp18 "::" Exp19 ;
-EMem. 	 Exp18 ::= Exp18 "." Exp19 ;
+ENs. 	   Exp18  ::= Exp18 "::" Exp19 ;
+EDot. 	 Exp18  ::= Exp18 "." Exp19 ;
 
 EArray.  Exp17  ::= Exp18 "[" Exp11 "]" ;
 

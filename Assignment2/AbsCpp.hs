@@ -48,7 +48,7 @@ data Exp
     | EId Id
     | EIds Id Id
     | ENs Exp Exp
-    | EMem Exp Exp
+    | EDot Exp Exp
     | EArray Exp Exp
     | EPIncr Exp
     | EPDecr Exp

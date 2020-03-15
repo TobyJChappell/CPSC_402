@@ -166,7 +166,7 @@ instance Print AbsCpp.Exp where
     AbsCpp.EId id -> prPrec i 19 (concatD [prt 0 id])
     AbsCpp.EIds id1 id2 -> prPrec i 19 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
     AbsCpp.ENs exp1 exp2 -> prPrec i 18 (concatD [prt 18 exp1, doc (showString "::"), prt 19 exp2])
-    AbsCpp.EMem exp1 exp2 -> prPrec i 18 (concatD [prt 18 exp1, doc (showString "."), prt 19 exp2])
+    AbsCpp.EDot exp1 exp2 -> prPrec i 18 (concatD [prt 18 exp1, doc (showString "."), prt 19 exp2])
     AbsCpp.EArray exp1 exp2 -> prPrec i 17 (concatD [prt 18 exp1, doc (showString "["), prt 11 exp2, doc (showString "]")])
     AbsCpp.EPIncr exp -> prPrec i 16 (concatD [prt 17 exp, doc (showString "++")])
     AbsCpp.EPDecr exp -> prPrec i 16 (concatD [prt 17 exp, doc (showString "--")])
