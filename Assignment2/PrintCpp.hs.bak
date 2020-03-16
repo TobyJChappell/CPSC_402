@@ -101,7 +101,7 @@ instance Print AbsCpp.Def where
   prt i e = case e of
     AbsCpp.DFunc type_ id args stms -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "{"), prt 0 stms, doc (showString "}")])
     AbsCpp.DDecl type_ ids -> prPrec i 0 (concatD [prt 0 type_, prt 0 ids, doc (showString ";")])
-    AbsCpp.DUse type_ -> prPrec i 0 (concatD [doc (showString "using"), prt 0 type_, doc (showString ";")])
+    AbsCpp.DUse qconst -> prPrec i 0 (concatD [doc (showString "using"), prt 0 qconst, doc (showString ";")])
     AbsCpp.DStruct type_ id types -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 types, doc (showString ")"), doc (showString ";")])
     AbsCpp.DMain type_ args stms -> prPrec i 0 (concatD [prt 0 type_, doc (showString "main"), doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "{"), prt 0 stms, doc (showString "}")])
   prtList _ [] = concatD []
@@ -142,21 +142,34 @@ instance Print [AbsCpp.Stm] where
 
 instance Print AbsCpp.Type where
   prt i e = case e of
-    AbsCpp.TId id -> prPrec i 4 (concatD [prt 0 id])
-    AbsCpp.TIds id1 id2 -> prPrec i 4 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
-    AbsCpp.TNs type_1 type_2 -> prPrec i 3 (concatD [prt 3 type_1, doc (showString "::"), prt 4 type_2])
-    AbsCpp.TBrac type_ types -> prPrec i 3 (concatD [prt 3 type_, doc (showString "<"), prt 3 types, doc (showString ">")])
-    AbsCpp.TCons type_ -> prPrec i 2 (concatD [doc (showString "const"), prt 3 type_])
-    AbsCpp.TAlias type_ -> prPrec i 2 (concatD [doc (showString "typedef"), prt 3 type_])
-    AbsCpp.TAmp type_ -> prPrec i 1 (concatD [prt 2 type_, doc (showString "&")])
-  prtList 3 [] = concatD []
-  prtList 3 [x] = concatD [prt 3 x]
-  prtList 3 (x:xs) = concatD [prt 3 x, doc (showString ","), prt 3 xs]
+    AbsCpp.TInt -> prPrec i 0 (concatD [doc (showString "int")])
+    AbsCpp.TBool -> prPrec i 0 (concatD [doc (showString "bool")])
+    AbsCpp.TVoid -> prPrec i 0 (concatD [doc (showString "void")])
+    AbsCpp.TChar -> prPrec i 0 (concatD [doc (showString "char")])
+    AbsCpp.TDouble -> prPrec i 0 (concatD [doc (showString "double")])
+    AbsCpp.TQConst qconst -> prPrec i 0 (concatD [prt 0 qconst])
+    AbsCpp.TCons type_ -> prPrec i 0 (concatD [doc (showString "const"), prt 0 type_])
+    AbsCpp.TAlias type_ -> prPrec i 0 (concatD [doc (showString "typedef"), prt 0 type_])
+    AbsCpp.TAmp type_ -> prPrec i 0 (concatD [prt 0 type_, doc (showString "&")])
   prtList _ [] = concatD []
   prtList _ [x] = concatD [prt 0 x]
   prtList _ (x:xs) = concatD [prt 0 x, doc (showString ","), prt 0 xs]
 
 instance Print [AbsCpp.Type] where
+  prt = prtList
+
+instance Print AbsCpp.QConst where
+  prt i e = case e of
+    AbsCpp.QConst names -> prPrec i 0 (concatD [prt 0 names])
+
+instance Print AbsCpp.Name where
+  prt i e = case e of
+    AbsCpp.NId id -> prPrec i 0 (concatD [prt 0 id])
+    AbsCpp.NBrac id types -> prPrec i 0 (concatD [prt 0 id, doc (showString "<"), prt 0 types, doc (showString ">")])
+  prtList _ [x] = concatD [prt 0 x]
+  prtList _ (x:xs) = concatD [prt 0 x, doc (showString "::"), prt 0 xs]
+
+instance Print [AbsCpp.Name] where
   prt = prtList
 
 instance Print AbsCpp.Exp where
@@ -168,8 +181,7 @@ instance Print AbsCpp.Exp where
     AbsCpp.EString str -> prPrec i 16 (concatD [prt 0 str])
     AbsCpp.EChar c -> prPrec i 16 (concatD [prt 0 c])
     AbsCpp.EId id -> prPrec i 16 (concatD [prt 0 id])
-    AbsCpp.EIds id1 id2 -> prPrec i 16 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
-    AbsCpp.ENs exp1 exp2 -> prPrec i 15 (concatD [prt 15 exp1, doc (showString "::"), prt 16 exp2])
+    AbsCpp.EQConst qconst -> prPrec i 16 (concatD [prt 0 qconst])
     AbsCpp.EArray exp1 exp2 -> prPrec i 15 (concatD [prt 15 exp1, doc (showString "["), prt 11 exp2, doc (showString "]")])
     AbsCpp.EFunc exp exps -> prPrec i 15 (concatD [prt 16 exp, doc (showString "("), prt 2 exps, doc (showString ")")])
     AbsCpp.EDot exp1 exp2 -> prPrec i 14 (concatD [prt 14 exp1, doc (showString "."), prt 15 exp2])

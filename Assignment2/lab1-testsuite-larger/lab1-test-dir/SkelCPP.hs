@@ -19,9 +19,9 @@ transDef :: Def -> Result
 transDef x = case x of
   DFunc type_ id args stms -> failure x
   DDecl type_ ids -> failure x
-  DUse type_ -> failure x
-  DProt type_ id types -> failure x
-  DMain args stms -> failure x
+  DUse qconst -> failure x
+  DStruct type_ id types -> failure x
+  DMain type_ args stms -> failure x
 transArg :: Arg -> Result
 transArg x = case x of
   ADecl type_ id -> failure x
@@ -34,6 +34,7 @@ transStm x = case x of
   SReturnVoid -> failure x
   SWhile exp stm -> failure x
   SFor stm1 exp1 exp2 stm2 -> failure x
+  SDo stm exp -> failure x
   SBlock stms -> failure x
   SIf exp stm -> failure x
   SIfElse exp stm1 stm2 -> failure x
@@ -41,12 +42,17 @@ transStm x = case x of
 transType :: Type -> Result
 transType x = case x of
   TId id -> failure x
-  TIds id1 id2 -> failure x
-  TBrac type_ types -> failure x
-  TNs type_1 type_2 -> failure x
+  TQConst qconst -> failure x
   TCons type_ -> failure x
   TAlias type_ -> failure x
   TAmp type_ -> failure x
+transQConst :: QConst -> Result
+transQConst x = case x of
+  QConst names -> failure x
+transName :: Name -> Result
+transName x = case x of
+  NId id -> failure x
+  NBrac id types -> failure x
 transExp :: Exp -> Result
 transExp x = case x of
   ETrue -> failure x
@@ -56,8 +62,7 @@ transExp x = case x of
   EString string -> failure x
   EChar char -> failure x
   EId id -> failure x
-  EIds id1 id2 -> failure x
-  ENs exp1 exp2 -> failure x
+  EQConst qconst -> failure x
   EArray exp1 exp2 -> failure x
   EFunc exp exps -> failure x
   EDot exp1 exp2 -> failure x

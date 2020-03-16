@@ -15,14 +15,11 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
-%name pType5 Type5
-%name pType4 Type4
-%name pType3 Type3
-%name pType2 Type2
-%name pListType ListType
-%name pListType5 ListType5
 %name pType Type
-%name pType1 Type1
+%name pListType ListType
+%name pQConst QConst
+%name pName Name
+%name pListName ListName
 %name pExp16 Exp16
 %name pExp15 Exp15
 %name pExp14 Exp14
@@ -81,11 +78,11 @@ import ErrM
   '[' { PT _ (TS _ 31) }
   ']' { PT _ (TS _ 32) }
   'const' { PT _ (TS _ 33) }
-  'else' { PT _ (TS _ 34) }
-  'false' { PT _ (TS _ 35) }
-  'for' { PT _ (TS _ 36) }
-  'if' { PT _ (TS _ 37) }
-  'int' { PT _ (TS _ 38) }
+  'do' { PT _ (TS _ 34) }
+  'else' { PT _ (TS _ 35) }
+  'false' { PT _ (TS _ 36) }
+  'for' { PT _ (TS _ 37) }
+  'if' { PT _ (TS _ 38) }
   'main' { PT _ (TS _ 39) }
   'return' { PT _ (TS _ 40) }
   'throw' { PT _ (TS _ 41) }
@@ -124,9 +121,9 @@ Program : ListDef { AbsCPP.PDefs (reverse $1) }
 Def :: { Def }
 Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCPP.DFunc $1 $2 $4 (reverse $7) }
     | Type ListId ';' { AbsCPP.DDecl $1 $2 }
-    | 'using' Type ';' { AbsCPP.DUse $2 }
-    | Type Id '(' ListType ')' ';' { AbsCPP.DProt $1 $2 $4 }
-    | 'int' 'main' '(' ListArg ')' '{' ListStm '}' { AbsCPP.DMain $4 (reverse $7) }
+    | 'using' QConst ';' { AbsCPP.DUse $2 }
+    | Type Id '(' ListType ')' ';' { AbsCPP.DStruct $1 $2 $4 }
+    | Type 'main' '(' ListArg ')' '{' ListStm '}' { AbsCPP.DMain $1 $4 (reverse $7) }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }
@@ -143,38 +140,30 @@ Stm : Exp ';' { AbsCPP.SExp $1 }
     | 'return' ';' { AbsCPP.SReturnVoid }
     | 'while' '(' Exp ')' Stm { AbsCPP.SWhile $3 $5 }
     | 'for' '(' Stm Exp ';' Exp ')' Stm { AbsCPP.SFor $3 $4 $6 $8 }
+    | 'do' Stm 'while' '(' Exp ')' ';' { AbsCPP.SDo $2 $5 }
     | '{' ListStm '}' { AbsCPP.SBlock (reverse $2) }
     | 'if' '(' Exp ')' Stm { AbsCPP.SIf $3 $5 }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCPP.SIfElse $3 $5 $7 }
     | Type Id '(' ListArg ')' '{' Stm '}' { AbsCPP.SMethod $1 $2 $4 $7 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
-Type5 :: { Type }
-Type5 : Id { AbsCPP.TId $1 }
-      | Id '::' Id { AbsCPP.TIds $1 $3 }
-      | '(' Type ')' { $2 }
-Type4 :: { Type }
-Type4 : Type4 '<' ListType5 '>' { AbsCPP.TBrac $1 $3 }
-      | Type4 '::' Type5 { AbsCPP.TNs $1 $3 }
-      | Type5 { $1 }
-Type3 :: { Type }
-Type3 : 'const' Type4 { AbsCPP.TCons $2 }
-      | 'typedef' Type4 { AbsCPP.TAlias $2 }
-      | Type4 { $1 }
-Type2 :: { Type }
-Type2 : Type3 '&' { AbsCPP.TAmp $1 } | Type3 { $1 }
+Type :: { Type }
+Type : Id { AbsCPP.TId $1 }
+     | QConst { AbsCPP.TQConst $1 }
+     | 'const' Type { AbsCPP.TCons $2 }
+     | 'typedef' Type { AbsCPP.TAlias $2 }
+     | Type '&' { AbsCPP.TAmp $1 }
 ListType :: { [Type] }
 ListType : {- empty -} { [] }
          | Type { (:[]) $1 }
          | Type ',' ListType { (:) $1 $3 }
-ListType5 :: { [Type] }
-ListType5 : {- empty -} { [] }
-          | Type5 { (:[]) $1 }
-          | Type5 ',' ListType5 { (:) $1 $3 }
-Type :: { Type }
-Type : Type1 { $1 }
-Type1 :: { Type }
-Type1 : Type2 { $1 }
+QConst :: { QConst }
+QConst : ListName { AbsCPP.QConst $1 }
+Name :: { Name }
+Name : Id { AbsCPP.NId $1 }
+     | Id '<' ListType '>' { AbsCPP.NBrac $1 $3 }
+ListName :: { [Name] }
+ListName : Name { (:[]) $1 } | Name '::' ListName { (:) $1 $3 }
 Exp16 :: { Exp }
 Exp16 : 'true' { AbsCPP.ETrue }
       | 'false' { AbsCPP.EFalse }
@@ -183,11 +172,10 @@ Exp16 : 'true' { AbsCPP.ETrue }
       | String { AbsCPP.EString $1 }
       | Char { AbsCPP.EChar $1 }
       | Id { AbsCPP.EId $1 }
-      | Id '::' Id { AbsCPP.EIds $1 $3 }
+      | QConst { AbsCPP.EQConst $1 }
       | '(' Exp ')' { $2 }
 Exp15 :: { Exp }
-Exp15 : Exp15 '::' Exp16 { AbsCPP.ENs $1 $3 }
-      | Exp15 '[' Exp11 ']' { AbsCPP.EArray $1 $3 }
+Exp15 : Exp15 '[' Exp11 ']' { AbsCPP.EArray $1 $3 }
       | Exp16 '(' ListExp2 ')' { AbsCPP.EFunc $1 $3 }
       | Exp16 { $1 }
 Exp14 :: { Exp }

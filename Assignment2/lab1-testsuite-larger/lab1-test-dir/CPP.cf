@@ -2,9 +2,9 @@ PDefs.   Program ::= [Def] ;
 
 DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DDecl.	    Def ::= Type [Id] ";" ;
-DUse.	    Def ::= "using" Type ";" ;
-DProt.      Def ::= Type Id "(" [Type] ")" ";" ;
-DMain.      Def ::= "int" "main" "(" [Arg] ")" "{" [Stm] "}" ;
+DUse.	    Def ::= "using" QConst ";" ;
+DStruct.      Def ::= Type Id "(" [Type] ")" ";" ;
+DMain.      Def ::= Type "main" "(" [Arg] ")" "{" [Stm] "}" ;
 
 terminator Def "" ;
 
@@ -19,6 +19,7 @@ SReturn.     Stm ::= "return" Exp ";" ;
 SReturnVoid. Stm ::= "return" ";" ;
 SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
 SFor.        Stm ::= "for" "(" Stm Exp ";" Exp ")" Stm ;
+SDo.				 Stm ::= "do" Stm "while" "(" Exp ")" ";" ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
@@ -26,17 +27,25 @@ SMethod.     Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
 
 terminator Stm "" ;
 
-TId. 	   Type5 ::= Id ;
-TIds.	   Type5 ::= Id "::" Id ;
-TBrac. 	   Type4 ::= Type4 "<" [Type5] ">" ;
-TNs. 	   Type4 ::= Type4 "::" Type5 ;
-TCons.	   Type3 ::= "const" Type4 ;
-TAlias.    Type3 ::= "typedef" Type4 ;
-TAmp.      Type2 ::= Type3 "&" ;
+--TInt.      Type ::= "int" ;
+--TBool.	   Type ::= "bool" ;
+--TVoid.     Type ::= "void" ;
+--TChar.     Type ::= "char" ;
+--TDouble.   Type ::= "double" ;
+TId.			 Type ::= Id ;
+TQConst.   Type ::= QConst ;
+TCons.	   Type ::= "const" Type ;
+TAlias.    Type ::= "typedef" Type ;
+TAmp.      Type ::= Type "&" ;
 
 separator Type "," ;
-separator Type5 "," ;
-coercions Type 5 ;
+
+QConst.    QConst ::= [Name] ;
+
+NId.			 Name ::= Id ;
+NBrac.     Name ::= Id "<" [Type] ">" ;
+
+separator nonempty Name "::" ;
 
 ETrue.   Exp16  ::= "true" ;
 EFalse.  Exp16  ::= "false" ;
@@ -45,9 +54,8 @@ EDouble. Exp16  ::= Double ;
 EString. Exp16  ::= String ;
 EChar.   Exp16  ::= Char ;
 EId.     Exp16  ::= Id ;
-EIds.    Exp16  ::= Id "::" Id ;
+EQConst. Exp16  ::= QConst ;
 
-ENs. 	 Exp15  ::= Exp15 "::" Exp16 ;
 EArray.  Exp15  ::= Exp15 "[" Exp11 "]" ;
 EFunc.	 Exp15  ::= Exp16 "(" [Exp2] ")" ;
 

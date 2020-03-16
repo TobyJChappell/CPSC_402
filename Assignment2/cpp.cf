@@ -2,8 +2,8 @@ PDefs.   Program ::= [Def] ;
 
 DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DDecl.	    Def ::= Type [Id] ";" ;
-DUse.	    Def ::= "using" Type ";" ;
-DStruct.      Def ::= Type Id "(" [Type] ")" ";" ;
+DUse.	    Def ::= "using" QConst ";" ;
+DStruct.    Def ::= Type Id "(" [Type] ")" ";" ;
 DMain.      Def ::= Type "main" "(" [Arg] ")" "{" [Stm] "}" ;
 
 terminator Def "" ;
@@ -27,17 +27,25 @@ SMethod.     Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
 
 terminator Stm "" ;
 
-TId. 	   Type4 ::= Id ;
-TIds.	   Type4 ::= Id "::" Id ;
-TNs. 	     Type3 ::= Type3 "::" Type4 ;
-TBrac. 	   Type3 ::= Type3 "<" [Type3] ">" ;
-TCons.	   Type2 ::= "const" Type3 ;
-TAlias.    Type2 ::= "typedef" Type3 ;
-TAmp.      Type1 ::= Type2 "&" ;
+--TInt.      Type ::= "int" ;
+--TBool.     Type ::= "bool" ;
+--TVoid.     Type ::= "void" ;
+--TChar.     Type ::= "char" ;
+--TDouble.   Type ::= "double" ;
+TId.			 Type ::= Id ;
+TQConst.   Type ::= QConst ;
+TCons.	   Type ::= "const" Type ;
+TAlias.    Type ::= "typedef" Type ;
+TAmp.      Type ::= Type "&" ;
 
 separator Type "," ;
-separator Type3 "," ;
-coercions Type 4 ;
+
+QConst.    QConst ::= [Name] ;
+
+NId.	   Name ::= Id ;
+NBrac.     Name ::= Id "<" [Type] ">" ;
+
+separator nonempty Name "::" ;
 
 ETrue.   Exp16  ::= "true" ;
 EFalse.  Exp16  ::= "false" ;
@@ -46,9 +54,8 @@ EDouble. Exp16  ::= Double ;
 EString. Exp16  ::= String ;
 EChar.   Exp16  ::= Char ;
 EId.     Exp16  ::= Id ;
-EIds.    Exp16  ::= Id "::" Id ;
+EQConst. Exp16  ::= QConst ;
 
-ENs. 	 Exp15  ::= Exp15 "::" Exp16 ;
 EArray.  Exp15  ::= Exp15 "[" Exp11 "]" ;
 EFunc.	 Exp15  ::= Exp16 "(" [Exp2] ")" ;
 
