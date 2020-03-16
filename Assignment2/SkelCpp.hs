@@ -35,7 +35,6 @@ transStm x = case x of
   SIf exp stm -> failure x
   SIfElse exp stm1 stm2 -> failure x
   SMethod type_ id args stm -> failure x
-  SThrow id exp -> failure x
 transType :: Type -> Result
 transType x = case x of
   TId id -> failure x
@@ -55,19 +54,22 @@ transExp x = case x of
   EId id -> failure x
   EIds id1 id2 -> failure x
   ENs exp1 exp2 -> failure x
-  EDot exp1 exp2 -> failure x
   EArray exp1 exp2 -> failure x
+  EFunc exp exps -> failure x
+  EDot exp1 exp2 -> failure x
   EPIncr exp -> failure x
   EPDecr exp -> failure x
+  EDeref exp -> failure x
   EIncr exp -> failure x
   EDecr exp -> failure x
-  EFunc exp exps -> failure x
   ENot exp -> failure x
   ETimes exp1 exp2 -> failure x
   EDiv exp1 exp2 -> failure x
   EMod exp1 exp2 -> failure x
   EPlus exp1 exp2 -> failure x
   EMinus exp1 exp2 -> failure x
+  ECout exp exps -> failure x
+  ECin exp1 exp2 -> failure x
   ELt exp1 exp2 -> failure x
   EGt exp1 exp2 -> failure x
   ELtEq exp1 exp2 -> failure x
@@ -77,8 +79,7 @@ transExp x = case x of
   EAnd exp1 exp2 -> failure x
   EOr exp1 exp2 -> failure x
   EAss exp1 exp2 -> failure x
-  ECout exp exps -> failure x
-  ECin exp1 exp2 -> failure x
   EIf exp1 exp2 exp3 -> failure x
+  EThrow exp -> failure x
   ETyped exp type_ -> failure x
 

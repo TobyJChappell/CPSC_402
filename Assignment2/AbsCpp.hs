@@ -26,7 +26,6 @@ data Stm
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
     | SMethod Type Id [Arg] Stm
-    | SThrow Id Exp
   deriving (Eq, Ord, Show, Read)
 
 data Type
@@ -48,19 +47,22 @@ data Exp
     | EId Id
     | EIds Id Id
     | ENs Exp Exp
-    | EDot Exp Exp
     | EArray Exp Exp
+    | EFunc Exp [Exp]
+    | EDot Exp Exp
     | EPIncr Exp
     | EPDecr Exp
+    | EDeref Exp
     | EIncr Exp
     | EDecr Exp
-    | EFunc Exp [Exp]
     | ENot Exp
     | ETimes Exp Exp
     | EDiv Exp Exp
     | EMod Exp Exp
     | EPlus Exp Exp
     | EMinus Exp Exp
+    | ECout Exp [Exp]
+    | ECin Exp Exp
     | ELt Exp Exp
     | EGt Exp Exp
     | ELtEq Exp Exp
@@ -70,9 +72,8 @@ data Exp
     | EAnd Exp Exp
     | EOr Exp Exp
     | EAss Exp Exp
-    | ECout Exp [Exp]
-    | ECin Exp Exp
     | EIf Exp Exp Exp
+    | EThrow Exp
     | ETyped Exp Type
   deriving (Eq, Ord, Show, Read)
 

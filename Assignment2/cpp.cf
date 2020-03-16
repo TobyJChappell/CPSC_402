@@ -21,7 +21,6 @@ SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
 SMethod.     Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
-SThrow.	     Stm ::= "throw" Id "(" Exp ")" ";" ;
 
 terminator Stm "" ;
 
@@ -37,60 +36,64 @@ separator Type "," ;
 separator Type5 "," ;
 coercions Type 5 ;
 
-ETrue.   Exp19  ::= "true" ;
-EFalse.  Exp19  ::= "false" ;
-EInt.    Exp19  ::= Integer ;
-EDouble. Exp19  ::= Double ;
-EString. Exp19  ::= String ;
-EId.     Exp19  ::= Id ;
-EIds.    Exp19  ::= Id "::" Id ;
+ETrue.   Exp16  ::= "true" ;
+EFalse.  Exp16  ::= "false" ;
+EInt.    Exp16  ::= Integer ;
+EDouble. Exp16  ::= Double ;
+EString. Exp16  ::= String ;
+EId.     Exp16  ::= Id ;
+EIds.    Exp16  ::= Id "::" Id ;
 
-ENs. 	 Exp18  ::= Exp18 "::" Exp19 ;
-EDot. 	 Exp18  ::= Exp18 "." Exp19 ;
+ENs. 	 Exp15  ::= Exp15 "::" Exp16 ;
+EArray.  Exp15  ::= Exp15 "[" Exp11 "]" ;
+EFunc.	 Exp15  ::= Exp16 "(" [Exp2] ")" ;
 
-EArray.  Exp17  ::= Exp18 "[" Exp11 "]" ;
+EDot. 	 Exp14  ::= Exp14 "." Exp15 ;
+EPIncr.  Exp14  ::= Exp15 "++" ;
+EPDecr.  Exp14  ::= Exp15 "--" ;
+EDeref.  Exp14  ::= "*" Exp15 ;
 
-EPIncr.  Exp16  ::= Exp17 "++" ;
-EPDecr.  Exp16  ::= Exp17 "--" ;
-
-EIncr.   Exp15  ::= "++" Exp16 ;
-EDecr.   Exp15  ::= "--" Exp16 ;
-
-EFunc.	 Exp14 ::= Exp17 "(" [Exp5] ")" ;
-
+EIncr.   Exp13  ::= "++" Exp14 ;
+EDecr.   Exp13  ::= "--" Exp14 ;
 ENot.    Exp13  ::= "!" Exp14 ;
 
 ETimes.  Exp12  ::= Exp12 "*"  Exp13 ;
 EDiv.    Exp12  ::= Exp12 "/"  Exp13 ;
 EMod.    Exp12  ::= Exp12 "%"  Exp13 ;
+
 EPlus.   Exp11  ::= Exp11 "+"  Exp12 ;
 EMinus.  Exp11  ::= Exp11 "-"  Exp12 ;
+
+ECout.   Exp10 ::= Exp10 "<<" [Exp11] ;
+ECin. 	 Exp10 ::= Exp10 ">>" Exp11 ;
+
 ELt.     Exp9   ::= Exp9  "<"  Exp10 ;
 EGt.     Exp9   ::= Exp9  ">"  Exp10 ;
 ELtEq.   Exp9   ::= Exp9  "<=" Exp10 ;
 EGtEq.   Exp9   ::= Exp9  ">=" Exp10 ;
+
 EEq.     Exp8   ::= Exp8  "==" Exp9 ;
 ENEq.    Exp8   ::= Exp8  "!=" Exp9 ;
 
-EAnd.    Exp7   ::= Exp7  "&&" Exp8 ;
-EOr.     Exp6   ::= Exp6  "||" Exp7 ;
-EAss.    Exp5   ::= Exp6 "=" Exp5 ;
+EAnd.    Exp4   ::= Exp4  "&&" Exp5 ;
 
-ECout.   Exp3 ::= Exp3 "<<" [Exp4] ;
+EOr.     Exp3   ::= Exp3  "||" Exp4 ;
 
-ECin. 	 Exp2 ::= Exp2 ">>" Exp3 ;
+EAss.    Exp2   ::= Exp2 "=" Exp3 ;
 
-EIf.     Exp ::= Exp2 "?" Exp2 ":" Exp2 ;
+EIf.     Exp2 ::= Exp2 "?" Exp2 ":" Exp2 ;
 
-internal ETyped. Exp18 ::= "(" Exp ":" Type ")" ;
+EThrow.  Exp1  ::= "throw" Exp2 ;
 
-coercions Exp 19 ;
+internal ETyped. Exp16 ::= "(" Exp ":" Type ")" ;
+
+coercions Exp 16 ;
 
 separator Exp "," ;
 
-separator Exp4 "" ;
+separator Exp2 "," ;
 
-separator Exp5 "," ;
+separator Exp11 "" ;
 
 token Id (letter (letter | digit | '_')*) ;
 

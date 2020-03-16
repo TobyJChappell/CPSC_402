@@ -80,4 +80,5 @@ transExp x = case x of
   ECout exp exps -> failure x
   ECin exp1 exp2 -> failure x
   EIf exp1 exp2 exp3 -> failure x
+  ETyped exp type_ -> failure x
 
