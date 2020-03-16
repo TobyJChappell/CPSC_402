@@ -20,7 +20,7 @@ transDef x = case x of
   DFunc type_ id args stms -> failure x
   DDecl type_ ids -> failure x
   DUse type_ -> failure x
-  DProt type_ id types -> failure x
+  DStruct type_ id types -> failure x
   DMain type_ args stms -> failure x
 transArg :: Arg -> Result
 transArg x = case x of
@@ -34,6 +34,7 @@ transStm x = case x of
   SReturnVoid -> failure x
   SWhile exp stm -> failure x
   SFor stm1 exp1 exp2 stm2 -> failure x
+  SDo stm exp -> failure x
   SBlock stms -> failure x
   SIf exp stm -> failure x
   SIfElse exp stm1 stm2 -> failure x
@@ -42,6 +43,7 @@ transType :: Type -> Result
 transType x = case x of
   TId id -> failure x
   TIds id1 id2 -> failure x
+  TV id1 id2 -> failure x
   TNs type_1 type_2 -> failure x
   TBrac type_ types -> failure x
   TCons type_ -> failure x

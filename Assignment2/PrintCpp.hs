@@ -102,7 +102,7 @@ instance Print AbsCpp.Def where
     AbsCpp.DFunc type_ id args stms -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "{"), prt 0 stms, doc (showString "}")])
     AbsCpp.DDecl type_ ids -> prPrec i 0 (concatD [prt 0 type_, prt 0 ids, doc (showString ";")])
     AbsCpp.DUse type_ -> prPrec i 0 (concatD [doc (showString "using"), prt 0 type_, doc (showString ";")])
-    AbsCpp.DProt type_ id types -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 types, doc (showString ")"), doc (showString ";")])
+    AbsCpp.DStruct type_ id types -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 types, doc (showString ")"), doc (showString ";")])
     AbsCpp.DMain type_ args stms -> prPrec i 0 (concatD [prt 0 type_, doc (showString "main"), doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "{"), prt 0 stms, doc (showString "}")])
   prtList _ [] = concatD []
   prtList _ (x:xs) = concatD [prt 0 x, prt 0 xs]
@@ -142,16 +142,16 @@ instance Print [AbsCpp.Stm] where
 
 instance Print AbsCpp.Type where
   prt i e = case e of
-    AbsCpp.TId id -> prPrec i 5 (concatD [prt 0 id])
-    AbsCpp.TIds id1 id2 -> prPrec i 5 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
-    AbsCpp.TNs type_1 type_2 -> prPrec i 3 (concatD [prt 3 type_1, doc (showString "::"), prt 4 type_2])
-    AbsCpp.TBrac type_ types -> prPrec i 4 (concatD [prt 4 type_, doc (showString "<"), prt 4 types, doc (showString ">")])
+    AbsCpp.TId id -> prPrec i 4 (concatD [prt 0 id])
+    AbsCpp.TIds id1 id2 -> prPrec i 4 (concatD [prt 0 id1, doc (showString "::"), prt 0 id2])
+    AbsCpp.TNs type_1 type_2 -> prPrec i 3 (concatD [prt 3 type_1, doc (showString "::"), prt 3 type_2])
+    AbsCpp.TBrac type_ types -> prPrec i 3 (concatD [prt 3 type_, doc (showString "<"), prt 3 types, doc (showString ">")])
     AbsCpp.TCons type_ -> prPrec i 2 (concatD [doc (showString "const"), prt 3 type_])
     AbsCpp.TAlias type_ -> prPrec i 2 (concatD [doc (showString "typedef"), prt 3 type_])
     AbsCpp.TAmp type_ -> prPrec i 1 (concatD [prt 2 type_, doc (showString "&")])
-  prtList 4 [] = concatD []
-  prtList 4 [x] = concatD [prt 4 x]
-  prtList 4 (x:xs) = concatD [prt 4 x, doc (showString ","), prt 4 xs]
+  prtList 3 [] = concatD []
+  prtList 3 [x] = concatD [prt 3 x]
+  prtList 3 (x:xs) = concatD [prt 3 x, doc (showString ","), prt 3 xs]
   prtList _ [] = concatD []
   prtList _ [x] = concatD [prt 0 x]
   prtList _ (x:xs) = concatD [prt 0 x, doc (showString ","), prt 0 xs]

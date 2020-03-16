@@ -3,7 +3,7 @@ PDefs.   Program ::= [Def] ;
 DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DDecl.	    Def ::= Type [Id] ";" ;
 DUse.	    Def ::= "using" Type ";" ;
-DProt.      Def ::= Type Id "(" [Type] ")" ";" ;
+DStruct.      Def ::= Type Id "(" [Type] ")" ";" ;
 DMain.      Def ::= Type "main" "(" [Arg] ")" "{" [Stm] "}" ;
 
 terminator Def "" ;
@@ -27,17 +27,17 @@ SMethod.     Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
 
 terminator Stm "" ;
 
-TId. 	   Type5 ::= Id ;
-TIds.	   Type5 ::= Id "::" Id ;
-TBrac. 	   Type4 ::= Type4 "<" [Type4] ">" ;
+TId. 	   Type4 ::= Id ;
+TIds.	   Type4 ::= Id "::" Id ;
 TNs. 	     Type3 ::= Type3 "::" Type4 ;
+TBrac. 	   Type3 ::= Type3 "<" [Type3] ">" ;
 TCons.	   Type2 ::= "const" Type3 ;
 TAlias.    Type2 ::= "typedef" Type3 ;
 TAmp.      Type1 ::= Type2 "&" ;
 
 separator Type "," ;
-separator Type4 "," ;
-coercions Type 5 ;
+separator Type3 "," ;
+coercions Type 4 ;
 
 ETrue.   Exp16  ::= "true" ;
 EFalse.  Exp16  ::= "false" ;

@@ -15,14 +15,14 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
-%name pType5 Type5
 %name pType4 Type4
 %name pType3 Type3
 %name pType2 Type2
 %name pType1 Type1
 %name pListType ListType
-%name pListType4 ListType4
+%name pListType3 ListType3
 %name pType Type
+%name pType5 Type5
 %name pExp16 Exp16
 %name pExp15 Exp15
 %name pExp14 Exp14
@@ -125,7 +125,7 @@ Def :: { Def }
 Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DFunc $1 $2 $4 (reverse $7) }
     | Type ListId ';' { AbsCpp.DDecl $1 $2 }
     | 'using' Type ';' { AbsCpp.DUse $2 }
-    | Type Id '(' ListType ')' ';' { AbsCpp.DProt $1 $2 $4 }
+    | Type Id '(' ListType ')' ';' { AbsCpp.DStruct $1 $2 $4 }
     | Type 'main' '(' ListArg ')' '{' ListStm '}' { AbsCpp.DMain $1 $4 (reverse $7) }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
@@ -150,14 +150,13 @@ Stm : Exp ';' { AbsCpp.SExp $1 }
     | Type Id '(' ListArg ')' '{' Stm '}' { AbsCpp.SMethod $1 $2 $4 $7 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
-Type5 :: { Type }
-Type5 : Id { AbsCpp.TId $1 }
-      | Id '::' Id { AbsCpp.TIds $1 $3 }
-      | '(' Type ')' { $2 }
 Type4 :: { Type }
-Type4 : Type4 '::' Type5 { AbsCpp.TNs $1 $3 } | Type5 { $1 }
+Type4 : Id { AbsCpp.TId $1 }
+      | Id '::' Id { AbsCpp.TIds $1 $3 }
+      | Type5 { $1 }
 Type3 :: { Type }
-Type3 : Type3 '<' ListType4 '>' { AbsCpp.TBrac $1 $3 }
+Type3 : Type3 '::' Type4 { AbsCpp.TNs $1 $3 }
+      | Type3 '<' ListType3 '>' { AbsCpp.TBrac $1 $3 }
       | Type4 { $1 }
 Type2 :: { Type }
 Type2 : 'const' Type3 { AbsCpp.TCons $2 }
@@ -169,12 +168,14 @@ ListType :: { [Type] }
 ListType : {- empty -} { [] }
          | Type { (:[]) $1 }
          | Type ',' ListType { (:) $1 $3 }
-ListType4 :: { [Type] }
-ListType4 : {- empty -} { [] }
-          | Type4 { (:[]) $1 }
-          | Type4 ',' ListType4 { (:) $1 $3 }
+ListType3 :: { [Type] }
+ListType3 : {- empty -} { [] }
+          | Type3 { (:[]) $1 }
+          | Type3 ',' ListType3 { (:) $1 $3 }
 Type :: { Type }
 Type : Type1 { $1 }
+Type5 :: { Type }
+Type5 : '(' Type ')' { $2 }
 Exp16 :: { Exp }
 Exp16 : 'true' { AbsCpp.ETrue }
       | 'false' { AbsCpp.EFalse }

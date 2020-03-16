@@ -91,12 +91,11 @@ All other symbols are terminals.
   |  |  **|**  | //Type// //Id// ``(`` //[Arg]// ``)`` ``{`` //Stm// ``}``
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// //[Stm]//
-  | //Type5// | -> | //Id//
+  | //Type4// | -> | //Id//
   |  |  **|**  | //Id// ``::`` //Id//
-  |  |  **|**  | ``(`` //Type// ``)``
-  | //Type4// | -> | //Type4// ``::`` //Type5//
   |  |  **|**  | //Type5//
-  | //Type3// | -> | //Type3// ``<`` //[Type4]// ``>``
+  | //Type3// | -> | //Type3// ``::`` //Type4//
+  |  |  **|**  | //Type3// ``<`` //[Type3]// ``>``
   |  |  **|**  | //Type4//
   | //Type2// | -> | ``const`` //Type3//
   |  |  **|**  | ``typedef`` //Type3//
@@ -106,10 +105,11 @@ All other symbols are terminals.
   | //[Type]// | -> | **eps**
   |  |  **|**  | //Type//
   |  |  **|**  | //Type// ``,`` //[Type]//
-  | //[Type4]// | -> | **eps**
-  |  |  **|**  | //Type4//
-  |  |  **|**  | //Type4// ``,`` //[Type4]//
+  | //[Type3]// | -> | **eps**
+  |  |  **|**  | //Type3//
+  |  |  **|**  | //Type3// ``,`` //[Type3]//
   | //Type// | -> | //Type1//
+  | //Type5// | -> | ``(`` //Type// ``)``
   | //Exp16// | -> | ``true``
   |  |  **|**  | ``false``
   |  |  **|**  | //Integer//

@@ -20,7 +20,7 @@ transDef x = case x of
   DFunc type_ id args stms -> failure x
   DDecl type_ ids -> failure x
   DUse type_ -> failure x
-  DProt type_ id types -> failure x
+  DStruct type_ id types -> failure x
   DMain type_ args stms -> failure x
 transArg :: Arg -> Result
 transArg x = case x of

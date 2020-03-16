@@ -13,7 +13,7 @@ data Def
     = DFunc Type Id [Arg] [Stm]
     | DDecl Type [Id]
     | DUse Type
-    | DProt Type Id [Type]
+    | DStruct Type Id [Type]
     | DMain Type [Arg] [Stm]
   deriving (Eq, Ord, Show, Read)
 
