@@ -9,7 +9,12 @@ newtype Id = Id String
 data Program = PDefs [Def]
   deriving (Eq, Ord, Show, Read)
 
-data Def = DFunc Type Id [Arg] [Stm] | DDecl Type [Id] | DUse Type
+data Def
+    = DFunc Type Id [Arg] [Stm]
+    | DDecl Type [Id]
+    | DUse Type
+    | DProt Type Id [Type]
+    | DMain [Arg] [Stm]
   deriving (Eq, Ord, Show, Read)
 
 data Arg = ADecl Type Id
@@ -22,11 +27,11 @@ data Stm
     | SReturn Exp
     | SReturnVoid
     | SWhile Exp Stm
+    | SFor Stm Exp Exp Stm
     | SBlock [Stm]
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
     | SMethod Type Id [Arg] Stm
-    | SThrow Id Exp
   deriving (Eq, Ord, Show, Read)
 
 data Type
@@ -45,22 +50,27 @@ data Exp
     | EInt Integer
     | EDouble Double
     | EString String
+    | EChar Char
     | EId Id
     | EIds Id Id
     | ENs Exp Exp
-    | EDot Exp Exp
     | EArray Exp Exp
+    | EFunc Exp [Exp]
+    | EDot Exp Exp
     | EPIncr Exp
     | EPDecr Exp
+    | EDeref Exp
+    | EArrow Exp Exp
     | EIncr Exp
     | EDecr Exp
-    | EFunc Exp [Exp]
     | ENot Exp
     | ETimes Exp Exp
     | EDiv Exp Exp
     | EMod Exp Exp
     | EPlus Exp Exp
     | EMinus Exp Exp
+    | ECout Exp [Exp]
+    | ECin Exp Exp
     | ELt Exp Exp
     | EGt Exp Exp
     | ELtEq Exp Exp
@@ -70,9 +80,10 @@ data Exp
     | EAnd Exp Exp
     | EOr Exp Exp
     | EAss Exp Exp
-    | ECout Exp [Exp]
-    | ECin Exp Exp
+    | EAssA Exp Exp
+    | EAssM Exp Exp
     | EIf Exp Exp Exp
+    | EThrow Exp
     | ETyped Exp Type
   deriving (Eq, Ord, Show, Read)
 

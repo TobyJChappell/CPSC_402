@@ -9,7 +9,12 @@ newtype Id = Id String
 data Program = PDefs [Def]
   deriving (Eq, Ord, Show, Read)
 
-data Def = DFunc Type Id [Arg] [Stm] | DDecl Type [Id] | DUse Type
+data Def
+    = DFunc Type Id [Arg] [Stm]
+    | DDecl Type [Id]
+    | DUse Type
+    | DProt Type Id [Type]
+    | DMain Type [Arg] [Stm]
   deriving (Eq, Ord, Show, Read)
 
 data Arg = ADecl Type Id
@@ -22,6 +27,8 @@ data Stm
     | SReturn Exp
     | SReturnVoid
     | SWhile Exp Stm
+    | SFor Stm Exp Exp Stm
+    | SDo Stm Exp
     | SBlock [Stm]
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
@@ -31,8 +38,8 @@ data Stm
 data Type
     = TId Id
     | TIds Id Id
-    | TBrac Type [Type]
     | TNs Type Type
+    | TBrac Type [Type]
     | TCons Type
     | TAlias Type
     | TAmp Type
@@ -44,6 +51,7 @@ data Exp
     | EInt Integer
     | EDouble Double
     | EString String
+    | EChar Char
     | EId Id
     | EIds Id Id
     | ENs Exp Exp
@@ -53,6 +61,7 @@ data Exp
     | EPIncr Exp
     | EPDecr Exp
     | EDeref Exp
+    | EArrow Exp Exp
     | EIncr Exp
     | EDecr Exp
     | ENot Exp
@@ -72,6 +81,8 @@ data Exp
     | EAnd Exp Exp
     | EOr Exp Exp
     | EAss Exp Exp
+    | EAssA Exp Exp
+    | EAssM Exp Exp
     | EIf Exp Exp Exp
     | EThrow Exp
     | ETyped Exp Type

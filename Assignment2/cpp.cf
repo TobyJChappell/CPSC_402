@@ -3,7 +3,8 @@ PDefs.   Program ::= [Def] ;
 DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DDecl.	    Def ::= Type [Id] ";" ;
 DUse.	    Def ::= "using" Type ";" ;
---DProt.    Def ::= Type Id "(" [Type] ")" ";" ;
+DProt.      Def ::= Type Id "(" [Type] ")" ";" ;
+DMain.      Def ::= Type "main" "(" [Arg] ")" "{" [Stm] "}" ;
 
 terminator Def "" ;
 
@@ -17,6 +18,8 @@ SInit.       Stm ::= Type Id "=" Exp ";" ;
 SReturn.     Stm ::= "return" Exp ";" ;
 SReturnVoid. Stm ::= "return" ";" ;
 SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
+SFor.        Stm ::= "for" "(" Stm Exp ";" Exp ")" Stm ;
+SDo.				 Stm ::= "do" Stm "while" "(" Exp ")" ";" ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
@@ -26,14 +29,14 @@ terminator Stm "" ;
 
 TId. 	   Type5 ::= Id ;
 TIds.	   Type5 ::= Id "::" Id ;
-TBrac. 	   Type4 ::= Type4 "<" [Type5] ">" ;
-TNs. 	   Type4 ::= Type4 "::" Type5 ;
-TCons.	   Type3 ::= "const" Type4 ;
-TAlias.    Type3 ::= "typedef" Type4 ;
-TAmp.      Type2 ::= Type3 "&" ;
+TBrac. 	   Type4 ::= Type4 "<" [Type4] ">" ;
+TNs. 	     Type3 ::= Type3 "::" Type4 ;
+TCons.	   Type2 ::= "const" Type3 ;
+TAlias.    Type2 ::= "typedef" Type3 ;
+TAmp.      Type1 ::= Type2 "&" ;
 
 separator Type "," ;
-separator Type5 "," ;
+separator Type4 "," ;
 coercions Type 5 ;
 
 ETrue.   Exp16  ::= "true" ;
@@ -41,6 +44,7 @@ EFalse.  Exp16  ::= "false" ;
 EInt.    Exp16  ::= Integer ;
 EDouble. Exp16  ::= Double ;
 EString. Exp16  ::= String ;
+EChar.   Exp16  ::= Char ;
 EId.     Exp16  ::= Id ;
 EIds.    Exp16  ::= Id "::" Id ;
 
@@ -52,6 +56,7 @@ EDot. 	 Exp14  ::= Exp14 "." Exp15 ;
 EPIncr.  Exp14  ::= Exp15 "++" ;
 EPDecr.  Exp14  ::= Exp15 "--" ;
 EDeref.  Exp14  ::= "*" Exp15 ;
+EArrow.  Exp14  ::= Exp14 "->" Exp15 ;
 
 EIncr.   Exp13  ::= "++" Exp14 ;
 EDecr.   Exp13  ::= "--" Exp14 ;
@@ -80,6 +85,8 @@ EAnd.    Exp4   ::= Exp4  "&&" Exp5 ;
 EOr.     Exp3   ::= Exp3  "||" Exp4 ;
 
 EAss.    Exp2   ::= Exp2 "=" Exp3 ;
+EAssA.   Exp2   ::= Exp2 "+=" Exp3 ;
+EAssM.   Exp2   ::= Exp2 "-=" Exp3 ;
 
 EIf.     Exp2 ::= Exp2 "?" Exp2 ":" Exp2 ;
 

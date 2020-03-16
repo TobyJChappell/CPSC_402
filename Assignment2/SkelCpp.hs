@@ -20,6 +20,8 @@ transDef x = case x of
   DFunc type_ id args stms -> failure x
   DDecl type_ ids -> failure x
   DUse type_ -> failure x
+  DProt type_ id types -> failure x
+  DMain type_ args stms -> failure x
 transArg :: Arg -> Result
 transArg x = case x of
   ADecl type_ id -> failure x
@@ -31,6 +33,8 @@ transStm x = case x of
   SReturn exp -> failure x
   SReturnVoid -> failure x
   SWhile exp stm -> failure x
+  SFor stm1 exp1 exp2 stm2 -> failure x
+  SDo stm exp -> failure x
   SBlock stms -> failure x
   SIf exp stm -> failure x
   SIfElse exp stm1 stm2 -> failure x
@@ -39,8 +43,8 @@ transType :: Type -> Result
 transType x = case x of
   TId id -> failure x
   TIds id1 id2 -> failure x
-  TBrac type_ types -> failure x
   TNs type_1 type_2 -> failure x
+  TBrac type_ types -> failure x
   TCons type_ -> failure x
   TAlias type_ -> failure x
   TAmp type_ -> failure x
@@ -51,6 +55,7 @@ transExp x = case x of
   EInt integer -> failure x
   EDouble double -> failure x
   EString string -> failure x
+  EChar char -> failure x
   EId id -> failure x
   EIds id1 id2 -> failure x
   ENs exp1 exp2 -> failure x
@@ -60,6 +65,7 @@ transExp x = case x of
   EPIncr exp -> failure x
   EPDecr exp -> failure x
   EDeref exp -> failure x
+  EArrow exp1 exp2 -> failure x
   EIncr exp -> failure x
   EDecr exp -> failure x
   ENot exp -> failure x
@@ -79,6 +85,8 @@ transExp x = case x of
   EAnd exp1 exp2 -> failure x
   EOr exp1 exp2 -> failure x
   EAss exp1 exp2 -> failure x
+  EAssA exp1 exp2 -> failure x
+  EAssM exp1 exp2 -> failure x
   EIf exp1 exp2 exp3 -> failure x
   EThrow exp -> failure x
   ETyped exp type_ -> failure x
