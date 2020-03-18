@@ -19,7 +19,7 @@ SReturn.     Stm ::= "return" Exp ";" ;
 SReturnVoid. Stm ::= "return" ";" ;
 SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
 SFor.        Stm ::= "for" "(" Stm Exp ";" Exp ")" Stm ;
-SDo.				 Stm ::= "do" Stm "while" "(" Exp ")" ";" ;
+SDo.         Stm ::= "do" Stm "while" "(" Exp ")" ";" ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
@@ -39,7 +39,7 @@ TAmp.      Type ::= Type "&" ;
 
 separator Type "," ;
 
-QConst.    QConst ::= [Name] ;
+QDef.    QConst ::= [Name] ;
 
 NId.	   Name ::= Id ;
 NBrac.     Name ::= Id "<" [Type] ">" ;
@@ -56,6 +56,7 @@ EQConst. Exp16  ::= QConst ;
 
 EArray.  Exp15  ::= Exp15 "[" Exp11 "]" ;
 EFunc.	 Exp15  ::= Exp16 "(" [Exp2] ")" ;
+ECol.    Exp15  ::= Exp15 "::" Exp16 ;
 
 EDot. 	 Exp14  ::= Exp14 "." Exp15 ;
 EPIncr.  Exp14  ::= Exp15 "++" ;
@@ -92,8 +93,7 @@ EOr.     Exp3   ::= Exp3  "||" Exp4 ;
 EAss.    Exp2   ::= Exp2 "=" Exp3 ;
 EAssA.   Exp2   ::= Exp2 "+=" Exp3 ;
 EAssM.   Exp2   ::= Exp2 "-=" Exp3 ;
-
-EIf.     Exp2 ::= Exp2 "?" Exp2 ":" Exp2 ;
+EIf.     Exp2 ::= Exp2 "?" Exp3 ":" Exp3 ;
 
 EThrow.  Exp1  ::= "throw" Exp2 ;
 
