@@ -160,7 +160,7 @@ instance Print [AbsCpp.Type] where
 
 instance Print AbsCpp.QConst where
   prt i e = case e of
-    AbsCpp.QConst names -> prPrec i 0 (concatD [prt 0 names])
+    AbsCpp.QDef names -> prPrec i 0 (concatD [prt 0 names])
 
 instance Print AbsCpp.Name where
   prt i e = case e of
@@ -183,6 +183,7 @@ instance Print AbsCpp.Exp where
     AbsCpp.EQConst qconst -> prPrec i 16 (concatD [prt 0 qconst])
     AbsCpp.EArray exp1 exp2 -> prPrec i 15 (concatD [prt 15 exp1, doc (showString "["), prt 11 exp2, doc (showString "]")])
     AbsCpp.EFunc exp exps -> prPrec i 15 (concatD [prt 16 exp, doc (showString "("), prt 2 exps, doc (showString ")")])
+    AbsCpp.ECol exp1 exp2 -> prPrec i 15 (concatD [prt 15 exp1, doc (showString "::"), prt 16 exp2])
     AbsCpp.EDot exp1 exp2 -> prPrec i 14 (concatD [prt 14 exp1, doc (showString "."), prt 15 exp2])
     AbsCpp.EPIncr exp -> prPrec i 14 (concatD [prt 15 exp, doc (showString "++")])
     AbsCpp.EPDecr exp -> prPrec i 14 (concatD [prt 15 exp, doc (showString "--")])
@@ -209,7 +210,7 @@ instance Print AbsCpp.Exp where
     AbsCpp.EAss exp1 exp2 -> prPrec i 2 (concatD [prt 2 exp1, doc (showString "="), prt 3 exp2])
     AbsCpp.EAssA exp1 exp2 -> prPrec i 2 (concatD [prt 2 exp1, doc (showString "+="), prt 3 exp2])
     AbsCpp.EAssM exp1 exp2 -> prPrec i 2 (concatD [prt 2 exp1, doc (showString "-="), prt 3 exp2])
-    AbsCpp.EIf exp1 exp2 exp3 -> prPrec i 2 (concatD [prt 2 exp1, doc (showString "?"), prt 2 exp2, doc (showString ":"), prt 2 exp3])
+    AbsCpp.EIf exp1 exp2 exp3 -> prPrec i 2 (concatD [prt 2 exp1, doc (showString "?"), prt 3 exp2, doc (showString ":"), prt 3 exp3])
     AbsCpp.EThrow exp -> prPrec i 1 (concatD [doc (showString "throw"), prt 2 exp])
     AbsCpp.ETyped exp type_ -> prPrec i 16 (concatD [doc (showString "("), prt 0 exp, doc (showString ":"), prt 0 type_, doc (showString ")")])
   prtList 11 [] = concatD []

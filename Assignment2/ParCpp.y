@@ -167,7 +167,7 @@ ListType : {- empty -} { [] }
          | Type { (:[]) $1 }
          | Type ',' ListType { (:) $1 $3 }
 QConst :: { QConst }
-QConst : ListName { AbsCpp.QConst $1 }
+QConst : ListName { AbsCpp.QDef $1 }
 Name :: { Name }
 Name : Id { AbsCpp.NId $1 }
      | Id '<' ListType '>' { AbsCpp.NBrac $1 $3 }
@@ -185,6 +185,7 @@ Exp16 : 'true' { AbsCpp.ETrue }
 Exp15 :: { Exp }
 Exp15 : Exp15 '[' Exp11 ']' { AbsCpp.EArray $1 $3 }
       | Exp16 '(' ListExp2 ')' { AbsCpp.EFunc $1 $3 }
+      | Exp15 '::' Exp16 { AbsCpp.ECol $1 $3 }
       | Exp16 { $1 }
 Exp14 :: { Exp }
 Exp14 : Exp14 '.' Exp15 { AbsCpp.EDot $1 $3 }
@@ -229,7 +230,7 @@ Exp2 :: { Exp }
 Exp2 : Exp2 '=' Exp3 { AbsCpp.EAss $1 $3 }
      | Exp2 '+=' Exp3 { AbsCpp.EAssA $1 $3 }
      | Exp2 '-=' Exp3 { AbsCpp.EAssM $1 $3 }
-     | Exp2 '?' Exp2 ':' Exp2 { AbsCpp.EIf $1 $3 $5 }
+     | Exp2 '?' Exp3 ':' Exp3 { AbsCpp.EIf $1 $3 $5 }
      | Exp3 { $1 }
 Exp1 :: { Exp }
 Exp1 : 'throw' Exp2 { AbsCpp.EThrow $2 } | Exp2 { $1 }

@@ -41,14 +41,18 @@ transStm x = case x of
   SMethod type_ id args stm -> failure x
 transType :: Type -> Result
 transType x = case x of
-  TId id -> failure x
+  TInt -> failure x
+  TBool -> failure x
+  TVoid -> failure x
+  TChar -> failure x
+  TDouble -> failure x
   TQConst qconst -> failure x
   TCons type_ -> failure x
   TAlias type_ -> failure x
   TAmp type_ -> failure x
 transQConst :: QConst -> Result
 transQConst x = case x of
-  QConst names -> failure x
+  QDef names -> failure x
 transName :: Name -> Result
 transName x = case x of
   NId id -> failure x

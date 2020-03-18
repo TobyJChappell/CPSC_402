@@ -36,7 +36,15 @@ data Stm
   deriving (Eq, Ord, Show, Read)
 
 data Type
-    = TId Id | TQConst QConst | TCons Type | TAlias Type | TAmp Type
+    = TInt
+    | TBool
+    | TVoid
+    | TChar
+    | TDouble
+    | TQConst QConst
+    | TCons Type
+    | TAlias Type
+    | TAmp Type
   deriving (Eq, Ord, Show, Read)
 
 data QConst = QConst [Name]
@@ -52,7 +60,6 @@ data Exp
     | EDouble Double
     | EString String
     | EChar Char
-    | EId Id
     | EQConst QConst
     | EArray Exp Exp
     | EFunc Exp [Exp]

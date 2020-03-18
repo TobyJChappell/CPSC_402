@@ -36,10 +36,18 @@ data Stm
   deriving (Eq, Ord, Show, Read)
 
 data Type
-    = TId Id | TQConst QConst | TCons Type | TAlias Type | TAmp Type
+    = TInt
+    | TBool
+    | TVoid
+    | TChar
+    | TDouble
+    | TQConst QConst
+    | TCons Type
+    | TAlias Type
+    | TAmp Type
   deriving (Eq, Ord, Show, Read)
 
-data QConst = QConst [Name]
+data QConst = QDef [Name]
   deriving (Eq, Ord, Show, Read)
 
 data Name = NId Id | NBrac Id [Type]

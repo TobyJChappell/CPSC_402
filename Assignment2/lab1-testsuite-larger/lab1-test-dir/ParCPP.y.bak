@@ -15,13 +15,11 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
-%name pType4 Type4
-%name pType3 Type3
-%name pType2 Type2
-%name pType1 Type1
-%name pListType ListType
-%name pListType3 ListType3
 %name pType Type
+%name pListType ListType
+%name pQConst QConst
+%name pName Name
+%name pListName ListName
 %name pExp16 Exp16
 %name pExp15 Exp15
 %name pExp14 Exp14
@@ -123,7 +121,7 @@ Program : ListDef { AbsCPP.PDefs (reverse $1) }
 Def :: { Def }
 Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCPP.DFunc $1 $2 $4 (reverse $7) }
     | Type ListId ';' { AbsCPP.DDecl $1 $2 }
-    | 'using' Type ';' { AbsCPP.DUse $2 }
+    | 'using' QConst ';' { AbsCPP.DUse $2 }
     | Type Id '(' ListType ')' ';' { AbsCPP.DStruct $1 $2 $4 }
     | Type 'main' '(' ListArg ')' '{' ListStm '}' { AbsCPP.DMain $1 $4 (reverse $7) }
 ListDef :: { [Def] }
@@ -149,30 +147,23 @@ Stm : Exp ';' { AbsCPP.SExp $1 }
     | Type Id '(' ListArg ')' '{' Stm '}' { AbsCPP.SMethod $1 $2 $4 $7 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
-Type4 :: { Type }
-Type4 : Id { AbsCPP.TId $1 }
-      | Id '::' Id { AbsCPP.TIds $1 $3 }
-      | '(' Type ')' { $2 }
-Type3 :: { Type }
-Type3 : Type3 '::' Type4 { AbsCPP.TNs $1 $3 }
-      | Type3 '<' ListType3 '>' { AbsCPP.TBrac $1 $3 }
-      | Type4 { $1 }
-Type2 :: { Type }
-Type2 : 'const' Type3 { AbsCPP.TCons $2 }
-      | 'typedef' Type3 { AbsCPP.TAlias $2 }
-      | Type3 { $1 }
-Type1 :: { Type }
-Type1 : Type2 '&' { AbsCPP.TAmp $1 } | Type2 { $1 }
+Type :: { Type }
+Type : Id { AbsCPP.TId $1 }
+     | QConst { AbsCPP.TQConst $1 }
+     | 'const' Type { AbsCPP.TCons $2 }
+     | 'typedef' Type { AbsCPP.TAlias $2 }
+     | Type '&' { AbsCPP.TAmp $1 }
 ListType :: { [Type] }
 ListType : {- empty -} { [] }
          | Type { (:[]) $1 }
          | Type ',' ListType { (:) $1 $3 }
-ListType3 :: { [Type] }
-ListType3 : {- empty -} { [] }
-          | Type3 { (:[]) $1 }
-          | Type3 ',' ListType3 { (:) $1 $3 }
-Type :: { Type }
-Type : Type1 { $1 }
+QConst :: { QConst }
+QConst : ListName { AbsCPP.QConst $1 }
+Name :: { Name }
+Name : Id { AbsCPP.NId $1 }
+     | Id '<' ListType '>' { AbsCPP.NBrac $1 $3 }
+ListName :: { [Name] }
+ListName : Name { (:[]) $1 } | Name '::' ListName { (:) $1 $3 }
 Exp16 :: { Exp }
 Exp16 : 'true' { AbsCPP.ETrue }
       | 'false' { AbsCPP.EFalse }
@@ -181,11 +172,10 @@ Exp16 : 'true' { AbsCPP.ETrue }
       | String { AbsCPP.EString $1 }
       | Char { AbsCPP.EChar $1 }
       | Id { AbsCPP.EId $1 }
-      | Id '::' Id { AbsCPP.EIds $1 $3 }
+      | QConst { AbsCPP.EQConst $1 }
       | '(' Exp ')' { $2 }
 Exp15 :: { Exp }
-Exp15 : Exp15 '::' Exp16 { AbsCPP.ENs $1 $3 }
-      | Exp15 '[' Exp11 ']' { AbsCPP.EArray $1 $3 }
+Exp15 : Exp15 '[' Exp11 ']' { AbsCPP.EArray $1 $3 }
       | Exp16 '(' ListExp2 ')' { AbsCPP.EFunc $1 $3 }
       | Exp16 { $1 }
 Exp14 :: { Exp }
