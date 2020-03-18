@@ -63,7 +63,6 @@ data Exp
     | EQConst QConst
     | EArray Exp Exp
     | EFunc Exp [Exp]
-    | ECol Exp Exp
     | EDot Exp Exp
     | EPIncr Exp
     | EPDecr Exp

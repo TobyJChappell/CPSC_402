@@ -37,8 +37,7 @@ import ErrM
 %name pExp5 Exp5
 %name pExp6 Exp6
 %name pExp7 Exp7
-%name pListExp ListExp
-%name pListExp2 ListExp2
+%name pListExp3 ListExp3
 %name pListExp11 ListExp11
 %name pListId ListId
 -- no lexer declaration
@@ -183,9 +182,8 @@ Exp16 : 'true' { AbsCPP.ETrue }
       | QConst { AbsCPP.EQConst $1 }
       | '(' Exp ')' { $2 }
 Exp15 :: { Exp }
-Exp15 : Exp15 '[' Exp11 ']' { AbsCPP.EArray $1 $3 }
-      | Exp16 '(' ListExp2 ')' { AbsCPP.EFunc $1 $3 }
-      | Exp15 '::' Exp16 { AbsCPP.ECol $1 $3 }
+Exp15 : Exp16 '[' Exp11 ']' { AbsCPP.EArray $1 $3 }
+      | Exp16 '(' ListExp3 ')' { AbsCPP.EFunc $1 $3 }
       | Exp16 { $1 }
 Exp14 :: { Exp }
 Exp14 : Exp14 '.' Exp15 { AbsCPP.EDot $1 $3 }
@@ -209,7 +207,7 @@ Exp11 : Exp11 '+' Exp12 { AbsCPP.EPlus $1 $3 }
       | Exp11 '-' Exp12 { AbsCPP.EMinus $1 $3 }
       | Exp12 { $1 }
 Exp10 :: { Exp }
-Exp10 : Exp10 '<<' ListExp11 { AbsCPP.ECout $1 (reverse $3) }
+Exp10 : Exp10 '<<' ListExp11 { AbsCPP.ECout $1 $3 }
       | Exp10 '>>' Exp11 { AbsCPP.ECin $1 $3 }
       | Exp11 { $1 }
 Exp9 :: { Exp }
@@ -242,16 +240,12 @@ Exp6 :: { Exp }
 Exp6 : Exp7 { $1 }
 Exp7 :: { Exp }
 Exp7 : Exp8 { $1 }
-ListExp :: { [Exp] }
-ListExp : {- empty -} { [] }
-        | Exp { (:[]) $1 }
-        | Exp ',' ListExp { (:) $1 $3 }
-ListExp2 :: { [Exp] }
-ListExp2 : {- empty -} { [] }
-         | Exp2 { (:[]) $1 }
-         | Exp2 ',' ListExp2 { (:) $1 $3 }
+ListExp3 :: { [Exp] }
+ListExp3 : {- empty -} { [] }
+         | Exp3 { (:[]) $1 }
+         | Exp3 ',' ListExp3 { (:) $1 $3 }
 ListExp11 :: { [Exp] }
-ListExp11 : {- empty -} { [] } | ListExp11 Exp11 { flip (:) $1 $2 }
+ListExp11 : Exp11 { (:[]) $1 } | Exp11 ListExp11 { (:) $1 $2 }
 ListId :: { [Id] }
 ListId : Id { (:[]) $1 } | Id ',' ListId { (:) $1 $3 }
 {

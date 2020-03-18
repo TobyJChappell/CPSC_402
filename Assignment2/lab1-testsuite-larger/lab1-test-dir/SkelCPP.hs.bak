@@ -52,7 +52,7 @@ transType x = case x of
   TAmp type_ -> failure x
 transQConst :: QConst -> Result
 transQConst x = case x of
-  QConst names -> failure x
+  QDef names -> failure x
 transName :: Name -> Result
 transName x = case x of
   NId id -> failure x
@@ -68,6 +68,7 @@ transExp x = case x of
   EQConst qconst -> failure x
   EArray exp1 exp2 -> failure x
   EFunc exp exps -> failure x
+  ECol exp1 exp2 -> failure x
   EDot exp1 exp2 -> failure x
   EPIncr exp -> failure x
   EPDecr exp -> failure x

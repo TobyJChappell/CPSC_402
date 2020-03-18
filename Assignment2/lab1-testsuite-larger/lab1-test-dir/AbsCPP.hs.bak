@@ -47,7 +47,7 @@ data Type
     | TAmp Type
   deriving (Eq, Ord, Show, Read)
 
-data QConst = QConst [Name]
+data QConst = QDef [Name]
   deriving (Eq, Ord, Show, Read)
 
 data Name = NId Id | NBrac Id [Type]
@@ -63,6 +63,7 @@ data Exp
     | EQConst QConst
     | EArray Exp Exp
     | EFunc Exp [Exp]
+    | ECol Exp Exp
     | EDot Exp Exp
     | EPIncr Exp
     | EPDecr Exp

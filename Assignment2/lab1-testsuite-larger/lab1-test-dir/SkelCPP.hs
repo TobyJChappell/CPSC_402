@@ -68,7 +68,6 @@ transExp x = case x of
   EQConst qconst -> failure x
   EArray exp1 exp2 -> failure x
   EFunc exp exps -> failure x
-  ECol exp1 exp2 -> failure x
   EDot exp1 exp2 -> failure x
   EPIncr exp -> failure x
   EPDecr exp -> failure x
