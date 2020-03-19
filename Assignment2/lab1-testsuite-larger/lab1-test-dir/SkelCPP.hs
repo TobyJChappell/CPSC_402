@@ -17,19 +17,19 @@ transProgram x = case x of
   PDefs defs -> failure x
 transDef :: Def -> Result
 transDef x = case x of
-  DFunc type_ id args stms -> failure x
-  DFInline type_ id args stms -> failure x
+  DInit init -> failure x
+  DAlias type_ id -> failure x
   DDecl decl -> failure x
   DUse qconst -> failure x
-  DTemp type_ id types -> failure x
-  DTInline type_ id types -> failure x
-  DMain type_ args stms -> failure x
-  DAlias type_ id -> failure x
-  DInit init -> failure x
   DStruct id decls -> failure x
+  DTInline type_ id args -> failure x
+  DTemp type_ id args -> failure x
+  DFInline type_ id args stms -> failure x
+  DFunc type_ id args stms -> failure x
 transArg :: Arg -> Result
 transArg x = case x of
   ADecl type_ id -> failure x
+  AType type_ -> failure x
 transStm :: Stm -> Result
 transStm x = case x of
   SExp exp -> failure x
@@ -43,7 +43,6 @@ transStm x = case x of
   SBlock stms -> failure x
   SIf exp stm -> failure x
   SIfElse exp stm1 stm2 -> failure x
-  SMethod type_ id args stm -> failure x
   SAlias type_ -> failure x
   SStruct id decls -> failure x
 transDecl :: Decl -> Result
@@ -76,7 +75,7 @@ transExp x = case x of
   EDouble double -> failure x
   EString strings -> failure x
   EChar char -> failure x
-  EQConst qconst -> failure x
+  QConst qconst -> failure x
   EArray exp1 exp2 -> failure x
   EFunc exp exps -> failure x
   EDot exp1 exp2 -> failure x

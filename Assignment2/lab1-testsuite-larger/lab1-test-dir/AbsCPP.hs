@@ -10,19 +10,18 @@ data Program = PDefs [Def]
   deriving (Eq, Ord, Show, Read)
 
 data Def
-    = DFunc Type Id [Arg] [Stm]
-    | DFInline Type Id [Arg] [Stm]
+    = DInit Init
+    | DAlias Type Id
     | DDecl Decl
     | DUse QConst
-    | DTemp Type Id [Type]
-    | DTInline Type Id [Type]
-    | DMain Type [Arg] [Stm]
-    | DAlias Type Id
-    | DInit Init
     | DStruct Id [Decl]
+    | DTInline Type Id [Arg]
+    | DTemp Type Id [Arg]
+    | DFInline Type Id [Arg] [Stm]
+    | DFunc Type Id [Arg] [Stm]
   deriving (Eq, Ord, Show, Read)
 
-data Arg = ADecl Type Id
+data Arg = ADecl Type Id | AType Type
   deriving (Eq, Ord, Show, Read)
 
 data Stm
@@ -37,7 +36,6 @@ data Stm
     | SBlock [Stm]
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
-    | SMethod Type Id [Arg] Stm
     | SAlias Type
     | SStruct Id [Decl]
   deriving (Eq, Ord, Show, Read)
@@ -71,7 +69,7 @@ data Exp
     | EDouble Double
     | EString [String]
     | EChar Char
-    | EQConst QConst
+    | QConst QConst
     | EArray Exp Exp
     | EFunc Exp [Exp]
     | EDot Exp Exp

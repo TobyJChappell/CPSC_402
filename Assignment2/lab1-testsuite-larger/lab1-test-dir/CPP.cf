@@ -1,20 +1,19 @@
 PDefs.   Program ::= [Def] ;
 
-DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
-DFInline.   Def ::= "inline" Type Id "(" [Arg] ")" "{" [Stm] "}" ;
+DInit.      Def ::= Init ;
+DAlias.     Def ::= "typedef" Type Id ";" ;
 DDecl.	    Def ::= Decl ;
 DUse.	    Def ::= "using" QConst ";" ;
-DTemp.      Def ::= Type Id "(" [Type] ")" ";" ;
-DTInline.   Def ::= "inline" Type Id "(" [Type] ")" ";" ;
-DMain.      Def ::= Type "main" "(" [Arg] ")" "{" [Stm] "}" ;
-DAlias.     Def ::= "typedef" Type Id ";" ;
-DInit.      Def ::= Init ;
 DStruct.    Def ::= "struct" Id "{" [Decl] "}" ";" ;
-
+DTInline.   Def ::= "inline" Type Id "(" [Arg] ")" ";" ;
+DTemp.      Def ::= Type Id "(" [Arg] ")" ";" ;
+DFInline.   Def ::= "inline" Type Id "(" [Arg] ")" "{" [Stm] "}" ;
+DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 
 terminator Def "" ;
 
 ADecl.      Arg ::= Type Id ;
+AType.      Arg ::= Type ;
 
 separator Arg "," ;
 
@@ -29,7 +28,6 @@ SDo.         Stm ::= "do" Stm "while" "(" Exp ")" ";" ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
-SMethod.     Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
 SAlias.      Stm ::= "typedef" Type ;
 SStruct.     Stm ::= "struct" Id "{" [Decl] "}" ";" ;
 
@@ -50,7 +48,8 @@ TQConst.   Type3 ::= QConst ;
 TCons.	   Type2 ::= "const" Type3 ;
 TAmp.      Type1 ::= Type2 "&" ;
 
-separator Type "," ;
+--separator Type "," ;
+separator nonempty Type "," ;
 coercions Type 3 ;
 
 QDef.      QConst ::= [Name] ;
@@ -66,10 +65,12 @@ EInt.    Exp16  ::= Integer ;
 EDouble. Exp16  ::= Double ;
 EString. Exp16  ::= [String] ;
 EChar.   Exp16  ::= Char ;
-EQConst. Exp16  ::= QConst ;
+QConst.  Exp16  ::= QConst ;
+
+--QConst.  Exp15  ::= QConst "::" - ;
 
 EArray.  Exp15  ::= Exp16 "[" Exp11 "]" ;
-EFunc.	 Exp15  ::= Exp16 "(" [Exp3] ")" ;
+EFunc.	 Exp15  ::= Exp16 "(" [Exp] ")" ;
 
 EDot. 	 Exp14  ::= Exp14 "." Exp15 ;
 EPIncr.  Exp14  ::= Exp15 "++" ;
@@ -114,7 +115,7 @@ internal ETyped. Exp16 ::= "(" Exp ":" Type ")" ;
 
 coercions Exp 16 ;
 
-separator Exp3 "," ;
+separator Exp "," ;
 
 separator nonempty Exp11 "" ;
 
