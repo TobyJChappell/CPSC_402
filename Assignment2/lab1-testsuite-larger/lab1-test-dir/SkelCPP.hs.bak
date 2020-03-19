@@ -21,8 +21,8 @@ transDef x = case x of
   DFInline type_ id args stms -> failure x
   DDecl decl -> failure x
   DUse qconst -> failure x
-  DTemp type_ id types -> failure x
-  DTInline type_ id types -> failure x
+  DTemp type_ id args -> failure x
+  DTInline type_ id args -> failure x
   DMain type_ args stms -> failure x
   DAlias type_ id -> failure x
   DInit init -> failure x
@@ -30,6 +30,7 @@ transDef x = case x of
 transArg :: Arg -> Result
 transArg x = case x of
   ADecl type_ id -> failure x
+  ADecl2 type_ ids -> failure x
 transStm :: Stm -> Result
 transStm x = case x of
   SExp exp -> failure x

@@ -12,7 +12,9 @@ import ErrM
 %name pDef Def
 %name pListDef ListDef
 %name pArg Arg
+%name pArg2 Arg2
 %name pListArg ListArg
+%name pListArg2 ListArg2
 %name pStm Stm
 %name pListStm ListStm
 %name pDecl Decl
@@ -135,8 +137,8 @@ Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCPP.DFunc $1 $2 $4 (reverse $
     | 'inline' Type Id '(' ListArg ')' '{' ListStm '}' { AbsCPP.DFInline $2 $3 $5 (reverse $8) }
     | Decl { AbsCPP.DDecl $1 }
     | 'using' QConst ';' { AbsCPP.DUse $2 }
-    | Type Id '(' ListType ')' ';' { AbsCPP.DTemp $1 $2 $4 }
-    | 'inline' Type Id '(' ListType ')' ';' { AbsCPP.DTInline $2 $3 $5 }
+    | Type Id '(' ListArg2 ')' ';' { AbsCPP.DTemp $1 $2 $4 }
+    | 'inline' Type Id '(' ListArg2 ')' ';' { AbsCPP.DTInline $2 $3 $5 }
     | Type 'main' '(' ListArg ')' '{' ListStm '}' { AbsCPP.DMain $1 $4 (reverse $7) }
     | 'typedef' Type Id ';' { AbsCPP.DAlias $2 $3 }
     | Init { AbsCPP.DInit $1 }
@@ -145,10 +147,16 @@ ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }
 Arg : Type Id { AbsCPP.ADecl $1 $2 }
+Arg2 :: { Arg }
+Arg2 : Type ListId { AbsCPP.ADecl2 $1 $2 }
 ListArg :: { [Arg] }
 ListArg : {- empty -} { [] }
         | Arg { (:[]) $1 }
         | Arg ',' ListArg { (:) $1 $3 }
+ListArg2 :: { [Arg] }
+ListArg2 : {- empty -} { [] }
+         | Arg2 { (:[]) $1 }
+         | Arg2 ',' ListArg2 { (:) $1 $3 }
 Stm :: { Stm }
 Stm : Exp ';' { AbsCPP.SExp $1 }
     | Decl { AbsCPP.SDecl $1 }

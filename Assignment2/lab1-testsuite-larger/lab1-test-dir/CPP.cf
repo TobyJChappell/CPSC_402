@@ -4,8 +4,8 @@ DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DFInline.   Def ::= "inline" Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DDecl.	    Def ::= Decl ;
 DUse.	    Def ::= "using" QConst ";" ;
-DTemp.      Def ::= Type Id "(" [Arg2] ")" ";" ;
-DTInline.   Def ::= "inline" Type Id "(" [Arg2] ")" ";" ;
+DTemp.      Def ::= Type Id "(" [Type] ")" ";" ;
+DTInline.   Def ::= "inline" Type Id "(" [Type] ")" ";" ;
 DMain.      Def ::= Type "main" "(" [Arg] ")" "{" [Stm] "}" ;
 DAlias.     Def ::= "typedef" Type Id ";" ;
 DInit.      Def ::= Init ;
@@ -15,11 +15,8 @@ DStruct.    Def ::= "struct" Id "{" [Decl] "}" ";" ;
 terminator Def "" ;
 
 ADecl.      Arg ::= Type Id ;
-ADecl2.	    Arg2 ::= Type [Id] ;
 
 separator Arg "," ;
-
-separator Arg2 "," ;
 
 SExp.        Stm ::= Exp ";" ;
 SDecl.       Stm ::= Decl ;

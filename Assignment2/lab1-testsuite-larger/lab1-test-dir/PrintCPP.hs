@@ -103,8 +103,8 @@ instance Print AbsCPP.Def where
     AbsCPP.DFInline type_ id args stms -> prPrec i 0 (concatD [doc (showString "inline"), prt 0 type_, prt 0 id, doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "{"), prt 0 stms, doc (showString "}")])
     AbsCPP.DDecl decl -> prPrec i 0 (concatD [prt 0 decl])
     AbsCPP.DUse qconst -> prPrec i 0 (concatD [doc (showString "using"), prt 0 qconst, doc (showString ";")])
-    AbsCPP.DTemp type_ id args -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 2 args, doc (showString ")"), doc (showString ";")])
-    AbsCPP.DTInline type_ id args -> prPrec i 0 (concatD [doc (showString "inline"), prt 0 type_, prt 0 id, doc (showString "("), prt 2 args, doc (showString ")"), doc (showString ";")])
+    AbsCPP.DTemp type_ id types -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "("), prt 0 types, doc (showString ")"), doc (showString ";")])
+    AbsCPP.DTInline type_ id types -> prPrec i 0 (concatD [doc (showString "inline"), prt 0 type_, prt 0 id, doc (showString "("), prt 0 types, doc (showString ")"), doc (showString ";")])
     AbsCPP.DMain type_ args stms -> prPrec i 0 (concatD [prt 0 type_, doc (showString "main"), doc (showString "("), prt 0 args, doc (showString ")"), doc (showString "{"), prt 0 stms, doc (showString "}")])
     AbsCPP.DAlias type_ id -> prPrec i 0 (concatD [doc (showString "typedef"), prt 0 type_, prt 0 id, doc (showString ";")])
     AbsCPP.DInit init -> prPrec i 0 (concatD [prt 0 init])
@@ -118,10 +118,6 @@ instance Print [AbsCPP.Def] where
 instance Print AbsCPP.Arg where
   prt i e = case e of
     AbsCPP.ADecl type_ id -> prPrec i 0 (concatD [prt 0 type_, prt 0 id])
-    AbsCPP.ADecl2 type_ ids -> prPrec i 2 (concatD [prt 0 type_, prt 0 ids])
-  prtList 2 [] = concatD []
-  prtList 2 [x] = concatD [prt 2 x]
-  prtList 2 (x:xs) = concatD [prt 2 x, doc (showString ","), prt 2 xs]
   prtList _ [] = concatD []
   prtList _ [x] = concatD [prt 0 x]
   prtList _ (x:xs) = concatD [prt 0 x, doc (showString ","), prt 0 xs]

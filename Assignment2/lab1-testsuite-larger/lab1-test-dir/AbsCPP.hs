@@ -14,15 +14,15 @@ data Def
     | DFInline Type Id [Arg] [Stm]
     | DDecl Decl
     | DUse QConst
-    | DTemp Type Id [Arg]
-    | DTInline Type Id [Arg]
+    | DTemp Type Id [Type]
+    | DTInline Type Id [Type]
     | DMain Type [Arg] [Stm]
     | DAlias Type Id
     | DInit Init
     | DStruct Id [Decl]
   deriving (Eq, Ord, Show, Read)
 
-data Arg = ADecl Type Id | ADecl2 Type [Id]
+data Arg = ADecl Type Id
   deriving (Eq, Ord, Show, Read)
 
 data Stm
