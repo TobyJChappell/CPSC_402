@@ -144,6 +144,7 @@ ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }
 Arg : Type Id { AbsCPP.ADecl $1 $2 }
     | Type { AbsCPP.AType $1 }
+    | Type Id '=' Id { AbsCPP.AId $1 $2 $4 }
     | Type Id '=' String { AbsCPP.AString $1 $2 $4 }
 ListArg :: { [Arg] }
 ListArg : {- empty -} { [] }
@@ -156,7 +157,7 @@ Stm : Exp ';' { AbsCPP.SExp $1 }
     | 'return' Exp ';' { AbsCPP.SReturn $2 }
     | 'return' ';' { AbsCPP.SReturnVoid }
     | 'while' '(' Exp ')' Stm { AbsCPP.SWhile $3 $5 }
-    | 'for' '(' Stm Exp ';' Exp ')' Stm { AbsCPP.SFor $3 $4 $6 $8 }
+    | 'for' '(' Init Exp ';' Exp ')' Stm { AbsCPP.SFor $3 $4 $6 $8 }
     | 'do' Stm 'while' '(' Exp ')' ';' { AbsCPP.SDo $2 $5 }
     | '{' ListStm '}' { AbsCPP.SBlock (reverse $2) }
     | 'if' '(' Exp ')' Stm { AbsCPP.SIf $3 $5 }

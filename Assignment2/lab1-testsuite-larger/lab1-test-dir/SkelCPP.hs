@@ -40,13 +40,17 @@ transStm x = case x of
   SReturn exp -> failure x
   SReturnVoid -> failure x
   SWhile exp stm -> failure x
-  SFor stm1 exp1 exp2 stm2 -> failure x
+  SFor for exp1 exp2 stm -> failure x
   SDo stm exp -> failure x
   SBlock stms -> failure x
   SIf exp stm -> failure x
   SIfElse exp stm1 stm2 -> failure x
   SAlias type_ -> failure x
   SStruct id decls -> failure x
+transFor :: For -> Result
+transFor x = case x of
+  FInit init -> failure x
+  FDecl decl -> failure x
 transDecl :: Decl -> Result
 transDecl x = case x of
   DDef type_ ids -> failure x

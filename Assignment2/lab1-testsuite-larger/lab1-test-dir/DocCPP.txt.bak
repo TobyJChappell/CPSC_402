@@ -80,6 +80,7 @@ All other symbols are terminals.
   |  |  **|**  | //Def// //[Def]//
   | //Arg// | -> | //Type// //Id//
   |  |  **|**  | //Type//
+  |  |  **|**  | //Type// //Id// ``=`` //Id//
   |  |  **|**  | //Type// //Id// ``=`` //String//
   | //[Arg]// | -> | **eps**
   |  |  **|**  | //Arg//
@@ -90,7 +91,7 @@ All other symbols are terminals.
   |  |  **|**  | ``return`` //Exp// ``;``
   |  |  **|**  | ``return`` ``;``
   |  |  **|**  | ``while`` ``(`` //Exp// ``)`` //Stm//
-  |  |  **|**  | ``for`` ``(`` //Stm// //Exp// ``;`` //Exp// ``)`` //Stm//
+  |  |  **|**  | ``for`` ``(`` //Init// //Exp// ``;`` //Exp// ``)`` //Stm//
   |  |  **|**  | ``do`` //Stm// ``while`` ``(`` //Exp// ``)`` ``;``
   |  |  **|**  | ``{`` //[Stm]// ``}``
   |  |  **|**  | ``if`` ``(`` //Exp// ``)`` //Stm//

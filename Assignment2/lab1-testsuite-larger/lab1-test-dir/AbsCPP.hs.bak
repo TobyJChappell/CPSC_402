@@ -21,7 +21,11 @@ data Def
     | DFunc Type Id [Arg] [Stm]
   deriving (Eq, Ord, Show, Read)
 
-data Arg = ADecl Type Id | AType Type | AString Type Id String
+data Arg
+    = ADecl Type Id
+    | AType Type
+    | AId Type Id Id
+    | AString Type Id String
   deriving (Eq, Ord, Show, Read)
 
 data Stm
@@ -31,7 +35,7 @@ data Stm
     | SReturn Exp
     | SReturnVoid
     | SWhile Exp Stm
-    | SFor Stm Exp Exp Stm
+    | SFor Init Exp Exp Stm
     | SDo Stm Exp
     | SBlock [Stm]
     | SIf Exp Stm

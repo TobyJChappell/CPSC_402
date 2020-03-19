@@ -91,7 +91,7 @@ All other symbols are terminals.
   |  |  **|**  | ``return`` //Exp// ``;``
   |  |  **|**  | ``return`` ``;``
   |  |  **|**  | ``while`` ``(`` //Exp// ``)`` //Stm//
-  |  |  **|**  | ``for`` ``(`` //Stm// //Exp// ``;`` //Exp// ``)`` //Stm//
+  |  |  **|**  | ``for`` ``(`` //For// //Exp// ``;`` //Exp// ``)`` //Stm//
   |  |  **|**  | ``do`` //Stm// ``while`` ``(`` //Exp// ``)`` ``;``
   |  |  **|**  | ``{`` //[Stm]// ``}``
   |  |  **|**  | ``if`` ``(`` //Exp// ``)`` //Stm//
@@ -100,6 +100,8 @@ All other symbols are terminals.
   |  |  **|**  | ``struct`` //Id// ``{`` //[Decl]// ``}`` ``;``
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// //[Stm]//
+  | //For// | -> | //Init//
+  |  |  **|**  | //Decl//
   | //Decl// | -> | //Type// //[Id]// ``;``
   | //[Decl]// | -> | **eps**
   |  |  **|**  | //Decl// //[Decl]//

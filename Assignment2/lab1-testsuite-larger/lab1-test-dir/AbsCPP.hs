@@ -35,13 +35,16 @@ data Stm
     | SReturn Exp
     | SReturnVoid
     | SWhile Exp Stm
-    | SFor Stm Exp Exp Stm
+    | SFor For Exp Exp Stm
     | SDo Stm Exp
     | SBlock [Stm]
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
     | SAlias Type
     | SStruct Id [Decl]
+  deriving (Eq, Ord, Show, Read)
+
+data For = FInit Init | FDecl Decl
   deriving (Eq, Ord, Show, Read)
 
 data Decl = DDef Type [Id]

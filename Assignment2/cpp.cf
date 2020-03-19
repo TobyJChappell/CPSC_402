@@ -1,4 +1,4 @@
-PDefs.   Program ::= [Def] ;
+PDefs.      Program ::= [Def] ;
 
 DInit.      Def ::= Init ;
 DAlias.     Def ::= "typedef" Type Id ";" ;
@@ -25,7 +25,7 @@ SInit.       Stm ::= Init ;
 SReturn.     Stm ::= "return" Exp ";" ;
 SReturnVoid. Stm ::= "return" ";" ;
 SWhile.      Stm ::= "while" "(" Exp ")" Stm ;
-SFor.        Stm ::= "for" "(" Stm Exp ";" Exp ")" Stm ;
+SFor.        Stm ::= "for" "(" For Exp ";" Exp ")" Stm ;
 SDo.         Stm ::= "do" Stm "while" "(" Exp ")" ";" ;
 SBlock.      Stm ::= "{" [Stm] "}" ;
 SIf.         Stm ::= "if" "(" Exp ")" Stm ;
@@ -33,8 +33,10 @@ SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
 SAlias.      Stm ::= "typedef" Type ;
 SStruct.     Stm ::= "struct" Id "{" [Decl] "}" ";" ;
 
-
 terminator Stm "" ;
+
+FInit.   For ::= Init ;
+FDecl.   For ::= Decl ;
 
 DDef.	   Decl ::= Type [Id] ";" ;
 
@@ -67,8 +69,6 @@ EDouble. Exp16  ::= Double ;
 EString. Exp16  ::= [String] ;
 EChar.   Exp16  ::= Char ;
 QConst.  Exp16  ::= QConst ;
-
---QConst.  Exp15  ::= QConst "::" QConst ;
 
 EArray.  Exp15  ::= Exp16 "[" Exp11 "]" ;
 EFunc.	 Exp15  ::= Exp16 "(" [Exp] ")" ;

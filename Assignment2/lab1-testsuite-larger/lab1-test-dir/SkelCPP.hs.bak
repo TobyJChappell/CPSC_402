@@ -30,6 +30,7 @@ transArg :: Arg -> Result
 transArg x = case x of
   ADecl type_ id -> failure x
   AType type_ -> failure x
+  AId type_ id1 id2 -> failure x
   AString type_ id string -> failure x
 transStm :: Stm -> Result
 transStm x = case x of
@@ -39,7 +40,7 @@ transStm x = case x of
   SReturn exp -> failure x
   SReturnVoid -> failure x
   SWhile exp stm -> failure x
-  SFor stm1 exp1 exp2 stm2 -> failure x
+  SFor init exp1 exp2 stm -> failure x
   SDo stm exp -> failure x
   SBlock stms -> failure x
   SIf exp stm -> failure x

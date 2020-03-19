@@ -15,6 +15,7 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
+%name pFor For
 %name pDecl Decl
 %name pListDecl ListDecl
 %name pInit Init
@@ -157,7 +158,7 @@ Stm : Exp ';' { AbsCPP.SExp $1 }
     | 'return' Exp ';' { AbsCPP.SReturn $2 }
     | 'return' ';' { AbsCPP.SReturnVoid }
     | 'while' '(' Exp ')' Stm { AbsCPP.SWhile $3 $5 }
-    | 'for' '(' Stm Exp ';' Exp ')' Stm { AbsCPP.SFor $3 $4 $6 $8 }
+    | 'for' '(' For Exp ';' Exp ')' Stm { AbsCPP.SFor $3 $4 $6 $8 }
     | 'do' Stm 'while' '(' Exp ')' ';' { AbsCPP.SDo $2 $5 }
     | '{' ListStm '}' { AbsCPP.SBlock (reverse $2) }
     | 'if' '(' Exp ')' Stm { AbsCPP.SIf $3 $5 }
@@ -166,6 +167,8 @@ Stm : Exp ';' { AbsCPP.SExp $1 }
     | 'struct' Id '{' ListDecl '}' ';' { AbsCPP.SStruct $2 (reverse $4) }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
+For :: { For }
+For : Init { AbsCPP.FInit $1 } | Decl { AbsCPP.FDecl $1 }
 Decl :: { Decl }
 Decl : Type ListId ';' { AbsCPP.DDef $1 $2 }
 ListDecl :: { [Decl] }

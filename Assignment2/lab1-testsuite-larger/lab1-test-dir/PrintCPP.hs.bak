@@ -118,6 +118,7 @@ instance Print AbsCPP.Arg where
   prt i e = case e of
     AbsCPP.ADecl type_ id -> prPrec i 0 (concatD [prt 0 type_, prt 0 id])
     AbsCPP.AType type_ -> prPrec i 0 (concatD [prt 0 type_])
+    AbsCPP.AId type_ id1 id2 -> prPrec i 0 (concatD [prt 0 type_, prt 0 id1, doc (showString "="), prt 0 id2])
     AbsCPP.AString type_ id str -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "="), prt 0 str])
   prtList _ [] = concatD []
   prtList _ [x] = concatD [prt 0 x]
@@ -134,7 +135,7 @@ instance Print AbsCPP.Stm where
     AbsCPP.SReturn exp -> prPrec i 0 (concatD [doc (showString "return"), prt 0 exp, doc (showString ";")])
     AbsCPP.SReturnVoid -> prPrec i 0 (concatD [doc (showString "return"), doc (showString ";")])
     AbsCPP.SWhile exp stm -> prPrec i 0 (concatD [doc (showString "while"), doc (showString "("), prt 0 exp, doc (showString ")"), prt 0 stm])
-    AbsCPP.SFor stm1 exp1 exp2 stm2 -> prPrec i 0 (concatD [doc (showString "for"), doc (showString "("), prt 0 stm1, prt 0 exp1, doc (showString ";"), prt 0 exp2, doc (showString ")"), prt 0 stm2])
+    AbsCPP.SFor init exp1 exp2 stm -> prPrec i 0 (concatD [doc (showString "for"), doc (showString "("), prt 0 init, prt 0 exp1, doc (showString ";"), prt 0 exp2, doc (showString ")"), prt 0 stm])
     AbsCPP.SDo stm exp -> prPrec i 0 (concatD [doc (showString "do"), prt 0 stm, doc (showString "while"), doc (showString "("), prt 0 exp, doc (showString ")"), doc (showString ";")])
     AbsCPP.SBlock stms -> prPrec i 0 (concatD [doc (showString "{"), prt 0 stms, doc (showString "}")])
     AbsCPP.SIf exp stm -> prPrec i 0 (concatD [doc (showString "if"), doc (showString "("), prt 0 exp, doc (showString ")"), prt 0 stm])
