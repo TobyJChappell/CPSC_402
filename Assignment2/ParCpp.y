@@ -15,6 +15,9 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
+%name pDecl Decl
+%name pListDecl ListDecl
+%name pInit Init
 %name pType3 Type3
 %name pType2 Type2
 %name pType1 Type1
@@ -88,18 +91,20 @@ import ErrM
   'false' { PT _ (TS _ 39) }
   'for' { PT _ (TS _ 40) }
   'if' { PT _ (TS _ 41) }
-  'int' { PT _ (TS _ 42) }
-  'main' { PT _ (TS _ 43) }
-  'return' { PT _ (TS _ 44) }
-  'throw' { PT _ (TS _ 45) }
-  'true' { PT _ (TS _ 46) }
-  'typedef' { PT _ (TS _ 47) }
-  'using' { PT _ (TS _ 48) }
-  'void' { PT _ (TS _ 49) }
-  'while' { PT _ (TS _ 50) }
-  '{' { PT _ (TS _ 51) }
-  '||' { PT _ (TS _ 52) }
-  '}' { PT _ (TS _ 53) }
+  'inline' { PT _ (TS _ 42) }
+  'int' { PT _ (TS _ 43) }
+  'main' { PT _ (TS _ 44) }
+  'return' { PT _ (TS _ 45) }
+  'struct' { PT _ (TS _ 46) }
+  'throw' { PT _ (TS _ 47) }
+  'true' { PT _ (TS _ 48) }
+  'typedef' { PT _ (TS _ 49) }
+  'using' { PT _ (TS _ 50) }
+  'void' { PT _ (TS _ 51) }
+  'while' { PT _ (TS _ 52) }
+  '{' { PT _ (TS _ 53) }
+  '||' { PT _ (TS _ 54) }
+  '}' { PT _ (TS _ 55) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
   L_quoted { PT _ (TL $$) }
@@ -127,10 +132,13 @@ Program :: { Program }
 Program : ListDef { AbsCpp.PDefs (reverse $1) }
 Def :: { Def }
 Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DFunc $1 $2 $4 (reverse $7) }
-    | Type ListId ';' { AbsCpp.DDecl $1 $2 }
+    | 'inline' Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DInline $2 $3 $5 (reverse $8) }
+    | Decl { AbsCpp.DDecl $1 }
     | 'using' QConst ';' { AbsCpp.DUse $2 }
     | Type Id '(' ListType ')' ';' { AbsCpp.DStruct $1 $2 $4 }
     | Type 'main' '(' ListArg ')' '{' ListStm '}' { AbsCpp.DMain $1 $4 (reverse $7) }
+    | 'typedef' Type Id ';' { AbsCpp.DAlias $2 $3 }
+    | Init { AbsCpp.DInit $1 }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }
@@ -141,8 +149,8 @@ ListArg : {- empty -} { [] }
         | Arg ',' ListArg { (:) $1 $3 }
 Stm :: { Stm }
 Stm : Exp ';' { AbsCpp.SExp $1 }
-    | Type ListId ';' { AbsCpp.SDecls $1 $2 }
-    | Type Id '=' Exp ';' { AbsCpp.SInit $1 $2 $4 }
+    | Decl { AbsCpp.SDecl $1 }
+    | Init { AbsCpp.SInit $1 }
     | 'return' Exp ';' { AbsCpp.SReturn $2 }
     | 'return' ';' { AbsCpp.SReturnVoid }
     | 'while' '(' Exp ')' Stm { AbsCpp.SWhile $3 $5 }
@@ -152,8 +160,16 @@ Stm : Exp ';' { AbsCpp.SExp $1 }
     | 'if' '(' Exp ')' Stm { AbsCpp.SIf $3 $5 }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCpp.SIfElse $3 $5 $7 }
     | Type Id '(' ListArg ')' '{' Stm '}' { AbsCpp.SMethod $1 $2 $4 $7 }
+    | 'struct' Id '{' ListDecl '}' ';' { AbsCpp.SStruct $2 (reverse $4) }
+    | 'typedef' Type { AbsCpp.SAlias $2 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
+Decl :: { Decl }
+Decl : Type ListId ';' { AbsCpp.DDef $1 $2 }
+ListDecl :: { [Decl] }
+ListDecl : {- empty -} { [] } | ListDecl Decl { flip (:) $1 $2 }
+Init :: { Init }
+Init : Type Id '=' Exp ';' { AbsCpp.IDef $1 $2 $4 }
 Type3 :: { Type }
 Type3 : 'int' { AbsCpp.TInt }
       | 'bool' { AbsCpp.TBool }
@@ -163,9 +179,7 @@ Type3 : 'int' { AbsCpp.TInt }
       | QConst { AbsCpp.TQConst $1 }
       | '(' Type ')' { $2 }
 Type2 :: { Type }
-Type2 : 'const' Type3 { AbsCpp.TCons $2 }
-      | 'typedef' Type3 { AbsCpp.TAlias $2 }
-      | Type3 { $1 }
+Type2 : 'const' Type3 { AbsCpp.TCons $2 } | Type3 { $1 }
 Type1 :: { Type }
 Type1 : Type2 '&' { AbsCpp.TAmp $1 } | Type2 { $1 }
 ListType :: { [Type] }

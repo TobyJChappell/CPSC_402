@@ -43,8 +43,8 @@ The reserved words used in cpp are the following:
   | ``bool`` | ``char`` | ``const`` | ``do``
   | ``double`` | ``else`` | ``false`` | ``for``
   | ``if`` | ``int`` | ``main`` | ``return``
-  | ``throw`` | ``true`` | ``typedef`` | ``using``
-  | ``void`` | ``while`` |  |
+  | ``struct`` | ``throw`` | ``true`` | ``typedef``
+  | ``using`` | ``void`` | ``while`` |
 
 The symbols used in cpp are the following:
   | ( | ) | { | }
@@ -68,10 +68,12 @@ All other symbols are terminals.
 
   | //Program// | -> | //[Def]//
   | //Def// | -> | //Type// //Id// ``(`` //[Arg]// ``)`` ``{`` //[Stm]// ``}``
-  |  |  **|**  | //Type// //[Id]// ``;``
+  |  |  **|**  | //Decl//
   |  |  **|**  | ``using`` //QConst// ``;``
   |  |  **|**  | //Type// //Id// ``(`` //[Type]// ``)`` ``;``
   |  |  **|**  | //Type// ``main`` ``(`` //[Arg]// ``)`` ``{`` //[Stm]// ``}``
+  |  |  **|**  | ``typedef`` //Type// //Id// ``;``
+  |  |  **|**  | //Init//
   | //[Def]// | -> | **eps**
   |  |  **|**  | //Def// //[Def]//
   | //Arg// | -> | //Type// //Id//
@@ -79,8 +81,8 @@ All other symbols are terminals.
   |  |  **|**  | //Arg//
   |  |  **|**  | //Arg// ``,`` //[Arg]//
   | //Stm// | -> | //Exp// ``;``
-  |  |  **|**  | //Type// //[Id]// ``;``
-  |  |  **|**  | //Type// //Id// ``=`` //Exp// ``;``
+  |  |  **|**  | //Decl//
+  |  |  **|**  | //Init//
   |  |  **|**  | ``return`` //Exp// ``;``
   |  |  **|**  | ``return`` ``;``
   |  |  **|**  | ``while`` ``(`` //Exp// ``)`` //Stm//
@@ -90,8 +92,14 @@ All other symbols are terminals.
   |  |  **|**  | ``if`` ``(`` //Exp// ``)`` //Stm//
   |  |  **|**  | ``if`` ``(`` //Exp// ``)`` //Stm// ``else`` //Stm//
   |  |  **|**  | //Type// //Id// ``(`` //[Arg]// ``)`` ``{`` //Stm// ``}``
+  |  |  **|**  | ``struct`` //Id// ``{`` //[Decl]// ``}`` ``;``
+  |  |  **|**  | ``typedef`` //Type//
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// //[Stm]//
+  | //Decl// | -> | //Type// //[Id]// ``;``
+  | //[Decl]// | -> | **eps**
+  |  |  **|**  | //Decl// //[Decl]//
+  | //Init// | -> | //Type// //Id// ``=`` //Exp// ``;``
   | //Type3// | -> | ``int``
   |  |  **|**  | ``bool``
   |  |  **|**  | ``void``
@@ -100,14 +108,13 @@ All other symbols are terminals.
   |  |  **|**  | //QConst//
   |  |  **|**  | ``(`` //Type// ``)``
   | //Type2// | -> | ``const`` //Type3//
-  |  |  **|**  | ``typedef`` //Type3//
-  |  |  **|**  | //Type3// ``&``
   |  |  **|**  | //Type3//
+  | //Type1// | -> | //Type2// ``&``
+  |  |  **|**  | //Type2//
   | //[Type]// | -> | **eps**
   |  |  **|**  | //Type//
   |  |  **|**  | //Type// ``,`` //[Type]//
   | //Type// | -> | //Type1//
-  | //Type1// | -> | //Type2//
   | //QConst// | -> | //[Name]//
   | //Name// | -> | //Id//
   |  |  **|**  | //Id// ``<`` //[Type]// ``>``

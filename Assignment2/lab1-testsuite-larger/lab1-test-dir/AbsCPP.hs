@@ -11,10 +11,14 @@ data Program = PDefs [Def]
 
 data Def
     = DFunc Type Id [Arg] [Stm]
-    | DDecl Type [Id]
+    | DFInline Type Id [Arg] [Stm]
+    | DDecl Decl
     | DUse QConst
-    | DStruct Type Id [Type]
+    | DTemp Type Id [Type]
+    | DTInline Type Id [Type]
     | DMain Type [Arg] [Stm]
+    | DAlias Type Id
+    | DInit Init
   deriving (Eq, Ord, Show, Read)
 
 data Arg = ADecl Type Id
@@ -22,8 +26,8 @@ data Arg = ADecl Type Id
 
 data Stm
     = SExp Exp
-    | SDecls Type [Id]
-    | SInit Type Id Exp
+    | SDecl Decl
+    | SInit Init
     | SReturn Exp
     | SReturnVoid
     | SWhile Exp Stm
@@ -33,6 +37,13 @@ data Stm
     | SIf Exp Stm
     | SIfElse Exp Stm Stm
     | SMethod Type Id [Arg] Stm
+    | SAlias Type
+  deriving (Eq, Ord, Show, Read)
+
+data Decl = DDef Type [Id]
+  deriving (Eq, Ord, Show, Read)
+
+data Init = IDef Type Id Exp
   deriving (Eq, Ord, Show, Read)
 
 data Type
@@ -43,7 +54,6 @@ data Type
     | TDouble
     | TQConst QConst
     | TCons Type
-    | TAlias Type
     | TAmp Type
   deriving (Eq, Ord, Show, Read)
 

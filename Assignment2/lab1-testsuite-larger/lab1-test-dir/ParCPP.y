@@ -15,8 +15,14 @@ import ErrM
 %name pListArg ListArg
 %name pStm Stm
 %name pListStm ListStm
-%name pType Type
+%name pDecl Decl
+%name pListDecl ListDecl
+%name pInit Init
+%name pType3 Type3
+%name pType2 Type2
+%name pType1 Type1
 %name pListType ListType
+%name pType Type
 %name pQConst QConst
 %name pName Name
 %name pListName ListName
@@ -85,18 +91,19 @@ import ErrM
   'false' { PT _ (TS _ 39) }
   'for' { PT _ (TS _ 40) }
   'if' { PT _ (TS _ 41) }
-  'int' { PT _ (TS _ 42) }
-  'main' { PT _ (TS _ 43) }
-  'return' { PT _ (TS _ 44) }
-  'throw' { PT _ (TS _ 45) }
-  'true' { PT _ (TS _ 46) }
-  'typedef' { PT _ (TS _ 47) }
-  'using' { PT _ (TS _ 48) }
-  'void' { PT _ (TS _ 49) }
-  'while' { PT _ (TS _ 50) }
-  '{' { PT _ (TS _ 51) }
-  '||' { PT _ (TS _ 52) }
-  '}' { PT _ (TS _ 53) }
+  'inline' { PT _ (TS _ 42) }
+  'int' { PT _ (TS _ 43) }
+  'main' { PT _ (TS _ 44) }
+  'return' { PT _ (TS _ 45) }
+  'throw' { PT _ (TS _ 46) }
+  'true' { PT _ (TS _ 47) }
+  'typedef' { PT _ (TS _ 48) }
+  'using' { PT _ (TS _ 49) }
+  'void' { PT _ (TS _ 50) }
+  'while' { PT _ (TS _ 51) }
+  '{' { PT _ (TS _ 52) }
+  '||' { PT _ (TS _ 53) }
+  '}' { PT _ (TS _ 54) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
   L_quoted { PT _ (TL $$) }
@@ -124,10 +131,14 @@ Program :: { Program }
 Program : ListDef { AbsCPP.PDefs (reverse $1) }
 Def :: { Def }
 Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCPP.DFunc $1 $2 $4 (reverse $7) }
-    | Type ListId ';' { AbsCPP.DDecl $1 $2 }
+    | 'inline' Type Id '(' ListArg ')' '{' ListStm '}' { AbsCPP.DFInline $2 $3 $5 (reverse $8) }
+    | Decl { AbsCPP.DDecl $1 }
     | 'using' QConst ';' { AbsCPP.DUse $2 }
-    | Type Id '(' ListType ')' ';' { AbsCPP.DStruct $1 $2 $4 }
+    | Type Id '(' ListType ')' ';' { AbsCPP.DTemp $1 $2 $4 }
+    | 'inline' Type Id '(' ListType ')' ';' { AbsCPP.DTInline $2 $3 $5 }
     | Type 'main' '(' ListArg ')' '{' ListStm '}' { AbsCPP.DMain $1 $4 (reverse $7) }
+    | 'typedef' Type Id ';' { AbsCPP.DAlias $2 $3 }
+    | Init { AbsCPP.DInit $1 }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }
@@ -138,8 +149,8 @@ ListArg : {- empty -} { [] }
         | Arg ',' ListArg { (:) $1 $3 }
 Stm :: { Stm }
 Stm : Exp ';' { AbsCPP.SExp $1 }
-    | Type ListId ';' { AbsCPP.SDecls $1 $2 }
-    | Type Id '=' Exp ';' { AbsCPP.SInit $1 $2 $4 }
+    | Decl { AbsCPP.SDecl $1 }
+    | Init { AbsCPP.SInit $1 }
     | 'return' Exp ';' { AbsCPP.SReturn $2 }
     | 'return' ';' { AbsCPP.SReturnVoid }
     | 'while' '(' Exp ')' Stm { AbsCPP.SWhile $3 $5 }
@@ -149,22 +160,33 @@ Stm : Exp ';' { AbsCPP.SExp $1 }
     | 'if' '(' Exp ')' Stm { AbsCPP.SIf $3 $5 }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCPP.SIfElse $3 $5 $7 }
     | Type Id '(' ListArg ')' '{' Stm '}' { AbsCPP.SMethod $1 $2 $4 $7 }
+    | 'typedef' Type { AbsCPP.SAlias $2 }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
-Type :: { Type }
-Type : 'int' { AbsCPP.TInt }
-     | 'bool' { AbsCPP.TBool }
-     | 'void' { AbsCPP.TVoid }
-     | 'char' { AbsCPP.TChar }
-     | 'double' { AbsCPP.TDouble }
-     | QConst { AbsCPP.TQConst $1 }
-     | 'const' Type { AbsCPP.TCons $2 }
-     | 'typedef' Type { AbsCPP.TAlias $2 }
-     | Type '&' { AbsCPP.TAmp $1 }
+Decl :: { Decl }
+Decl : Type ListId ';' { AbsCPP.DDef $1 $2 }
+ListDecl :: { [Decl] }
+ListDecl : {- empty -} { [] } | ListDecl Decl { flip (:) $1 $2 }
+Init :: { Init }
+Init : Type Id '=' Exp ';' { AbsCPP.IDef $1 $2 $4 }
+Type3 :: { Type }
+Type3 : 'int' { AbsCPP.TInt }
+      | 'bool' { AbsCPP.TBool }
+      | 'void' { AbsCPP.TVoid }
+      | 'char' { AbsCPP.TChar }
+      | 'double' { AbsCPP.TDouble }
+      | QConst { AbsCPP.TQConst $1 }
+      | '(' Type ')' { $2 }
+Type2 :: { Type }
+Type2 : 'const' Type3 { AbsCPP.TCons $2 } | Type3 { $1 }
+Type1 :: { Type }
+Type1 : Type2 '&' { AbsCPP.TAmp $1 } | Type2 { $1 }
 ListType :: { [Type] }
 ListType : {- empty -} { [] }
          | Type { (:[]) $1 }
          | Type ',' ListType { (:) $1 $3 }
+Type :: { Type }
+Type : Type1 { $1 }
 QConst :: { QConst }
 QConst : ListName { AbsCPP.QDef $1 }
 Name :: { Name }
