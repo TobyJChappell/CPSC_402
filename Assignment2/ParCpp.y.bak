@@ -91,19 +91,20 @@ import ErrM
   'false' { PT _ (TS _ 39) }
   'for' { PT _ (TS _ 40) }
   'if' { PT _ (TS _ 41) }
-  'int' { PT _ (TS _ 42) }
-  'main' { PT _ (TS _ 43) }
-  'return' { PT _ (TS _ 44) }
-  'struct' { PT _ (TS _ 45) }
-  'throw' { PT _ (TS _ 46) }
-  'true' { PT _ (TS _ 47) }
-  'typedef' { PT _ (TS _ 48) }
-  'using' { PT _ (TS _ 49) }
-  'void' { PT _ (TS _ 50) }
-  'while' { PT _ (TS _ 51) }
-  '{' { PT _ (TS _ 52) }
-  '||' { PT _ (TS _ 53) }
-  '}' { PT _ (TS _ 54) }
+  'inline' { PT _ (TS _ 42) }
+  'int' { PT _ (TS _ 43) }
+  'main' { PT _ (TS _ 44) }
+  'return' { PT _ (TS _ 45) }
+  'struct' { PT _ (TS _ 46) }
+  'throw' { PT _ (TS _ 47) }
+  'true' { PT _ (TS _ 48) }
+  'typedef' { PT _ (TS _ 49) }
+  'using' { PT _ (TS _ 50) }
+  'void' { PT _ (TS _ 51) }
+  'while' { PT _ (TS _ 52) }
+  '{' { PT _ (TS _ 53) }
+  '||' { PT _ (TS _ 54) }
+  '}' { PT _ (TS _ 55) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
   L_quoted { PT _ (TL $$) }
@@ -131,6 +132,7 @@ Program :: { Program }
 Program : ListDef { AbsCpp.PDefs (reverse $1) }
 Def :: { Def }
 Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DFunc $1 $2 $4 (reverse $7) }
+    | 'inline' Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DInline $2 $3 $5 (reverse $8) }
     | Decl { AbsCpp.DDecl $1 }
     | 'using' QConst ';' { AbsCpp.DUse $2 }
     | Type Id '(' ListType ')' ';' { AbsCpp.DStruct $1 $2 $4 }

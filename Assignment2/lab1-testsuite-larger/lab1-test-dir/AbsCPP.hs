@@ -14,14 +14,15 @@ data Def
     | DFInline Type Id [Arg] [Stm]
     | DDecl Decl
     | DUse QConst
-    | DTemp Type Id [Type]
-    | DTInline Type Id [Type]
+    | DTemp Type Id [Arg]
+    | DTInline Type Id [Arg]
     | DMain Type [Arg] [Stm]
     | DAlias Type Id
     | DInit Init
+    | DStruct Id [Decl]
   deriving (Eq, Ord, Show, Read)
 
-data Arg = ADecl Type Id
+data Arg = ADecl Type Id | ADecl2 Type [Id]
   deriving (Eq, Ord, Show, Read)
 
 data Stm
@@ -38,6 +39,7 @@ data Stm
     | SIfElse Exp Stm Stm
     | SMethod Type Id [Arg] Stm
     | SAlias Type
+    | SStruct Id [Decl]
   deriving (Eq, Ord, Show, Read)
 
 data Decl = DDef Type [Id]
@@ -50,7 +52,6 @@ data Type
     = TInt
     | TBool
     | TVoid
-    | TChar
     | TDouble
     | TQConst QConst
     | TCons Type
@@ -68,7 +69,7 @@ data Exp
     | EFalse
     | EInt Integer
     | EDouble Double
-    | EString String
+    | EString [String]
     | EChar Char
     | EQConst QConst
     | EArray Exp Exp

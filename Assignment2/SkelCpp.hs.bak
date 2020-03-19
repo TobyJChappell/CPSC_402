@@ -18,6 +18,7 @@ transProgram x = case x of
 transDef :: Def -> Result
 transDef x = case x of
   DFunc type_ id args stms -> failure x
+  DInline type_ id args stms -> failure x
   DDecl decl -> failure x
   DUse qconst -> failure x
   DStruct type_ id types -> failure x

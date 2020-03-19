@@ -21,13 +21,13 @@ two sequences of digits separated by a decimal point, optionally
 followed by an unsigned or negative exponent.
 
 
+Character literals //Char// have the form
+``'``//c//``'``, where //c// is any single character.
+
+
 String literals //String// have the form
 ``"``//x//``"``}, where //x// is any sequence of any characters
 except ``"`` unless preceded by ``\``.
-
-
-Character literals //Char// have the form
-``'``//c//``'``, where //c// is any single character.
 
 
 
@@ -40,10 +40,10 @@ Id literals are recognized by the regular expression
 The set of reserved words is the set of terminals appearing in the grammar. Those reserved words that consist of non-letter characters are called symbols, and they are treated in a different way from those that are similar to identifiers. The lexer follows rules familiar from languages like Haskell, C, and Java, including longest match and spacing conventions.
 
 The reserved words used in CPP are the following:
-  | ``bool`` | ``char`` | ``const`` | ``do``
-  | ``double`` | ``else`` | ``false`` | ``for``
-  | ``if`` | ``inline`` | ``int`` | ``main``
-  | ``return`` | ``throw`` | ``true`` | ``typedef``
+  | ``bool`` | ``const`` | ``do`` | ``double``
+  | ``else`` | ``false`` | ``for`` | ``if``
+  | ``inline`` | ``int`` | ``main`` | ``return``
+  | ``struct`` | ``throw`` | ``true`` | ``typedef``
   | ``using`` | ``void`` | ``while`` |
 
 The symbols used in CPP are the following:
@@ -71,17 +71,22 @@ All other symbols are terminals.
   |  |  **|**  | ``inline`` //Type// //Id// ``(`` //[Arg]// ``)`` ``{`` //[Stm]// ``}``
   |  |  **|**  | //Decl//
   |  |  **|**  | ``using`` //QConst// ``;``
-  |  |  **|**  | //Type// //Id// ``(`` //[Type]// ``)`` ``;``
-  |  |  **|**  | ``inline`` //Type// //Id// ``(`` //[Type]// ``)`` ``;``
+  |  |  **|**  | //Type// //Id// ``(`` //[Arg2]// ``)`` ``;``
+  |  |  **|**  | ``inline`` //Type// //Id// ``(`` //[Arg2]// ``)`` ``;``
   |  |  **|**  | //Type// ``main`` ``(`` //[Arg]// ``)`` ``{`` //[Stm]// ``}``
   |  |  **|**  | ``typedef`` //Type// //Id// ``;``
   |  |  **|**  | //Init//
+  |  |  **|**  | ``struct`` //Id// ``{`` //[Decl]// ``}`` ``;``
   | //[Def]// | -> | **eps**
   |  |  **|**  | //Def// //[Def]//
   | //Arg// | -> | //Type// //Id//
+  | //Arg2// | -> | //Type// //[Id]//
   | //[Arg]// | -> | **eps**
   |  |  **|**  | //Arg//
   |  |  **|**  | //Arg// ``,`` //[Arg]//
+  | //[Arg2]// | -> | **eps**
+  |  |  **|**  | //Arg2//
+  |  |  **|**  | //Arg2// ``,`` //[Arg2]//
   | //Stm// | -> | //Exp// ``;``
   |  |  **|**  | //Decl//
   |  |  **|**  | //Init//
@@ -95,6 +100,7 @@ All other symbols are terminals.
   |  |  **|**  | ``if`` ``(`` //Exp// ``)`` //Stm// ``else`` //Stm//
   |  |  **|**  | //Type// //Id// ``(`` //[Arg]// ``)`` ``{`` //Stm// ``}``
   |  |  **|**  | ``typedef`` //Type//
+  |  |  **|**  | ``struct`` //Id// ``{`` //[Decl]// ``}`` ``;``
   | //[Stm]// | -> | **eps**
   |  |  **|**  | //Stm// //[Stm]//
   | //Decl// | -> | //Type// //[Id]// ``;``
@@ -104,7 +110,6 @@ All other symbols are terminals.
   | //Type3// | -> | ``int``
   |  |  **|**  | ``bool``
   |  |  **|**  | ``void``
-  |  |  **|**  | ``char``
   |  |  **|**  | ``double``
   |  |  **|**  | //QConst//
   |  |  **|**  | ``(`` //Type// ``)``
@@ -125,7 +130,7 @@ All other symbols are terminals.
   |  |  **|**  | ``false``
   |  |  **|**  | //Integer//
   |  |  **|**  | //Double//
-  |  |  **|**  | //String//
+  |  |  **|**  | //[String]//
   |  |  **|**  | //Char//
   |  |  **|**  | //QConst//
   |  |  **|**  | ``(`` //Exp// ``)``
@@ -180,6 +185,8 @@ All other symbols are terminals.
   |  |  **|**  | //Exp3// ``,`` //[Exp3]//
   | //[Exp11]// | -> | //Exp11//
   |  |  **|**  | //Exp11// //[Exp11]//
+  | //[String]// | -> | //String//
+  |  |  **|**  | //String// //[String]//
   | //[Id]// | -> | //Id//
   |  |  **|**  | //Id// ``,`` //[Id]//
 

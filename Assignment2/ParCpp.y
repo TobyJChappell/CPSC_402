@@ -45,6 +45,7 @@ import ErrM
 %name pExp7 Exp7
 %name pListExp3 ListExp3
 %name pListExp11 ListExp11
+%name pListString ListString
 %name pListId ListId
 -- no lexer declaration
 %monad { Err } { thenM } { returnM }
@@ -83,32 +84,31 @@ import ErrM
   '[' { PT _ (TS _ 31) }
   ']' { PT _ (TS _ 32) }
   'bool' { PT _ (TS _ 33) }
-  'char' { PT _ (TS _ 34) }
-  'const' { PT _ (TS _ 35) }
-  'do' { PT _ (TS _ 36) }
-  'double' { PT _ (TS _ 37) }
-  'else' { PT _ (TS _ 38) }
-  'false' { PT _ (TS _ 39) }
-  'for' { PT _ (TS _ 40) }
-  'if' { PT _ (TS _ 41) }
-  'inline' { PT _ (TS _ 42) }
-  'int' { PT _ (TS _ 43) }
-  'main' { PT _ (TS _ 44) }
-  'return' { PT _ (TS _ 45) }
-  'struct' { PT _ (TS _ 46) }
-  'throw' { PT _ (TS _ 47) }
-  'true' { PT _ (TS _ 48) }
-  'typedef' { PT _ (TS _ 49) }
-  'using' { PT _ (TS _ 50) }
-  'void' { PT _ (TS _ 51) }
-  'while' { PT _ (TS _ 52) }
-  '{' { PT _ (TS _ 53) }
-  '||' { PT _ (TS _ 54) }
-  '}' { PT _ (TS _ 55) }
+  'const' { PT _ (TS _ 34) }
+  'do' { PT _ (TS _ 35) }
+  'double' { PT _ (TS _ 36) }
+  'else' { PT _ (TS _ 37) }
+  'false' { PT _ (TS _ 38) }
+  'for' { PT _ (TS _ 39) }
+  'if' { PT _ (TS _ 40) }
+  'inline' { PT _ (TS _ 41) }
+  'int' { PT _ (TS _ 42) }
+  'main' { PT _ (TS _ 43) }
+  'return' { PT _ (TS _ 44) }
+  'struct' { PT _ (TS _ 45) }
+  'throw' { PT _ (TS _ 46) }
+  'true' { PT _ (TS _ 47) }
+  'typedef' { PT _ (TS _ 48) }
+  'using' { PT _ (TS _ 49) }
+  'void' { PT _ (TS _ 50) }
+  'while' { PT _ (TS _ 51) }
+  '{' { PT _ (TS _ 52) }
+  '||' { PT _ (TS _ 53) }
+  '}' { PT _ (TS _ 54) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
-  L_quoted { PT _ (TL $$) }
   L_charac { PT _ (TC $$) }
+  L_quoted { PT _ (TL $$) }
   L_Id { PT _ (T_Id $$) }
 
 %%
@@ -119,11 +119,11 @@ Integer  : L_integ  { (read ( $1)) :: Integer }
 Double  :: { Double }
 Double   : L_doubl  { (read ( $1)) :: Double }
 
-String  :: { String }
-String   : L_quoted {  $1 }
-
 Char    :: { Char }
 Char     : L_charac { (read ( $1)) :: Char }
+
+String  :: { String }
+String   : L_quoted {  $1 }
 
 Id :: { Id}
 Id  : L_Id { Id ($1)}
@@ -132,13 +132,15 @@ Program :: { Program }
 Program : ListDef { AbsCpp.PDefs (reverse $1) }
 Def :: { Def }
 Def : Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DFunc $1 $2 $4 (reverse $7) }
-    | 'inline' Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DInline $2 $3 $5 (reverse $8) }
+    | 'inline' Type Id '(' ListArg ')' '{' ListStm '}' { AbsCpp.DFInline $2 $3 $5 (reverse $8) }
     | Decl { AbsCpp.DDecl $1 }
     | 'using' QConst ';' { AbsCpp.DUse $2 }
-    | Type Id '(' ListType ')' ';' { AbsCpp.DStruct $1 $2 $4 }
+    | Type Id '(' ListType ')' ';' { AbsCpp.DTemp $1 $2 $4 }
+    | 'inline' Type Id '(' ListType ')' ';' { AbsCpp.DTInline $2 $3 $5 }
     | Type 'main' '(' ListArg ')' '{' ListStm '}' { AbsCpp.DMain $1 $4 (reverse $7) }
     | 'typedef' Type Id ';' { AbsCpp.DAlias $2 $3 }
     | Init { AbsCpp.DInit $1 }
+    | 'struct' Id '{' ListDecl '}' ';' { AbsCpp.DStruct $2 (reverse $4) }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }
@@ -160,8 +162,8 @@ Stm : Exp ';' { AbsCpp.SExp $1 }
     | 'if' '(' Exp ')' Stm { AbsCpp.SIf $3 $5 }
     | 'if' '(' Exp ')' Stm 'else' Stm { AbsCpp.SIfElse $3 $5 $7 }
     | Type Id '(' ListArg ')' '{' Stm '}' { AbsCpp.SMethod $1 $2 $4 $7 }
-    | 'struct' Id '{' ListDecl '}' ';' { AbsCpp.SStruct $2 (reverse $4) }
     | 'typedef' Type { AbsCpp.SAlias $2 }
+    | 'struct' Id '{' ListDecl '}' ';' { AbsCpp.SStruct $2 (reverse $4) }
 ListStm :: { [Stm] }
 ListStm : {- empty -} { [] } | ListStm Stm { flip (:) $1 $2 }
 Decl :: { Decl }
@@ -174,7 +176,6 @@ Type3 :: { Type }
 Type3 : 'int' { AbsCpp.TInt }
       | 'bool' { AbsCpp.TBool }
       | 'void' { AbsCpp.TVoid }
-      | 'char' { AbsCpp.TChar }
       | 'double' { AbsCpp.TDouble }
       | QConst { AbsCpp.TQConst $1 }
       | '(' Type ')' { $2 }
@@ -200,7 +201,7 @@ Exp16 : 'true' { AbsCpp.ETrue }
       | 'false' { AbsCpp.EFalse }
       | Integer { AbsCpp.EInt $1 }
       | Double { AbsCpp.EDouble $1 }
-      | String { AbsCpp.EString $1 }
+      | ListString { AbsCpp.EString $1 }
       | Char { AbsCpp.EChar $1 }
       | QConst { AbsCpp.EQConst $1 }
       | '(' Exp ')' { $2 }
@@ -269,6 +270,8 @@ ListExp3 : {- empty -} { [] }
          | Exp3 ',' ListExp3 { (:) $1 $3 }
 ListExp11 :: { [Exp] }
 ListExp11 : Exp11 { (:[]) $1 } | Exp11 ListExp11 { (:) $1 $2 }
+ListString :: { [String] }
+ListString : String { (:[]) $1 } | String ListString { (:) $1 $2 }
 ListId :: { [Id] }
 ListId : Id { (:[]) $1 } | Id ',' ListId { (:) $1 $3 }
 {

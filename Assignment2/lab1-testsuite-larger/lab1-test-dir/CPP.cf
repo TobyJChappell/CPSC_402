@@ -4,19 +4,22 @@ DFunc.      Def ::= Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DFInline.   Def ::= "inline" Type Id "(" [Arg] ")" "{" [Stm] "}" ;
 DDecl.	    Def ::= Decl ;
 DUse.	    Def ::= "using" QConst ";" ;
-DTemp.      Def ::= Type Id "(" [Type] ")" ";" ;
-DTInline.   Def ::= "inline" Type Id "(" [Type] ")" ";" ;
+DTemp.      Def ::= Type Id "(" [Arg2] ")" ";" ;
+DTInline.   Def ::= "inline" Type Id "(" [Arg2] ")" ";" ;
 DMain.      Def ::= Type "main" "(" [Arg] ")" "{" [Stm] "}" ;
 DAlias.     Def ::= "typedef" Type Id ";" ;
 DInit.      Def ::= Init ;
---DStruct.    Def ::= "struct" Id "{" [Decl] "}" ";" ;
+DStruct.    Def ::= "struct" Id "{" [Decl] "}" ";" ;
 
 
 terminator Def "" ;
 
 ADecl.      Arg ::= Type Id ;
+ADecl2.	    Arg2 ::= Type [Id] ;
 
 separator Arg "," ;
+
+separator Arg2 "," ;
 
 SExp.        Stm ::= Exp ";" ;
 SDecl.       Stm ::= Decl ;
@@ -31,6 +34,8 @@ SIf.         Stm ::= "if" "(" Exp ")" Stm ;
 SIfElse.     Stm ::= "if" "(" Exp ")" Stm "else" Stm ;
 SMethod.     Stm ::= Type Id "(" [Arg] ")" "{" Stm "}" ;
 SAlias.      Stm ::= "typedef" Type ;
+SStruct.     Stm ::= "struct" Id "{" [Decl] "}" ";" ;
+
 
 terminator Stm "" ;
 
@@ -43,7 +48,6 @@ IDef.      Init ::= Type Id "=" Exp ";" ;
 TInt.      Type3 ::= "int" ;
 TBool.     Type3 ::= "bool" ;
 TVoid.     Type3 ::= "void" ;
-TChar.     Type3 ::= "char" ;
 TDouble.   Type3 ::= "double" ;
 TQConst.   Type3 ::= QConst ;
 TCons.	   Type2 ::= "const" Type3 ;
@@ -63,7 +67,7 @@ ETrue.   Exp16  ::= "true" ;
 EFalse.  Exp16  ::= "false" ;
 EInt.    Exp16  ::= Integer ;
 EDouble. Exp16  ::= Double ;
-EString. Exp16  ::= String ;
+EString. Exp16  ::= [String] ;
 EChar.   Exp16  ::= Char ;
 EQConst. Exp16  ::= QConst ;
 
@@ -116,6 +120,8 @@ coercions Exp 16 ;
 separator Exp3 "," ;
 
 separator nonempty Exp11 "" ;
+
+separator nonempty String "" ;
 
 token Id (letter (letter | digit | '_')*) ;
 
