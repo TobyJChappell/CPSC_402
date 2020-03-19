@@ -19,10 +19,9 @@ data Def
     | DTemp Type Id [Arg]
     | DFInline Type Id [Arg] [Stm]
     | DFunc Type Id [Arg] [Stm]
-    | DMain Type [Arg] [Stm]
   deriving (Eq, Ord, Show, Read)
 
-data Arg = ADecl Type Id | AType Type
+data Arg = ADecl Type Id | AType Type | AString Type Id String
   deriving (Eq, Ord, Show, Read)
 
 data Stm

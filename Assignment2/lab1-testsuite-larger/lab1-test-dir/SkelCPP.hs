@@ -30,6 +30,8 @@ transArg :: Arg -> Result
 transArg x = case x of
   ADecl type_ id -> failure x
   AType type_ -> failure x
+  AId type_ id1 id2 -> failure x
+  AString type_ id string -> failure x
 transStm :: Stm -> Result
 transStm x = case x of
   SExp exp -> failure x

@@ -14,6 +14,8 @@ terminator Def "" ;
 
 ADecl.      Arg ::= Type Id ;
 AType.      Arg ::= Type ;
+AId.        Arg ::= Type Id "=" Id ;
+AString.    Arg ::= Type Id "=" String ;
 
 separator Arg "," ;
 
@@ -66,7 +68,7 @@ EString. Exp16  ::= [String] ;
 EChar.   Exp16  ::= Char ;
 QConst.  Exp16  ::= QConst ;
 
---QConst.  Exp15  ::= QConst "::" - ;
+--QConst.  Exp15  ::= QConst "::" QConst ;
 
 EArray.  Exp15  ::= Exp16 "[" Exp11 "]" ;
 EFunc.	 Exp15  ::= Exp16 "(" [Exp] ")" ;

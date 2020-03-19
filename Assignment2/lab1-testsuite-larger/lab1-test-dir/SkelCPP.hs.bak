@@ -26,11 +26,11 @@ transDef x = case x of
   DTemp type_ id args -> failure x
   DFInline type_ id args stms -> failure x
   DFunc type_ id args stms -> failure x
-  DMain type_ args stms -> failure x
 transArg :: Arg -> Result
 transArg x = case x of
   ADecl type_ id -> failure x
   AType type_ -> failure x
+  AString type_ id string -> failure x
 transStm :: Stm -> Result
 transStm x = case x of
   SExp exp -> failure x

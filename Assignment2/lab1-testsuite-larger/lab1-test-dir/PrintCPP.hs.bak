@@ -118,6 +118,7 @@ instance Print AbsCPP.Arg where
   prt i e = case e of
     AbsCPP.ADecl type_ id -> prPrec i 0 (concatD [prt 0 type_, prt 0 id])
     AbsCPP.AType type_ -> prPrec i 0 (concatD [prt 0 type_])
+    AbsCPP.AString type_ id str -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "="), prt 0 str])
   prtList _ [] = concatD []
   prtList _ [x] = concatD [prt 0 x]
   prtList _ (x:xs) = concatD [prt 0 x, doc (showString ","), prt 0 xs]
@@ -168,7 +169,6 @@ instance Print AbsCPP.Type where
     AbsCPP.TQConst qconst -> prPrec i 3 (concatD [prt 0 qconst])
     AbsCPP.TCons type_ -> prPrec i 2 (concatD [doc (showString "const"), prt 3 type_])
     AbsCPP.TAmp type_ -> prPrec i 1 (concatD [prt 2 type_, doc (showString "&")])
-  prtList _ [] = concatD []
   prtList _ [x] = concatD [prt 0 x]
   prtList _ (x:xs) = concatD [prt 0 x, doc (showString ","), prt 0 xs]
 

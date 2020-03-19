@@ -104,13 +104,16 @@ import ErrM
   '{' { PT _ (TS _ 51) }
   '||' { PT _ (TS _ 52) }
   '}' { PT _ (TS _ 53) }
+  L_quoted { PT _ (TL $$) }
   L_integ  { PT _ (TI $$) }
   L_doubl  { PT _ (TD $$) }
   L_charac { PT _ (TC $$) }
-  L_quoted { PT _ (TL $$) }
   L_Id { PT _ (T_Id $$) }
 
 %%
+
+String  :: { String }
+String   : L_quoted {  $1 }
 
 Integer :: { Integer }
 Integer  : L_integ  { (read ( $1)) :: Integer }
@@ -120,9 +123,6 @@ Double   : L_doubl  { (read ( $1)) :: Double }
 
 Char    :: { Char }
 Char     : L_charac { (read ( $1)) :: Char }
-
-String  :: { String }
-String   : L_quoted {  $1 }
 
 Id :: { Id}
 Id  : L_Id { Id ($1)}
@@ -142,7 +142,9 @@ Def : Init { AbsCPP.DInit $1 }
 ListDef :: { [Def] }
 ListDef : {- empty -} { [] } | ListDef Def { flip (:) $1 $2 }
 Arg :: { Arg }
-Arg : Type Id { AbsCPP.ADecl $1 $2 } | Type { AbsCPP.AType $1 }
+Arg : Type Id { AbsCPP.ADecl $1 $2 }
+    | Type { AbsCPP.AType $1 }
+    | Type Id '=' String { AbsCPP.AString $1 $2 $4 }
 ListArg :: { [Arg] }
 ListArg : {- empty -} { [] }
         | Arg { (:[]) $1 }
@@ -181,9 +183,7 @@ Type2 : 'const' Type3 { AbsCPP.TCons $2 } | Type3 { $1 }
 Type1 :: { Type }
 Type1 : Type2 '&' { AbsCPP.TAmp $1 } | Type2 { $1 }
 ListType :: { [Type] }
-ListType : {- empty -} { [] }
-         | Type { (:[]) $1 }
-         | Type ',' ListType { (:) $1 $3 }
+ListType : Type { (:[]) $1 } | Type ',' ListType { (:) $1 $3 }
 Type :: { Type }
 Type : Type1 { $1 }
 QConst :: { QConst }

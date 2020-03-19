@@ -21,7 +21,11 @@ data Def
     | DFunc Type Id [Arg] [Stm]
   deriving (Eq, Ord, Show, Read)
 
-data Arg = ADecl Type Id | AType Type
+data Arg
+    = ADecl Type Id
+    | AType Type
+    | AId Type Id Id
+    | AString Type Id String
   deriving (Eq, Ord, Show, Read)
 
 data Stm

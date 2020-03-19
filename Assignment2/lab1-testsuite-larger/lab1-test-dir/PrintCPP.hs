@@ -118,6 +118,8 @@ instance Print AbsCPP.Arg where
   prt i e = case e of
     AbsCPP.ADecl type_ id -> prPrec i 0 (concatD [prt 0 type_, prt 0 id])
     AbsCPP.AType type_ -> prPrec i 0 (concatD [prt 0 type_])
+    AbsCPP.AId type_ id1 id2 -> prPrec i 0 (concatD [prt 0 type_, prt 0 id1, doc (showString "="), prt 0 id2])
+    AbsCPP.AString type_ id str -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "="), prt 0 str])
   prtList _ [] = concatD []
   prtList _ [x] = concatD [prt 0 x]
   prtList _ (x:xs) = concatD [prt 0 x, doc (showString ","), prt 0 xs]
