@@ -162,6 +162,9 @@ instance Print AbsCPP.Decl where
 instance Print [AbsCPP.Decl] where
   prt = prtList
 
+instance Print [AbsCPP.Id] where
+  prt = prtList
+
 instance Print AbsCPP.Init where
   prt i e = case e of
     AbsCPP.IDef type_ id exp -> prPrec i 0 (concatD [prt 0 type_, prt 0 id, doc (showString "="), prt 0 exp, doc (showString ";")])
@@ -173,8 +176,10 @@ instance Print AbsCPP.Type where
     AbsCPP.TVoid -> prPrec i 3 (concatD [doc (showString "void")])
     AbsCPP.TDouble -> prPrec i 3 (concatD [doc (showString "double")])
     AbsCPP.TQConst qconst -> prPrec i 3 (concatD [prt 0 qconst])
+    AbsCPP.T2 type_ -> prPrec i 2 (concatD [prt 3 type_])
     AbsCPP.TCons type_ -> prPrec i 2 (concatD [doc (showString "const"), prt 3 type_])
-    AbsCPP.TAmp type_ -> prPrec i 1 (concatD [prt 2 type_, doc (showString "&")])
+    AbsCPP.T1 type_ -> prPrec i 0 (concatD [prt 2 type_])
+    AbsCPP.TAmp type_ -> prPrec i 0 (concatD [prt 2 type_, doc (showString "&")])
   prtList _ [x] = concatD [prt 0 x]
   prtList _ (x:xs) = concatD [prt 0 x, doc (showString ","), prt 0 xs]
 
@@ -245,8 +250,5 @@ instance Print [AbsCPP.Exp] where
   prt = prtList
 
 instance Print [String] where
-  prt = prtList
-
-instance Print [AbsCPP.Id] where
   prt = prtList
 

@@ -64,7 +64,9 @@ transType x = case x of
   TVoid -> failure x
   TDouble -> failure x
   TQConst qconst -> failure x
+  T2 type_ -> failure x
   TCons type_ -> failure x
+  T1 type_ -> failure x
   TAmp type_ -> failure x
 transQConst :: QConst -> Result
 transQConst x = case x of

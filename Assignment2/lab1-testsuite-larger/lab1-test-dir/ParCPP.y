@@ -18,12 +18,12 @@ import ErrM
 %name pFor For
 %name pDecl Decl
 %name pListDecl ListDecl
+%name pListId ListId
 %name pInit Init
 %name pType3 Type3
 %name pType2 Type2
-%name pType1 Type1
-%name pListType ListType
 %name pType Type
+%name pListType ListType
 %name pQConst QConst
 %name pName Name
 %name pListName ListName
@@ -40,14 +40,13 @@ import ErrM
 %name pExp3 Exp3
 %name pExp2 Exp2
 %name pExp1 Exp1
+%name pListExp ListExp
+%name pListExp11 ListExp11
 %name pExp Exp
 %name pExp5 Exp5
 %name pExp6 Exp6
 %name pExp7 Exp7
-%name pListExp ListExp
-%name pListExp11 ListExp11
 %name pListString ListString
-%name pListId ListId
 -- no lexer declaration
 %monad { Err } { thenM } { returnM }
 %tokentype {Token}
@@ -173,6 +172,8 @@ Decl :: { Decl }
 Decl : Type ListId ';' { AbsCPP.DDef $1 $2 }
 ListDecl :: { [Decl] }
 ListDecl : {- empty -} { [] } | ListDecl Decl { flip (:) $1 $2 }
+ListId :: { [Id] }
+ListId : Id { (:[]) $1 } | Id ',' ListId { (:) $1 $3 }
 Init :: { Init }
 Init : Type Id '=' Exp ';' { AbsCPP.IDef $1 $2 $4 }
 Type3 :: { Type }
@@ -181,15 +182,12 @@ Type3 : 'int' { AbsCPP.TInt }
       | 'void' { AbsCPP.TVoid }
       | 'double' { AbsCPP.TDouble }
       | QConst { AbsCPP.TQConst $1 }
-      | '(' Type ')' { $2 }
 Type2 :: { Type }
-Type2 : 'const' Type3 { AbsCPP.TCons $2 } | Type3 { $1 }
-Type1 :: { Type }
-Type1 : Type2 '&' { AbsCPP.TAmp $1 } | Type2 { $1 }
+Type2 : Type3 { AbsCPP.T2 $1 } | 'const' Type3 { AbsCPP.TCons $2 }
+Type :: { Type }
+Type : Type2 { AbsCPP.T1 $1 } | Type2 '&' { AbsCPP.TAmp $1 }
 ListType :: { [Type] }
 ListType : Type { (:[]) $1 } | Type ',' ListType { (:) $1 $3 }
-Type :: { Type }
-Type : Type1 { $1 }
 QConst :: { QConst }
 QConst : ListName { AbsCPP.QDef $1 }
 Name :: { Name }
@@ -257,6 +255,12 @@ Exp2 : Exp2 '=' Exp3 { AbsCPP.EAss $1 $3 }
      | Exp3 { $1 }
 Exp1 :: { Exp }
 Exp1 : 'throw' Exp2 { AbsCPP.EThrow $2 } | Exp2 { $1 }
+ListExp :: { [Exp] }
+ListExp : {- empty -} { [] }
+        | Exp { (:[]) $1 }
+        | Exp ',' ListExp { (:) $1 $3 }
+ListExp11 :: { [Exp] }
+ListExp11 : Exp11 { (:[]) $1 } | Exp11 ListExp11 { (:) $1 $2 }
 Exp :: { Exp }
 Exp : Exp1 { $1 }
 Exp5 :: { Exp }
@@ -265,16 +269,8 @@ Exp6 :: { Exp }
 Exp6 : Exp7 { $1 }
 Exp7 :: { Exp }
 Exp7 : Exp8 { $1 }
-ListExp :: { [Exp] }
-ListExp : {- empty -} { [] }
-        | Exp { (:[]) $1 }
-        | Exp ',' ListExp { (:) $1 $3 }
-ListExp11 :: { [Exp] }
-ListExp11 : Exp11 { (:[]) $1 } | Exp11 ListExp11 { (:) $1 $2 }
 ListString :: { [String] }
 ListString : String { (:[]) $1 } | String ListString { (:) $1 $2 }
-ListId :: { [Id] }
-ListId : Id { (:[]) $1 } | Id ',' ListId { (:) $1 $3 }
 {
 
 returnM :: a -> Err a

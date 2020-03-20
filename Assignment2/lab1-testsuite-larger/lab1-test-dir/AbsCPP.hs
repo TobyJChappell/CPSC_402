@@ -59,7 +59,9 @@ data Type
     | TVoid
     | TDouble
     | TQConst QConst
+    | T2 Type
     | TCons Type
+    | T1 Type
     | TAmp Type
   deriving (Eq, Ord, Show, Read)
 

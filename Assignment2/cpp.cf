@@ -1,3 +1,4 @@
+
 PDefs.      Program ::= [Def] ;
 
 DInit.      Def ::= Init ;
@@ -35,12 +36,13 @@ SStruct.     Stm ::= "struct" Id "{" [Decl] "}" ";" ;
 
 terminator Stm "" ;
 
-FInit.   For ::= Init ;
-FDecl.   For ::= Decl ;
+FInit.     For ::= Init ;
+FDecl.     For ::= Decl ;
 
 DDef.	   Decl ::= Type [Id] ";" ;
 
 terminator Decl "" ;
+separator nonempty Id "," ;
 
 IDef.      Init ::= Type Id "=" Exp ";" ;
 
@@ -49,11 +51,12 @@ TBool.     Type3 ::= "bool" ;
 TVoid.     Type3 ::= "void" ;
 TDouble.   Type3 ::= "double" ;
 TQConst.   Type3 ::= QConst ;
+T2.        Type2 ::= Type3 ;
 TCons.	   Type2 ::= "const" Type3 ;
-TAmp.      Type1 ::= Type2 "&" ;
+T1.        Type ::= Type2 ;
+TAmp.      Type ::= Type2 "&" ;
 
 separator nonempty Type "," ;
-coercions Type 3 ;
 
 QDef.      QConst ::= [Name] ;
 
@@ -90,8 +93,8 @@ EMod.    Exp12  ::= Exp12 "%"  Exp13 ;
 EPlus.   Exp11  ::= Exp11 "+"  Exp12 ;
 EMinus.  Exp11  ::= Exp11 "-"  Exp12 ;
 
-ECout.   Exp10 ::= Exp10 "<<" [Exp11] ;
-ECin. 	 Exp10 ::= Exp10 ">>" Exp11 ;
+ECout.   Exp10  ::= Exp10 "<<" [Exp11] ;
+ECin. 	 Exp10  ::= Exp10 ">>" Exp11 ;
 
 ELt.     Exp9   ::= Exp9  "<"  Exp10 ;
 EGt.     Exp9   ::= Exp9  ">"  Exp10 ;
@@ -108,23 +111,21 @@ EOr.     Exp3   ::= Exp3  "||" Exp4 ;
 EAss.    Exp2   ::= Exp2 "=" Exp3 ;
 EAssA.   Exp2   ::= Exp2 "+=" Exp3 ;
 EAssM.   Exp2   ::= Exp2 "-=" Exp3 ;
-EIf.     Exp2 ::= Exp2 "?" Exp3 ":" Exp3 ;
+EIf.     Exp2   ::= Exp2 "?" Exp3 ":" Exp3 ;
 
-EThrow.  Exp1  ::= "throw" Exp2 ;
+EThrow.  Exp1   ::= "throw" Exp2 ;
 
 internal ETyped. Exp16 ::= "(" Exp ":" Type ")" ;
-
-coercions Exp 16 ;
 
 separator Exp "," ;
 
 separator nonempty Exp11 "" ;
 
+coercions Exp 16 ;
+
 separator nonempty String "" ;
 
 token Id (letter (letter | digit | '_')*) ;
-
-separator nonempty Id "," ;
 
 comment "#" ;
 comment "//" ;

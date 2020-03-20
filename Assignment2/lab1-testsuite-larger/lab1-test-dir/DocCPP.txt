@@ -105,20 +105,20 @@ All other symbols are terminals.
   | //Decl// | -> | //Type// //[Id]// ``;``
   | //[Decl]// | -> | **eps**
   |  |  **|**  | //Decl// //[Decl]//
+  | //[Id]// | -> | //Id//
+  |  |  **|**  | //Id// ``,`` //[Id]//
   | //Init// | -> | //Type// //Id// ``=`` //Exp// ``;``
   | //Type3// | -> | ``int``
   |  |  **|**  | ``bool``
   |  |  **|**  | ``void``
   |  |  **|**  | ``double``
   |  |  **|**  | //QConst//
-  |  |  **|**  | ``(`` //Type// ``)``
-  | //Type2// | -> | ``const`` //Type3//
-  |  |  **|**  | //Type3//
-  | //Type1// | -> | //Type2// ``&``
-  |  |  **|**  | //Type2//
+  | //Type2// | -> | //Type3//
+  |  |  **|**  | ``const`` //Type3//
+  | //Type// | -> | //Type2//
+  |  |  **|**  | //Type2// ``&``
   | //[Type]// | -> | //Type//
   |  |  **|**  | //Type// ``,`` //[Type]//
-  | //Type// | -> | //Type1//
   | //QConst// | -> | //[Name]//
   | //Name// | -> | //Id//
   |  |  **|**  | //Id// ``<`` //[Type]// ``>``
@@ -174,18 +174,16 @@ All other symbols are terminals.
   |  |  **|**  | //Exp3//
   | //Exp1// | -> | ``throw`` //Exp2//
   |  |  **|**  | //Exp2//
-  | //Exp// | -> | //Exp1//
-  | //Exp5// | -> | //Exp6//
-  | //Exp6// | -> | //Exp7//
-  | //Exp7// | -> | //Exp8//
   | //[Exp]// | -> | **eps**
   |  |  **|**  | //Exp//
   |  |  **|**  | //Exp// ``,`` //[Exp]//
   | //[Exp11]// | -> | //Exp11//
   |  |  **|**  | //Exp11// //[Exp11]//
+  | //Exp// | -> | //Exp1//
+  | //Exp5// | -> | //Exp6//
+  | //Exp6// | -> | //Exp7//
+  | //Exp7// | -> | //Exp8//
   | //[String]// | -> | //String//
   |  |  **|**  | //String// //[String]//
-  | //[Id]// | -> | //Id//
-  |  |  **|**  | //Id// ``,`` //[Id]//
 
 
