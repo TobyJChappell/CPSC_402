@@ -4,3 +4,6 @@
 [submodule "bnfc"]
 	path = bnfc
 	url = https://github.com/BNFC/bnfc
+[submodule "compiler-assignments"]
+	path = compiler-assignments
+	url = https://github.com/ChapmanCPSC/compiler-assignments.git
