@@ -119,9 +119,9 @@ checkStm env (SReturn e) ty = do
     checkExp env e ty
     return env
 checkStm env (SInit ty' id e) ty = do
-   insertVar env id ty'
-   checkExp env e ty'
-   return env
+   env' <- insertVar env id ty'
+   checkExp env' e ty'
+   return env'
 {-
 Here need to go the missing cases. Once you have all cases you can delete the next line which is only needed to catch all cases that are not yet implemented.
 -}
