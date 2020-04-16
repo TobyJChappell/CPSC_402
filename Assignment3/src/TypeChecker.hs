@@ -122,6 +122,13 @@ checkStm env (SInit ty' id e) ty = do
    env' <- insertVar env id ty'
    checkExp env' e ty'
    return env'
+checkStm env (SReturnVoid) ty = return env
+checkStm env (SBlock stms) ty = do
+  --  b <- newBlock env
+    foldM (\e s -> checkStm env s ty) env stms
+    return env
+--SWhile
+--SIfElse
 {-
 Here need to go the missing cases. Once you have all cases you can delete the next line which is only needed to catch all cases that are not yet implemented.
 -}
@@ -130,9 +137,20 @@ checkStm _ s _ = fail $ "Missing case in checkStm encountered:\n" ++ printTree s
 
 inferTypeExp :: Env -> Exp -> Err Type
 inferTypeExp env (EInt _) = return Type_int
+inferTypeExp env (ETrue) = return Type_bool
+inferTypeExp env (EFalse) = return Type_bool
+inferTypeExp env (EDouble _) = return Type_double
+inferTypeExp env (EString _) = return Type_string
+inferTypeExp env (EId id) = do
+    ty <- lookupVar id env
+    return ty
 inferTypeExp env (EPlus e1 e2) =
-    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string]) e1 [e2]
 inferTypeExp env (ETimes e1 e2) =
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+inferTypeExp env (EMinus e1 e2) =
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+inferTypeExp env (EDiv e1 e2) =
     inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
 inferTypeExp env (EAss e1 e2) = do
     ty <- inferTypeExp env e1
@@ -141,6 +159,35 @@ inferTypeExp env (EAss e1 e2) = do
 inferTypeExp env (ETyped e ty) = do
     checkExp env e ty
     return ty
+inferTypeExp env (ELt e1 e2) = do
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+    return Type_bool
+inferTypeExp env (EGt e1 e2) = do
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+    return Type_bool
+inferTypeExp env (ELtEq e1 e2) = do
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+    return Type_bool
+inferTypeExp env (EGtEq e1 e2) = do
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+    return Type_bool
+inferTypeExp env (EEq e1 e2) = do
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+    return Type_bool
+inferTypeExp env (ENEq e1 e2) = do
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e1 [e2]
+    return Type_bool
+inferTypeExp env (EApp id exps) = do
+    funcSig <- lookupFun env id
+    forM_ (zip exps (fst funcSig)) (\p -> checkExp env (fst p) (snd p))
+    return (snd funcSig)
+--EAnd
+--EOr
+--EPDecr
+--EPIncr
+--EIncr
+--EDecr
+
 {-
 Here need to go the missing cases. Once you have all cases you can delete the next line which is only needed to catch all cases that are not yet implemented.
 -}
