@@ -191,17 +191,17 @@ inferTypeExp env (EOr e1 e2) = do
     checkExp env e2 Type_bool
     return Type_bool
 inferTypeExp env (EPDecr e) = do
-    checkExp env e Type_void
-    return Type_void
+    ty <- inferTypeExp env e
+    return ty
 inferTypeExp env (EPIncr e) = do
-    checkExp env e Type_void
-    return Type_void
+    ty <- inferTypeExp env e
+    return ty
 inferTypeExp env (EDecr e) = do
-    checkExp env e Type_void
-    return Type_void
+    ty <- inferTypeExp env e
+    return ty
 inferTypeExp env (EIncr e) = do
-    checkExp env e Type_void
-    return Type_void
+    ty <- inferTypeExp env e
+    return ty
 
 inferTypeOverloadedExp :: Env -> Alternative Type -> Exp -> [Exp] -> Err Type
 inferTypeOverloadedExp env (Alternative ts) e es = do
