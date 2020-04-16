@@ -125,7 +125,7 @@ checkStm env (SInit ty' id e) ty = do
 checkStm env (SReturnVoid) ty = return env
 checkStm env (SBlock stms) ty = do
     b <- newBlock env
-    foldM (\e s -> checkStm env s ty) env stms
+    foldM (\e s -> checkStm e s ty) b stms
     return env
 --SWhile
 --SIfElse
