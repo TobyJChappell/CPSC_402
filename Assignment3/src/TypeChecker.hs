@@ -190,22 +190,10 @@ inferTypeExp env (EOr e1 e2) = do
     checkExp env e1 Type_bool
     checkExp env e2 Type_bool
     return Type_bool
-inferTypeExp env (EPDecr e) = do
-    ty <- inferTypeExp env e
-    if (ty == Type_int) then (checkExp env e Type_int) else (if (ty == Type_double) then (checkExp env e Type_double) else fail $ typeMismatchError e ty Type_int)
-    return ty
-inferTypeExp env (EPIncr e) = do
-    ty <- inferTypeExp env e
-    if (ty == Type_int) then (checkExp env e Type_int) else (if (ty == Type_double) then (checkExp env e Type_double) else fail $ typeMismatchError e ty Type_int)
-    return ty
-inferTypeExp env (EDecr e) = do
-    ty <- inferTypeExp env e
-    if (ty == Type_int) then (checkExp env e Type_int) else (if (ty == Type_double) then (checkExp env e Type_double) else fail $ typeMismatchError e ty Type_int)
-    return ty
-inferTypeExp env (EIncr e) = do
-    ty <- inferTypeExp env e
-    if (ty == Type_int) then (checkExp env e Type_int) else (if (ty == Type_double) then (checkExp env e Type_double) else fail $ typeMismatchError e ty Type_int)
-    return ty
+inferTypeExp env (EPDecr e) = inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e []
+inferTypeExp env (EPIncr e) = inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e []
+inferTypeExp env (EDecr e) = inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e []
+inferTypeExp env (EIncr e) = inferTypeOverloadedExp env (Alternative [Type_int,Type_double]) e []
 
 inferTypeOverloadedExp :: Env -> Alternative Type -> Exp -> [Exp] -> Err Type
 inferTypeOverloadedExp env (Alternative ts) e es = do
