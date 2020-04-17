@@ -192,15 +192,19 @@ inferTypeExp env (EOr e1 e2) = do
     return Type_bool
 inferTypeExp env (EPDecr e) = do
     ty <- inferTypeExp env e
+    if (ty == Type_int) then (checkExp env e Type_int) else (if (ty == Type_double) then (checkExp env e Type_double) else fail $ typeMismatchError e ty Type_int)
     return ty
 inferTypeExp env (EPIncr e) = do
     ty <- inferTypeExp env e
+    if (ty == Type_int) then (checkExp env e Type_int) else (if (ty == Type_double) then (checkExp env e Type_double) else fail $ typeMismatchError e ty Type_int)
     return ty
 inferTypeExp env (EDecr e) = do
     ty <- inferTypeExp env e
+    if (ty == Type_int) then (checkExp env e Type_int) else (if (ty == Type_double) then (checkExp env e Type_double) else fail $ typeMismatchError e ty Type_int)
     return ty
 inferTypeExp env (EIncr e) = do
     ty <- inferTypeExp env e
+    if (ty == Type_int) then (checkExp env e Type_int) else (if (ty == Type_double) then (checkExp env e Type_double) else fail $ typeMismatchError e ty Type_int)
     return ty
 
 inferTypeOverloadedExp :: Env -> Alternative Type -> Exp -> [Exp] -> Err Type
