@@ -180,6 +180,8 @@ inferTypeExp env (ENEq e1 e2) = do
     return Type_bool
 inferTypeExp env (EApp id exps) = do
     funcSig <- lookupFun env id
+    unless (length exps == length (fst funcSig)) $
+        fail $ "Number of declared arguments not equal to number of expressions"
     forM_ (zip exps (fst funcSig)) (\p -> checkExp env (fst p) (snd p))
     return (snd funcSig)
 inferTypeExp env (EAnd e1 e2) = do
