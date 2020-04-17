@@ -161,16 +161,16 @@ inferTypeExp env (ETyped e ty) = do
     checkExp env e ty
     return ty
 inferTypeExp env (ELt e1 e2) = do
-    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string,Type_bool]) e1 [e2]
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string]) e1 [e2]
     return Type_bool
 inferTypeExp env (EGt e1 e2) = do
-    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string,Type_bool]) e1 [e2]
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string]) e1 [e2]
     return Type_bool
 inferTypeExp env (ELtEq e1 e2) = do
-    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string,Type_bool]) e1 [e2]
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string]) e1 [e2]
     return Type_bool
 inferTypeExp env (EGtEq e1 e2) = do
-    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string,Type_bool]) e1 [e2]
+    inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string]) e1 [e2]
     return Type_bool
 inferTypeExp env (EEq e1 e2) = do
     inferTypeOverloadedExp env (Alternative [Type_int,Type_double,Type_string,Type_bool]) e1 [e2]
