@@ -180,8 +180,13 @@ evalStm (SBlock stms) = pushPop $ evalStms stms
 {-
 evalStm (SWhile e stm) = do
     v <- evalExp e
-		if v == VTrue
+    if v == VTrue then do
+        evalStm stm
+        evalStm e stm
+    else
+        return Nothing
 -}
+
 evalStm (SIfElse e stm1 stm2) = do
     v <- evalExp e
     if v == VTrue then evalStm stm1
@@ -239,14 +244,28 @@ evalExp (EPIncr e@(EId i)) = do
     updateContext i val'
     return val
 evalExp (EPIncr e) = fail $ "Expected " ++ printTree e ++ " to be an id."
-{-
-evalExp (EPDecr e@(EId i)) =
-evalExp (EPDecr e) =
-evalExp (EIncr e@(EId i)) =
-evalExp (EIncr e) =
-evalExp (EDecr e@(EId i)) =
-evalExp (EDecr e) =
--}
+
+evalExp (EPDecr e@(EId i)) = do
+    val <- evalExp e
+    val' <- subValue val (VInt 1)
+    updateContext i val'
+    return val
+evalExp (EPDecr e) = fail $ "Expected " ++ printTree e ++ " to be an id."
+
+evalExp (EIncr e@(EId i)) = do
+    val <- evalExp e
+    val' <- addValue val (VInt 1)
+    updateContext i val'
+    return val'
+evalExp (EIncr e) = fail $ "Expected " ++ printTree e ++ " to be an id."
+
+evalExp (EDecr e@(EId i)) = do
+    val <- evalExp e
+    val' <- subValue val (VInt 1)
+    updateContext i val'
+    return val'
+evalExp (EDecr e) = fail $ "Expected " ++ printTree e ++ " to be an id."
+
 evalExp (ETimes e1 e2) = applyFun mulValue e1 e2
 
 evalExp (EDiv e1 e2)   = applyFun divValue e1 e2
