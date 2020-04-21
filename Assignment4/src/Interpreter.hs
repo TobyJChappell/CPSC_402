@@ -273,12 +273,39 @@ evalExp (EPlus e1 e2)  = applyFun addValue e1 e2
 evalExp (EMinus e1 e2) = applyFun subValue e1 e2
 evalExp (ELt e1 e2)    = applyFun ltValue e1 e2
 evalExp (EGt e1 e2)    = applyFun gtValue e1 e2
-{-
-evalExp (ELtEq e1 e2)  =
-evalExp (EGtEq e1 e2)  =
-evalExp (EEq e1 e2)    =
-evalExp (ENEq e1 e2) =
--}
+
+evalExp (ELtEq e1 e2)  = do
+    val1 <- evalExp e1
+    val2 <- evalExp e2
+    if val1 == val2 then
+        return VTrue
+    else
+        applyFun ltValue e1 e2
+
+evalExp (EGtEq e1 e2)  = do
+    val1 <- evalExp e1
+    val2 <- evalExp e2
+    if val1 == val2 then
+        return VTrue
+    else
+        applyFun gtValue e1 e2
+
+evalExp (EEq e1 e2)   = do
+    val1 <- evalExp e1
+    val2 <- evalExp e2
+    if val1 == val2 then
+        return VTrue
+    else
+        return VFalse
+
+evalExp (ENEq e1 e2) = do
+    val1 <- evalExp e1
+    val2 <- evalExp e2
+    if val1 == val2 then
+        return VFalse
+    else
+        return VTrue
+
 evalExp (EAnd e1 e2) = do
     val <- evalExp e1
     if val == VFalse
