@@ -278,8 +278,29 @@ evalExp (ELtEq e1 e2)  =
 evalExp (EGtEq e1 e2)  =
 evalExp (EEq e1 e2)    =
 evalExp (ENEq e1 e2) =
-evalExp (EAnd e1 e2) =
-evalExp (EOr e1 e2) =
+-}
+evalExp (EAnd e1 e2) = do
+    val <- evalExp e1
+    if val == VFalse
+        then return VFalse
+    else do
+        val <- evalExp e2
+        if val == VTrue then
+            return VTrue
+        else
+            return VFalse
+
+evalExp (EOr e1 e2) = do
+    val <- evalExp e1
+    if val == VTrue
+        then return VTrue
+    else do
+        val <- evalExp e2
+        if val == VTrue then
+            return VTrue
+        else
+            return VFalse
+{-
 evalExp (EAss (EId i) e) =
 evalExp (EAss _ _) =
 evalExp (ETyped e _) =
