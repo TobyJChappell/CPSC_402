@@ -189,8 +189,8 @@ evalStm (SWhile e stm) = do
 
 evalStm (SIfElse e stm1 stm2) = do
     v <- evalExp e
-    if v == VTrue then evalStm stm1
-    else evalStm stm2
+    if v == VTrue then pushPop $ evalStm stm1
+    else pushPop $ evalStm stm2
     return Nothing
 
 evalStm stm =
