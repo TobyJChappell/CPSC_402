@@ -166,7 +166,8 @@ evalStm (SDecls _ ids) = do
 evalStm (SInit _ id e) = do
     v <- evalExp e
     extendContext id v
-    return Nothing
+    return $ Just v
+--return Nothing?
 
 evalStm SReturnVoid = return Nothing
 
@@ -175,10 +176,18 @@ evalStm (SReturn e) = do
     return $ Just v
 
 evalStm (SBlock stms) = pushPop $ evalStms stms
+
 {-
-evalStm (SWhile e stm) =
-evalStm (SIfElse e stm1 stm2) =
+evalStm (SWhile e stm) = do
+    v <- evalExp e
+		if v == VTrue
 -}
+evalStm (SIfElse e stm1 stm2) = do
+    v <- evalExp e
+    if v == VTrue then evalStm stm1
+    else evalStm stm2
+    return Nothing
+
 evalStm stm =
     fail $ "Missing case in evalStm " ++ printTree stm ++ "\n"
 
