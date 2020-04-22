@@ -166,8 +166,7 @@ evalStm (SDecls _ ids) = do
 evalStm (SInit _ id e) = do
     v <- evalExp e
     extendContext id v
-    return $ Just v
---return Nothing?
+    return Nothing
 
 evalStm SReturnVoid = return Nothing
 
@@ -205,7 +204,9 @@ evalExp (EInt i) = return $ VInt i
 
 evalExp (EDouble d) = return $ VDouble d
 --evalExp (EString _) =
---evalExp (EId i) =
+evalExp (EId i) = do
+    val <- lookupContext i
+    return val
 
 evalExp (EApp i exps) = do
     vals <- mapM evalExp exps
