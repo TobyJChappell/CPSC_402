@@ -179,9 +179,8 @@ evalStm (SBlock stms) = pushPop $ evalStms stms
 {-
 evalStm (SWhile e stm) = do
     v <- evalExp e
-    if v == VTrue then do
-        evalStm stm
-        evalStm e stm
+    if v == VTrue then
+        pushPop $ evalStm stm
     else
         return Nothing
 -}
@@ -328,8 +327,12 @@ evalExp (EOr e1 e2) = do
             return VTrue
         else
             return VFalse
+
+evalExp (EAss (EId i) e) = do
+    val <- evalExp e
+    updateContext i val
+    return val
 {-
-evalExp (EAss (EId i) e) =
 evalExp (EAss _ _) =
 evalExp (ETyped e _) =
 -}
