@@ -334,10 +334,10 @@ evalExp (EAss (EId i) e) = do
     val <- evalExp e
     updateContext i val
     return val
-{-
-evalExp (EAss _ _) =
-evalExp (ETyped e _) =
--}
+evalExp (EAss _ _) = fail $ "Expected valid assignment."
+
+evalExp (ETyped e _) = fail $ "Missing case in evalExp." ++ printTree e ++ "\n"
+
 evalExp e = fail $ "Missing case in evalExp." ++ printTree e ++ "\n"
 
 

@@ -23,13 +23,17 @@
   size: 1757
   modtime: 1586547299
 /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment4/src/Interpreter.hs:
-  hash: 2c28c912e0754976a417aba69c41d71cf8c2878bfdd3ca7fec991ac3f1a9bb6c
-  size: 10485
-  modtime: 1587496998
+  hash: c25bdf321725f1fe2e6858c4ca7dec7664ef6ad8025ab952976a8aa77e78f25e
+  size: 12503
+  modtime: 1587519158
 /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment4/package.yaml:
   hash: a23171099fa8a08aee1e07964476b2082ca3ed437a17021d676ad37c20bea015
   size: 1014
   modtime: 1586547299
+? /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment4/.stack-work/dist/x86_64-osx/Cabal-2.4.0.1/build/autogen/cabal_macros.h
+: hash: 836708575eb0e82a0c9586f6cafd5ce4ec92d5206c8547a973aaf43777caf93a
+  size: 5313
+  modtime: 1587497226
 /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment4/src/AbsCPP.hs:
   hash: c02f2f4b31d43815fc3fbc35ada33ba81a3e2ae69aae224078c5748bb2eda1d4
   size: 1171
