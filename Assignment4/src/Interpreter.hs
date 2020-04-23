@@ -176,14 +176,12 @@ evalStm (SReturn e) = do
 
 evalStm (SBlock stms) = pushPop $ evalStms stms
 
-{-
 evalStm (SWhile e stm) = do
     v <- evalExp e
     if v == VTrue then
         pushPop $ evalStm stm
     else
         return Nothing
--}
 
 evalStm (SIfElse e stm1 stm2) = do
     v <- evalExp e
@@ -193,9 +191,6 @@ evalStm (SIfElse e stm1 stm2) = do
         pushPop $ evalStm stm2
     return Nothing
 
-evalStm stm =
-    fail $ "Missing case in evalStm " ++ printTree stm ++ "\n"
-
 evalExp :: Interpreter i => Exp -> i Value
 evalExp ETrue = return VTrue
 
@@ -204,7 +199,7 @@ evalExp EFalse = return VFalse
 evalExp (EInt i) = return $ VInt i
 
 evalExp (EDouble d) = return $ VDouble d
---evalExp (EString _) =
+evalExp (EString _) = fail $ "Can't return string"
 evalExp (EId i) = do
     val <- lookupContext i
     return val
@@ -336,10 +331,7 @@ evalExp (EAss (EId i) e) = do
     return val
 evalExp (EAss _ _) = fail $ "Expected valid assignment."
 
-evalExp (ETyped e _) = fail $ "Missing case in evalExp." ++ printTree e ++ "\n"
-
-evalExp e = fail $ "Missing case in evalExp." ++ printTree e ++ "\n"
-
+evalExp (ETyped e _) = fail $ "Can't Type."
 
 applyFun :: Interpreter i => (Value -> Value -> i Value) -> Exp -> Exp -> i Value
 applyFun f e1 e2 = do
