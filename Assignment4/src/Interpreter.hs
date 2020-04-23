@@ -179,7 +179,7 @@ evalStm (SBlock stms) = pushPop $ evalStms stms
 evalStm (SWhile e stm) = do
     v <- evalExp e
     if v == VTrue then
-        pushPop $ evalStm stm
+        evalStm stm
     else
         return Nothing
 
