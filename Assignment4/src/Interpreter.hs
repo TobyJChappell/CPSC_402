@@ -10,7 +10,6 @@ import Data.Map ( Map )
 import qualified Data.Map as M
 import Control.Monad.State ( MonadState, StateT, get, put, modify, foldM, liftIO, lift )
 
-
 data Value = VInt Integer
            | VDouble Double
            | VVoid
@@ -178,18 +177,29 @@ evalStm (SBlock stms) = pushPop $ evalStms stms
 
 evalStm (SWhile e stm) = do
     v <- evalExp e
-    if v == VTrue then
-        evalStm stm
-    else
+    if v == VFalse then
         return Nothing
+    else do
+        con <- pushPop $ evalStms [stm]
+        if con == Nothing then
+            evalStm (SWhile e stm)
+        else
+            return con
 
 evalStm (SIfElse e stm1 stm2) = do
     v <- evalExp e
-    if v == VTrue then
-        pushPop $ evalStm stm1
-    else
-        pushPop $ evalStm stm2
-    return Nothing
+    if v == VTrue then do
+        con <- pushPop $ evalStms [stm1]
+        if con == Nothing then
+            return Nothing
+        else
+            return con
+    else do
+        con <- pushPop $ evalStm stm2
+        if con == Nothing then
+            return Nothing
+        else
+            return con
 
 evalExp :: Interpreter i => Exp -> i Value
 evalExp ETrue = return VTrue
@@ -199,7 +209,7 @@ evalExp EFalse = return VFalse
 evalExp (EInt i) = return $ VInt i
 
 evalExp (EDouble d) = return $ VDouble d
-evalExp (EString _) = fail $ "Can't return string"
+evalExp (EString _) = fail $ "Can't return string."
 evalExp (EId i) = do
     val <- lookupContext i
     return val
@@ -235,6 +245,7 @@ evalExp (EApp i exps) = do
                         return VVoid
                     else
                         fail $ "Function " ++ printTree i ++ " should return a value."
+
 evalExp (EPIncr e@(EId i)) = do
     val <- evalExp e
     val' <- addValue val (VInt 1)
@@ -271,21 +282,9 @@ evalExp (EMinus e1 e2) = applyFun subValue e1 e2
 evalExp (ELt e1 e2)    = applyFun ltValue e1 e2
 evalExp (EGt e1 e2)    = applyFun gtValue e1 e2
 
-evalExp (ELtEq e1 e2)  = do
-    val1 <- evalExp e1
-    val2 <- evalExp e2
-    if val1 == val2 then
-        return VTrue
-    else
-        applyFun ltValue e1 e2
+evalExp (ELtEq e1 e2)  = applyFun ltEqValue e1 e2
 
-evalExp (EGtEq e1 e2)  = do
-    val1 <- evalExp e1
-    val2 <- evalExp e2
-    if val1 == val2 then
-        return VTrue
-    else
-        applyFun gtValue e1 e2
+evalExp (EGtEq e1 e2)  = applyFun gtEqValue e1 e2
 
 evalExp (EEq e1 e2)   = do
     val1 <- evalExp e1
@@ -329,9 +328,10 @@ evalExp (EAss (EId i) e) = do
     val <- evalExp e
     updateContext i val
     return val
+
 evalExp (EAss _ _) = fail $ "Expected valid assignment."
 
-evalExp (ETyped e _) = fail $ "Can't Type."
+evalExp (ETyped e _) = fail $ "Can't Type check expression."
 
 applyFun :: Interpreter i => (Value -> Value -> i Value) -> Exp -> Exp -> i Value
 applyFun f e1 e2 = do
@@ -383,6 +383,14 @@ ltValue (VDouble u) (VInt    v) = ltValue (VDouble u) (VDouble $ fromInteger v)
 ltValue (VInt    u) (VDouble v) = ltValue (VDouble $ fromInteger u) (VDouble v)
 ltValue _ _ = fail $ "Internal error, trying to apply ltValue to incompatible types."
 
+ltEqValue :: Interpreter i => Value -> Value -> i Value
+ltEqValue (VInt    u) (VInt    v) | u <= v     = return $ VTrue
+                                | otherwise = return $ VFalse
+ltEqValue (VDouble u) (VDouble v) | u <= v     = return $ VTrue
+                                | otherwise = return $ VFalse
+ltEqValue (VDouble u) (VInt    v) = ltEqValue (VDouble u) (VDouble $ fromInteger v)
+ltEqValue (VInt    u) (VDouble v) = ltEqValue (VDouble $ fromInteger u) (VDouble v)
+ltEqValue _ _ = fail $ "Internal error, trying to apply ltEqValue to incompatible types."
 
 gtValue :: Interpreter i => Value -> Value -> i Value
 gtValue (VInt    u) (VInt    v) | u > v     = return $ VTrue
@@ -393,6 +401,14 @@ gtValue (VDouble u) (VInt    v) = gtValue (VDouble u) (VDouble $ fromInteger v)
 gtValue (VInt    u) (VDouble v) = gtValue (VDouble $ fromInteger u) (VDouble v)
 gtValue _ _ = fail $ "Internal error, trying to apply gtValue to incompatible types."
 
+gtEqValue :: Interpreter i => Value -> Value -> i Value
+gtEqValue (VInt    u) (VInt    v) | u >= v     = return $ VTrue
+                                | otherwise = return $ VFalse
+gtEqValue (VDouble u) (VDouble v) | u >= v     = return $ VTrue
+                                | otherwise = return $ VFalse
+gtEqValue (VDouble u) (VInt    v) = gtEqValue (VDouble u) (VDouble $ fromInteger v)
+gtEqValue (VInt    u) (VDouble v) = gtEqValue (VDouble $ fromInteger u) (VDouble v)
+gtEqValue _ _ = fail $ "Internal error, trying to apply gtEqValue to incompatible types."
 
 negValue :: Interpreter i => Value -> i Value
 negValue VFalse = return $ VTrue
