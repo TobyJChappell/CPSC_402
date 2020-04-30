@@ -23,9 +23,9 @@
   size: 1757
   modtime: 1586547299
 /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment4/src/Interpreter.hs:
-  hash: c25bdf321725f1fe2e6858c4ca7dec7664ef6ad8025ab952976a8aa77e78f25e
-  size: 12503
-  modtime: 1587519158
+  hash: 53ddc98b854f514ed1c6d11051c81cabeb7fa61defde73eb7d5ad54a4ce80734
+  size: 13560
+  modtime: 1587685240
 /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment4/package.yaml:
   hash: a23171099fa8a08aee1e07964476b2082ca3ed437a17021d676ad37c20bea015
   size: 1014
@@ -39,9 +39,9 @@
   size: 1171
   modtime: 1586547299
 /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment4/src/TypeChecker.hs:
-  hash: 9520f588405bce37b7eb17b278981e73a259edc004677fe80f296807ca58306f
-  size: 273
-  modtime: 1586547299
+  hash: dc47c415c4a351e6faf55d4ca99718621a8a283697fdd18b57ac54b69d03b0ab
+  size: 7384
+  modtime: 1587083569
 /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment4/src/PrintCPP.hs:
   hash: 33aec0fccb85f5731d172b9d501c72f75861d6664098070dac5932b23eee73b3
   size: 7025
