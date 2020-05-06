@@ -341,8 +341,20 @@ compileExp n (EInt i) = return $ if n == Nested then [s_i32_const i] else []
     -- use `s_call`
     -- if n==TopLevel and the type is not void use `s_drop`
 
--- compileExp n (EIncr id@(EId i)) = do
+{-
+compileExp n (EIncr id@(EId i)) = do
     -- make a case distinction on whether the type of `EId i` is `Type_int` or `Type_double`
+  t <- getType i
+	case t of
+    Type_double -> return $
+      i ++
+      s_f64_const 1 ++
+      s_i64_add
+    Type_int -> return $
+      i ++
+      s_i32 const 1  ++
+      s_i32_add
+-}
 -- compileExp n (EPIncr id@(EId i)) = do
 -- compileExp n (EDecr id@(EId i)) = do
 -- compileExp n (EPDecr id@(EId i)) = do
