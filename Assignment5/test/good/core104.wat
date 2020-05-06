@@ -106,7 +106,8 @@
   (param $ix99$0 i32)
   (param $ix100$0 i32)
   (result i32)
+  return
  )
- (func $main (result i32) (local $ix$0 i32))
+ (func $main (result i32) (local $ix$0 i32) return)
  (export "main" (func $main))
 )

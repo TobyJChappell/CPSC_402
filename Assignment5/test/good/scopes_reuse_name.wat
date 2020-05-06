@@ -11,6 +11,8 @@
   (local $ii$1 i32)
   (local $ix$3 i32)
   (local $ix$1 i32)
+  (i32.const 0)
+  return
  )
  (export "main" (func $main))
 )
