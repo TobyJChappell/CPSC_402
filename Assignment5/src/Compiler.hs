@@ -400,9 +400,13 @@ compileExp _ (ENEq e1 e2)   = compileArith e1 e2 s_i32_ne s_f64_ne
 -- compileExp _ (EAnd e1 e2) = do
 -- compileExp _ (EOr e1 e2) = do
 
--- compileExp n (EAss (EId i) e) = do
-    -- use s_local_tee and s_local_set
-
+compileExp n (EAss (EId i) e) = do
+  s_i <- getVarName i
+  s_e <- compileExp Nested e
+  return $
+    s_e ++
+    [s_local_set s_i]
+    --return [s_local_tee s_i]
 compileExp n (ETyped e _) = compileExp n e
 
 -- delete after implementing the above
