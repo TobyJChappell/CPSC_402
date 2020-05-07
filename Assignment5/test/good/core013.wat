@@ -5,6 +5,6 @@
  (import "env" "printDouble" (func $printDouble (param f64)))
  (func $main (result i32) (i32.const 0) return)
  (func $printBool (param $bb$0 i32))
- (func $test (param $ii$0 i32) (result i32) (i32.const 0) i32.gt_s return)
+ (func $test (param $ii$0 i32) (result i32) return)
  (export "main" (func $main))
 )

@@ -249,7 +249,7 @@ compileStm (SDecls ty ids) = do
     modify (\(m, c) -> (foldl (\m' i -> M.insert i (ty,c) m') m ids, c))
     return []
 
---compileStm (SInit ty i e) =
+--compileStm (SInit ty i e) = 
 compileStm (SReturn e) = do
     s_e <- compileExp Nested e
     return $
@@ -326,34 +326,35 @@ data Nesting = TopLevel | Nested deriving Eq
 compileExp :: MonadState Env m => Nesting -> Exp -> m [SExp]
 compileExp n ETrue = return $ if n == Nested then [s_i32_const 1] else []
 
--- compileExp n EFalse =
+compileExp n EFalse = return $ if n == Nested then [s_i32_const 0] else []
 
 compileExp n (EInt i) = return $ if n == Nested then [s_i32_const i] else []
 
--- compileExp n (EDouble i) =
+compileExp n (EDouble i) = return $ if n == Nested then [s_f64_const i] else []
 
--- compileExp n (EId i) = do
-    -- use `getVarName`
+--compileExp n (EId i) = 
+--  getVarName i
 
--- compileExp n x@(EApp (Id i) args) = do
-    -- use `mapM` to iterate `compileExp Nested` over `args`
-    -- get the type of `EApp (Id i) args`
-    -- use `s_call`
-    -- if n==TopLevel and the type is not void use `s_drop`
-
+compileExp n x@(EApp (Id i) args) = do
+  s_args <- mapM (compileExp Nested) args
+  ty <- getType x
+  return $
+    concat s_args ++
+    [s_call i] ++
+    if n == TopLevel && ty /= Type_void then [s_drop] else []
 {-
 compileExp n (EIncr id@(EId i)) = do
     -- make a case distinction on whether the type of `EId i` is `Type_int` or `Type_double`
-  t <- getType i
-	case t of
+  t <- getType id 
+  case t of
     Type_double -> return $
       i ++
       s_f64_const 1 ++
-      s_i64_add
+      [s_f64_add]
     Type_int -> return $
       i ++
-      s_i32 const 1  ++
-      s_i32_add
+      s_i32 const 1 ++
+      [s_i32_add]
 -}
 -- compileExp n (EPIncr id@(EId i)) = do
 -- compileExp n (EDecr id@(EId i)) = do
@@ -371,7 +372,6 @@ compileExp _ (ELtEq e1 e2)  = compileArith e1 e2 s_i32_le_s s_f64_le
 compileExp _ (EGtEq e1 e2)  = compileArith e1 e2 s_i32_ge_s s_f64_ge
 compileExp _ (EEq e1 e2)    = compileArith e1 e2 s_i32_eq s_f64_eq
 compileExp _ (ENEq e1 e2)   = compileArith e1 e2 s_i32_ne s_f64_ne
-
 
 -- for And and Or use if/then/else
 -- compileExp _ (EAnd e1 e2) = do
