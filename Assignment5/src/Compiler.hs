@@ -249,7 +249,13 @@ compileStm (SDecls ty ids) = do
     modify (\(m, c) -> (foldl (\m' i -> M.insert i (ty,c) m') m ids, c))
     return []
 
---compileStm (SInit ty i e) =
+compileStm (SInit ty i e) = do
+  s_i <- getVarName i
+  s_e <- compileExp Nested e
+  return $
+    s_e ++
+    [s_local_set s_i]
+
 compileStm (SReturn e) = do
     s_e <- compileExp Nested e
     return $
@@ -347,8 +353,10 @@ compileExp n (EInt i) = return $ if n == Nested then [s_i32_const i] else []
 
 compileExp n (EDouble i) = return $ if n == Nested then [s_f64_const i] else []
 
---compileExp n (EId i) =
---  getVarName i
+compileExp n (EId i) = do
+  s_i <- getVarName i
+  return $
+    if n == Nested then [s_local_get s_i] else []
 
 compileExp n x@(EApp (Id i) args) = do
   s_args <- mapM (compileExp Nested) args
