@@ -250,6 +250,7 @@ compileStm (SDecls ty ids) = do
     return []
 
 compileStm (SInit ty i e) = do
+  modify (\(m, c) -> (M.insert i (ty,c) m, c))
   s_i <- getVarName i
   s_e <- compileExp Nested e
   return $
@@ -274,15 +275,16 @@ compileStm (SWhile cond s) = do
   [s_br 0]
 -}
 
+{-
 compileStm (SBlock stms) = do
   s_stms <- mapM (compileStm) stms
   return $
     concat s_stms
-
+-}
 {-
 compileStm s@(SIfElse cond s1 s2) = do
-  [s_if_then_else]
-  ty <- getType cond
+  s_cond <- compileExp Nested cond
+	[s_if_then_else]
   pushPop $ compileStm s1
   pushPop $ compileStm s2
 -}
@@ -365,20 +367,20 @@ compileExp n x@(EApp (Id i) args) = do
     concat s_args ++
     [s_call i] ++
     if n == TopLevel && ty /= Type_void then [s_drop] else []
-{-
+
 compileExp n (EIncr id@(EId i)) = do
-    -- make a case distinction on whether the type of `EId i` is `Type_int` or `Type_double`
+  s_i <- getVarName i
   t <- getType id
   case t of
     Type_double -> return $
-      i ++
-      s_f64_const 1 ++
+      s_i ++
+      [s_f64_const 1] ++
       [s_f64_add]
     Type_int -> return $
-      i ++
-      s_i32 const 1 ++
+      s_i ++
+      [s_i32_const 1] ++
       [s_i32_add]
--}
+
 -- compileExp n (EPIncr id@(EId i)) = do
 -- compileExp n (EDecr id@(EId i)) = do
 -- compileExp n (EPDecr id@(EId i)) = do
@@ -396,17 +398,26 @@ compileExp _ (EGtEq e1 e2)  = compileArith e1 e2 s_i32_ge_s s_f64_ge
 compileExp _ (EEq e1 e2)    = compileArith e1 e2 s_i32_eq s_f64_eq
 compileExp _ (ENEq e1 e2)   = compileArith e1 e2 s_i32_ne s_f64_ne
 
--- for And and Or use if/then/else
--- compileExp _ (EAnd e1 e2) = do
--- compileExp _ (EOr e1 e2) = do
+compileExp _ (EAnd e1 e2) = do
+  s_e1 <- compileExp Nested e1
+  s_e2 <- compileExp Nested e2
+  return $
+    if s_e1 == [s_i32_const 0] then [s_i32_const 0] else (if s_e2 == [s_i32_const 0] then [s_i32_const 0] else [s_i32_const 1])
+
+compileExp _ (EOr e1 e2) = do
+  s_e1 <- compileExp Nested e1
+  s_e2 <- compileExp Nested e2
+  return $
+    if s_e1 == [s_i32_const 1] then [s_i32_const 1] else (if s_e2 == [s_i32_const 1] then [s_i32_const 1] else [s_i32_const 0])
 
 compileExp n (EAss (EId i) e) = do
   s_i <- getVarName i
   s_e <- compileExp Nested e
   return $
     s_e ++
-    [s_local_set s_i]
-    --return [s_local_tee s_i]
+    [s_local_set s_i] ++
+    [s_local_tee s_i]
+
 compileExp n (ETyped e _) = compileExp n e
 
 -- delete after implementing the above
