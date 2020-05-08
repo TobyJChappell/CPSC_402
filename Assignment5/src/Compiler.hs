@@ -231,7 +231,6 @@ getVarName i@(Id s) = do
         Just (ty,c) -> return $ typePrefix ty s ++ "$" ++ show c
         Nothing -> error $ "Error : " ++ s ++ " is not in the map " ++ show m
 
-
 -- similar to the pushPop of the interpreter
 pushPop :: MonadState Env m => m a -> m a
 pushPop f = do
@@ -240,7 +239,6 @@ pushPop f = do
     a <- f
     modify (\_ -> (m_old,c_old))
     return a
-
 
 compileStm :: MonadState Env m => Stm -> m [SExp]
 compileStm (SExp e) = compileExp TopLevel e
@@ -264,6 +262,7 @@ compileStm (SReturn e) = do
       [s_return]
 
 compileStm SReturnVoid = return []
+
 {-
 compileStm (SWhile cond s) = do
   [s_block]
@@ -271,15 +270,14 @@ compileStm (SWhile cond s) = do
   s_cond <- compileExp Nested cond
   [s_br_if 1]
   pushPop $ compileStm s
-  [[s_br 0]]
+  [s_br 0]
 -}
 
-{-
 compileStm (SBlock stms) = do
   s_stms <- mapM (compileStm) stms
   return $
     concat s_stms
--}
+
 {-
 compileStm s@(SIfElse cond s1 s2) = do
   s_cond <- compileExp Nested cond
@@ -287,6 +285,7 @@ compileStm s@(SIfElse cond s1 s2) = do
   pushPop $ compileStm s1
   pushPop $ compileStm s2
 -}
+
     -- we have to specify the return type of the if/then/else block
 -- delete the line below after implementing the above
 compileStm _ = return []
@@ -356,8 +355,7 @@ compileExp n (EDouble i) = return $ if n == Nested then [s_f64_const i] else []
 
 compileExp n (EId i) = do
   s_i <- getVarName i
-  return $
-    if n == Nested then [s_local_get s_i] else []
+  return $ if n == Nested then [s_local_get s_i] else []
 
 compileExp n x@(EApp (Id i) args) = do
   s_args <- mapM (compileExp Nested) args
@@ -372,39 +370,66 @@ compileExp n (EIncr id@(EId i)) = do
   t <- getType id
   case t of
     Type_double -> return $
-      s_i ++
+      [s_local_get s_i] ++
       [s_f64_const 1] ++
       [s_f64_add] ++
       [s_local_set s_i]
     Type_int -> return $
-      s_i ++
+      [s_local_get s_i] ++
       [s_i32_const 1] ++
       [s_i32_add] ++
       [s_local_set s_i]
 
-{-
 compileExp n (EPIncr id@(EId i)) = do
   s_i <- getVarName i
   let s_i' = s_i
   t <- getType id
   case t of
     Type_double -> return $
-      s_i ++
+      [s_local_get s_i] ++
       [s_f64_const 1] ++
       [s_f64_add] ++
       [s_local_set s_i] ++
-			s_i'
+      [s_local_get s_i']
     Type_int -> return $
-      s_i ++
+      [s_local_get s_i] ++
       [s_i32_const 1] ++
       [s_i32_add] ++
       [s_local_set s_i] ++
-      s_i'
--}
--- compileExp n (EDecr id@(EId i)) = do
--- compileExp n (EPDecr id@(EId i)) = do
+      [s_local_get s_i']
 
--- for the following use `compileArith`
+compileExp n (EDecr id@(EId i)) = do
+  s_i <- getVarName i
+  t <- getType id
+  case t of
+    Type_double -> return $
+      [s_local_get s_i] ++
+      [s_f64_const 1] ++
+      [s_f64_sub] ++
+      [s_local_set s_i]
+    Type_int -> return $
+      [s_local_get s_i] ++
+      [s_i32_const 1] ++
+      [s_i32_sub] ++
+      [s_local_set s_i]
+
+compileExp n (EPDecr id@(EId i)) = do
+  s_i <- getVarName i
+  let s_i' = s_i
+  t <- getType id
+  case t of
+    Type_double -> return $
+      [s_local_get s_i] ++
+      [s_f64_const 1] ++
+      [s_f64_sub] ++
+      [s_local_set s_i] ++
+      [s_local_get s_i']
+    Type_int -> return $
+      [s_local_get s_i] ++
+      [s_i32_const 1] ++
+      [s_i32_sub] ++
+      [s_local_set s_i] ++
+      [s_local_get s_i']
 
 compileExp n (ETimes e1 e2) = compileArith e1 e2 s_i32_mul s_f64_mul
 compileExp _ (EDiv e1 e2)   = compileArith e1 e2 s_i32_div_s s_f64_div

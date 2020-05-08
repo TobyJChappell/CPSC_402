@@ -10,6 +10,10 @@
   (local $iz$0 i32)
   (i32.const 0)
   (local.set $iz$0)
+  (local.get $iz$0)
+  (i32.const 1)
+  i32.add
+  (local.set $iz$0)
   (call $id)
   drop
   (local.get $iz$0)
@@ -22,9 +26,29 @@
   drop
   (local.get $iz$0)
   (call $printInt)
+  (local.get $iz$0)
+  (i32.const 1)
+  i32.add
+  (local.set $iz$0)
+  (local.get $iz$0)
+  (local.get $iz$0)
+  (i32.const 1)
+  i32.add
+  (local.set $iz$0)
+  (local.get $iz$0)
   i32.add
   (local.get $iz$0)
   (call $printInt)
+  (local.get $iz$0)
+  (i32.const 1)
+  i32.add
+  (local.set $iz$0)
+  (local.get $iz$0)
+  (local.get $iz$0)
+  (i32.const 1)
+  i32.add
+  (local.set $iz$0)
+  (local.get $iz$0)
   i32.eq
   (local.get $iz$0)
   (call $printInt)

@@ -10,6 +10,16 @@
   (local $iy$0 i32)
   (i32.const 50)
   (local.set $ix$0)
+  (local.get $ix$0)
+  (i32.const 1)
+  i32.add
+  (local.set $ix$0)
+  (local.get $ix$0)
+  (local.get $ix$0)
+  (i32.const 1)
+  i32.sub
+  (local.set $ix$0)
+  (local.get $ix$0)
   i32.add
   (local.set $iy$0)
   (local.get $iy$0)
@@ -18,6 +28,11 @@
   (call $printInt)
   (i32.const 10)
   (local.set $ix$0)
+  (local.get $ix$0)
+  (i32.const 1)
+  i32.add
+  (local.set $ix$0)
+  (local.get $ix$0)
   i32.add
   (local.get $ix$0)
   i32.add

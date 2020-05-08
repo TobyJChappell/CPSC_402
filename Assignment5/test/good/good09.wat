@@ -11,9 +11,18 @@
   (local.set $ii$0)
   (local.get $ii$0)
   (call $printInt)
+  (local.get $ii$0)
+  (i32.const 1)
+  i32.add
+  (local.set $ii$0)
+  (local.get $ii$0)
   (call $printInt)
   (local.get $ii$0)
   (call $printInt)
+  (local.get $ii$0)
+  (i32.const 1)
+  i32.add
+  (local.set $ii$0)
   (call $printInt)
   (local.get $ii$0)
   (call $printInt)

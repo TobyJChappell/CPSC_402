@@ -11,6 +11,11 @@
   (local $ix1$0 i32)
   (i32.const 0)
   (local.set $ix0$0)
+  (local.get $ix0$0)
+  (i32.const 1)
+  i32.sub
+  (local.set $ix0$0)
+  (local.get $ix0$0)
   (local.set $ix1$0)
   (i32.const 0)
   return
