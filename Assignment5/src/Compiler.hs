@@ -264,7 +264,6 @@ compileStm (SReturn e) = do
       [s_return]
 
 compileStm SReturnVoid = return []
-
 {-
 compileStm (SWhile cond s) = do
   [s_block]
@@ -272,7 +271,7 @@ compileStm (SWhile cond s) = do
   s_cond <- compileExp Nested cond
   [s_br_if 1]
   pushPop $ compileStm s
-  [s_br 0]
+  [[s_br 0]]
 -}
 
 {-
@@ -367,7 +366,7 @@ compileExp n x@(EApp (Id i) args) = do
     concat s_args ++
     [s_call i] ++
     if n == TopLevel && ty /= Type_void then [s_drop] else []
-
+{-
 compileExp n (EIncr id@(EId i)) = do
   s_i <- getVarName i
   t <- getType id
@@ -380,7 +379,7 @@ compileExp n (EIncr id@(EId i)) = do
       s_i ++
       [s_i32_const 1] ++
       [s_i32_add]
-
+-}
 -- compileExp n (EPIncr id@(EId i)) = do
 -- compileExp n (EDecr id@(EId i)) = do
 -- compileExp n (EPDecr id@(EId i)) = do
@@ -415,8 +414,8 @@ compileExp n (EAss (EId i) e) = do
   s_e <- compileExp Nested e
   return $
     s_e ++
-    [s_local_set s_i] ++
-    [s_local_tee s_i]
+    [s_local_set s_i]
+    --[s_local_tee s_i]
 
 compileExp n (ETyped e _) = compileExp n e
 

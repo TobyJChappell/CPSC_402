@@ -3,6 +3,16 @@
  (import "env" "readDouble" (func $readDouble (result f64)))
  (import "env" "printInt" (func $printInt (param i32)))
  (import "env" "printDouble" (func $printDouble (param f64)))
- (func $main (result i32) (local $iuw$0 i32) (i32.const 0) return)
+ (func
+  $main
+  (result i32)
+  (local $iuw$0 i32)
+  (i32.const 0)
+  (local.set $iuw$0)
+  (local.get $iuw$0)
+  (call $printInt)
+  (i32.const 0)
+  return
+ )
  (export "main" (func $main))
 )

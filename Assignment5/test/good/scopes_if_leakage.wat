@@ -10,6 +10,18 @@
   (local $ivar$1 i32)
   (local $bvar1$0 i32)
   (local $bvar2$0 i32)
+  (i32.const 1)
+  (local.set $bvar$0)
+  (local.get $bvar$0)
+  (i32.const 1)
+  i32.eq
+  (local.get $bvar$0)
+  (local.set $bvar1$0)
+  (local.get $bvar$0)
+  (i32.const 1)
+  i32.eq
+  (local.get $bvar$0)
+  (local.set $bvar2$0)
   (i32.const 0)
   return
  )

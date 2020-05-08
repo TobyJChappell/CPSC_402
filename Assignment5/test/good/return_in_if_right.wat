@@ -4,6 +4,6 @@
  (import "env" "printInt" (func $printInt (param i32)))
  (import "env" "printDouble" (func $printDouble (param f64)))
  (func $g (result i32) (i32.const 10) return)
- (func $main (result i32) (i32.const 0) return)
+ (func $main (result i32) (call $g) (call $printInt) (i32.const 0) return)
  (export "main" (func $main))
 )

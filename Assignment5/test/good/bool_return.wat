@@ -3,7 +3,7 @@
  (import "env" "readDouble" (func $readDouble (result f64)))
  (import "env" "printInt" (func $printInt (param i32)))
  (import "env" "printDouble" (func $printDouble (param f64)))
- (func $c (param $id$0 i32) (result i32) return)
+ (func $c (param $id$0 i32) (result i32) (local.get $id$0) (local.get $id$0) i32.lt_s return)
  (func $main (result i32) (i32.const 0) return)
  (export "main" (func $main))
 )
