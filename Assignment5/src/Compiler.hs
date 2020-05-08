@@ -265,7 +265,8 @@ compileStm SReturnVoid = return []
 
 {-
 compileStm (SWhile cond s) = do
-  [s_block]
+  pushPop $ compileStm s
+  [s_block 0]
   [s_loop]
   s_cond <- compileExp Nested cond
   [s_br_if 1]
@@ -274,9 +275,9 @@ compileStm (SWhile cond s) = do
 -}
 
 compileStm (SBlock stms) = do
+  pushPop $ compileStms stms
   s_stms <- mapM (compileStm) stms
-  return $
-    concat s_stms
+  return $ concat s_stms
 
 {-
 compileStm s@(SIfElse cond s1 s2) = do
@@ -465,7 +466,7 @@ compileExp n (EAss (EId i) e) = do
 compileExp n (ETyped e _) = compileExp n e
 
 -- delete after implementing the above
-compileExp _ _ = return []
+-- compileExp _ _ = return []
 
 compileArith e1 e2 intOp doubleOp = do
     s_e1 <- compileExp Nested e1
