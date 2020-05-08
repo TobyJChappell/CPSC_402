@@ -12,10 +12,8 @@
   (local $ij$2 i32)
   (call $readInt)
   (local.set $in$0)
-  (local.tee $in$0)
   (i32.const 2)
   (local.set $ii$0)
-  (local.tee $ii$0)
   (i32.const 0)
   return
  )

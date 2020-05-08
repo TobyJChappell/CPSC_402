@@ -366,7 +366,7 @@ compileExp n x@(EApp (Id i) args) = do
     concat s_args ++
     [s_call i] ++
     if n == TopLevel && ty /= Type_void then [s_drop] else []
-{-
+
 compileExp n (EIncr id@(EId i)) = do
   s_i <- getVarName i
   t <- getType id
@@ -374,13 +374,33 @@ compileExp n (EIncr id@(EId i)) = do
     Type_double -> return $
       s_i ++
       [s_f64_const 1] ++
-      [s_f64_add]
+      [s_f64_add] ++
+      [s_local_set s_i]
     Type_int -> return $
       s_i ++
       [s_i32_const 1] ++
-      [s_i32_add]
+      [s_i32_add] ++
+      [s_local_set s_i]
+
+{-
+compileExp n (EPIncr id@(EId i)) = do
+  s_i <- getVarName i
+  let s_i' = s_i
+  t <- getType id
+  case t of
+    Type_double -> return $
+      s_i ++
+      [s_f64_const 1] ++
+      [s_f64_add] ++
+      [s_local_set s_i] ++
+			s_i'
+    Type_int -> return $
+      s_i ++
+      [s_i32_const 1] ++
+      [s_i32_add] ++
+      [s_local_set s_i] ++
+      s_i'
 -}
--- compileExp n (EPIncr id@(EId i)) = do
 -- compileExp n (EDecr id@(EId i)) = do
 -- compileExp n (EPDecr id@(EId i)) = do
 

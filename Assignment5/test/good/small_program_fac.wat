@@ -12,10 +12,8 @@
   (local $in$0 i32)
   (i32.const 1)
   (local.set $ir$0)
-  (local.tee $ir$0)
   (local.get $ia$0)
   (local.set $in$0)
-  (local.tee $in$0)
   (local.get $ir$0)
   return
  )

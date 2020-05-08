@@ -413,7 +413,6 @@
   (i32.const 100)
   (call $foo)
   (local.set $ix$0)
-  (local.tee $ix$0)
   (local.get $ix$0)
   (call $printInt)
   (local.get $ix$0)

@@ -11,12 +11,10 @@
   (local $iy$1 i32)
   (i32.const 6)
   (local.set $ix$0)
-  (local.tee $ix$0)
   (local.get $ix$0)
   (i32.const 7)
   i32.add
   (local.set $iy$0)
-  (local.tee $iy$0)
   (local.get $iy$0)
   (call $printInt)
   (local.get $ix$0)
