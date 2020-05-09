@@ -17,6 +17,25 @@
   (local.set $imx$0)
   (local.get $ilo$0)
   (call $printInt)
+  (block
+   (loop
+    (local.get $ihi$0)
+    (call $printInt)
+    (local.get $ilo$0)
+    (local.get $ihi$0)
+    i32.add
+    (local.set $ihi$0)
+    (local.get $ihi$0)
+    (local.get $ilo$0)
+    i32.sub
+    (local.set $ilo$0)
+    (local.get $ihi$0)
+    (local.get $imx$0)
+    i32.lt_s
+    (br_if 0)
+    (br 1)
+   )
+  )
   (i32.const 0)
   return
  )

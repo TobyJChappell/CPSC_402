@@ -263,33 +263,25 @@ compileStm (SReturn e) = do
 
 compileStm SReturnVoid = return []
 
-{-
 compileStm (SWhile cond s) = do
-  pushPop $ compileStm s
-  [s_block 0]
-  [s_loop]
+  s_s <- pushPop $ compileStm s
+  (m, c) <- get
   s_cond <- compileExp Nested cond
-  [s_br_if 1]
-  pushPop $ compileStm s
-  [s_br 0]
--}
+  let val = s_s ++ s_cond ++ [s_br_if c] ++ [s_br (c+1)]
+  return $ [s_block $ [s_loop $ val]]
 
 compileStm (SBlock stms) = do
-  pushPop $ compileStms stms
-  s_stms <- mapM (compileStm) stms
+  s_stms <- pushPop $ mapM (compileStm) stms
   return $ concat s_stms
 
-{-
 compileStm s@(SIfElse cond s1 s2) = do
   s_cond <- compileExp Nested cond
-	[s_if_then_else]
-  pushPop $ compileStm s1
-  pushPop $ compileStm s2
--}
-
-    -- we have to specify the return type of the if/then/else block
--- delete the line below after implementing the above
-compileStm _ = return []
+  s_cond_ty <- getType cond
+  ty <- getReturn s
+  case1 <- compileStm s1
+  case2 <- compileStm s2
+  let res = if s_cond_ty == Type_int then [s_i32_const 0] ++ [s_i32_gt_s] else [s_f64_const 0] ++ [s_f64_gt]
+  return $ s_cond ++ res ++ [s_if_then_else (compileType s_cond_ty) case1 case2]
 
 -- computes the return type of the given statement.
 -- if a return x statement occurs, getReturn returns the type of x

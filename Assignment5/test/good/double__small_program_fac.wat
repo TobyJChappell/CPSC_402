@@ -10,10 +10,27 @@
   (local $in$1 i32)
   (local $ir$1 i32)
   (i32.const 10)
-  (local.set $in$0)
+  (local.set $in$1)
   (i32.const 1)
-  (local.set $ir$0)
-  (local.get $ir$0)
+  (local.set $ir$1)
+  (block
+   (loop
+    (local.get $ir$1)
+    (local.get $in$1)
+    i32.mul
+    (local.set $ir$1)
+    (local.get $in$1)
+    (i32.const 1)
+    i32.sub
+    (local.set $in$1)
+    (local.get $in$1)
+    (i32.const 0)
+    i32.gt_s
+    (br_if 1)
+    (br 2)
+   )
+  )
+  (local.get $ir$1)
   (call $printInt)
   (f64.const 10.0)
   (call $dfac)

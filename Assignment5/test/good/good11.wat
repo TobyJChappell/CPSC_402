@@ -13,6 +13,25 @@
   (local.set $isum$0)
   (i32.const 0)
   (local.set $inum$0)
+  (block
+   (loop
+    (local.get $isum$0)
+    (local.get $ix$0)
+    i32.add
+    (local.set $isum$0)
+    (local.get $inum$0)
+    (i32.const 1)
+    i32.add
+    (local.set $inum$0)
+    (local.get $inum$0)
+    (call $readInt)
+    (local.set $ix$0)
+    (i32.const 0)
+    i32.ne
+    (br_if 0)
+    (br 1)
+   )
+  )
   (local.get $isum$0)
   (local.get $inum$0)
   i32.div_s

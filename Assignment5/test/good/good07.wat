@@ -14,6 +14,20 @@
   (i32.const 2)
   i32.div_s
   (local.set $id$0)
+  (block
+   (loop
+    (local.get $id$0)
+    (i32.const 1)
+    i32.sub
+    (local.set $id$0)
+    (local.get $id$0)
+    (local.get $id$0)
+    (i32.const 1)
+    i32.gt_s
+    (br_if 0)
+    (br 1)
+   )
+  )
   (i32.const 0)
   return
  )

@@ -10,6 +10,29 @@
   (local $ii$2 i32)
   (i32.const 4)
   (local.set $ij$0)
+  (block
+   (loop
+    (i32.const 0)
+    (local.set $ii$2)
+    (local.get $ii$2)
+    (i32.const 1)
+    i32.add
+    (local.set $ii$2)
+    (local.get $ii$2)
+    (local.get $ii$2)
+    (call $printInt)
+    (local.get $ij$0)
+    (i32.const 1)
+    i32.add
+    (local.set $ij$0)
+    (local.get $ij$0)
+    (local.get $ij$0)
+    (i32.const 6)
+    i32.lt_s
+    (br_if 0)
+    (br 1)
+   )
+  )
   (local.get $ij$0)
   (call $printInt)
   (local.get $ij$0)

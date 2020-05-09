@@ -15,6 +15,25 @@
   (local.set $iret$0)
   (i32.const 1)
   (local.set $ii$0)
+  (block
+   (loop
+    (local.get $ii$0)
+    (local.get $iret$0)
+    i32.mul
+    (local.set $iret$0)
+    (local.get $ii$0)
+    (i32.const 1)
+    i32.add
+    (local.set $ii$0)
+    (local.get $ii$0)
+    (local.get $iarg$0)
+    (i32.const 1)
+    i32.add
+    i32.lt_s
+    (br_if 0)
+    (br 1)
+   )
+  )
   (local.get $iret$0)
   (call $printInt)
   (i32.const 0)
