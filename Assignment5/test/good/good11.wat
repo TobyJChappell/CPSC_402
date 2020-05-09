@@ -15,6 +15,13 @@
   (local.set $inum$0)
   (block
    (loop
+    (call $readInt)
+    (local.set $ix$0)
+    (i32.const 0)
+    i32.ne
+    (f64.const 0.0)
+    f64.le
+    (br_if 1)
     (local.get $isum$0)
     (local.get $ix$0)
     i32.add
@@ -24,12 +31,7 @@
     i32.add
     (local.set $inum$0)
     (local.get $inum$0)
-    (call $readInt)
-    (local.set $ix$0)
-    (i32.const 0)
-    i32.ne
-    (br_if 0)
-    (br 1)
+    (br 0)
    )
   )
   (local.get $isum$0)

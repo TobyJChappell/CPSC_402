@@ -264,24 +264,28 @@ compileStm (SReturn e) = do
 compileStm SReturnVoid = return []
 
 compileStm (SWhile cond s) = do
-  s_s <- pushPop $ compileStm s
+  s' <- pushPop $ compileStm s
   (m, c) <- get
-  s_cond <- compileExp Nested cond
-  let val = s_s ++ s_cond ++ [s_br_if c] ++ [s_br (c+1)]
+  bl <- compileExp Nested cond
+  ty <- getType cond
+  let evl = if ty == Type_int then (bl ++ [s_i32_const 0] ++ [s_i32_le_s]) else (bl ++ [s_f64_const 0] ++ [s_f64_le])
+  let val = evl ++ [s_br_if (c+1)] ++ s' ++ [s_br c]
   return $ [s_block $ [s_loop $ val]]
 
 compileStm (SBlock stms) = do
   s_stms <- pushPop $ mapM (compileStm) stms
   return $ concat s_stms
-
+{-
 compileStm s@(SIfElse cond s1 s2) = do
-  s_cond <- compileExp Nested cond
-  s_cond_ty <- getType cond
+  c <- compileExp Nested cond
+  cty <- getType cond
   ty <- getReturn s
-  case1 <- compileStm s1
-  case2 <- compileStm s2
-  let res = if s_cond_ty == Type_int then [s_i32_const 0] ++ [s_i32_gt_s] else [s_f64_const 0] ++ [s_f64_gt]
-  return $ s_cond ++ res ++ [s_if_then_else (compileType s_cond_ty) case1 case2]
+  c1 <- compileStm s1
+  c2 <- compileStm s2
+  let res = if cty == Type_int then ([s_i32_const 0] ++ [s_i32_gt_s]) else ([s_f64_const 0] ++ [s_f64_gt])
+  return $ c ++ res ++ [s_if_then_else (compileType ty) c1 c2]
+-}
+compileStm _ = return []
 
 -- computes the return type of the given statement.
 -- if a return x statement occurs, getReturn returns the type of x
@@ -367,7 +371,7 @@ compileExp n (EIncr id@(EId i)) = do
       [s_f64_const 1] ++
       [s_f64_add] ++
       [s_local_set s_i]
-    Type_int -> return $
+    _ -> return $
       [s_local_get s_i] ++
       [s_i32_const 1] ++
       [s_i32_add] ++
@@ -384,7 +388,7 @@ compileExp n (EPIncr id@(EId i)) = do
       [s_f64_add] ++
       [s_local_set s_i] ++
       [s_local_get s_i']
-    Type_int -> return $
+    _ -> return $
       [s_local_get s_i] ++
       [s_i32_const 1] ++
       [s_i32_add] ++
@@ -400,7 +404,7 @@ compileExp n (EDecr id@(EId i)) = do
       [s_f64_const 1] ++
       [s_f64_sub] ++
       [s_local_set s_i]
-    Type_int -> return $
+    _ -> return $
       [s_local_get s_i] ++
       [s_i32_const 1] ++
       [s_i32_sub] ++
@@ -417,7 +421,7 @@ compileExp n (EPDecr id@(EId i)) = do
       [s_f64_sub] ++
       [s_local_set s_i] ++
       [s_local_get s_i']
-    Type_int -> return $
+    _ -> return $
       [s_local_get s_i] ++
       [s_i32_const 1] ++
       [s_i32_sub] ++
@@ -438,22 +442,30 @@ compileExp _ (ENEq e1 e2)   = compileArith e1 e2 s_i32_ne s_f64_ne
 compileExp _ (EAnd e1 e2) = do
   s_e1 <- compileExp Nested e1
   s_e2 <- compileExp Nested e2
-  return $
-    if s_e1 == [s_i32_const 0] then [s_i32_const 0] else (if s_e2 == [s_i32_const 0] then [s_i32_const 0] else [s_i32_const 1])
+  t <- getType e1
+  case t of
+    Type_double -> return $
+      if s_e1 == [s_f64_const 0] then [s_f64_const 0] else (if s_e2 == [s_f64_const 0] then [s_f64_const 0] else [s_f64_const 1])
+    _ -> return $
+      if s_e1 == [s_i32_const 0] then [s_i32_const 0] else (if s_e2 == [s_i32_const 0] then [s_i32_const 0] else [s_i32_const 1])
 
 compileExp _ (EOr e1 e2) = do
   s_e1 <- compileExp Nested e1
   s_e2 <- compileExp Nested e2
-  return $
-    if s_e1 == [s_i32_const 1] then [s_i32_const 1] else (if s_e2 == [s_i32_const 1] then [s_i32_const 1] else [s_i32_const 0])
+  t <- getType e1
+  case t of
+    Type_double -> return $
+      if s_e1 == [s_f64_const 1] then [s_f64_const 1] else (if s_e2 == [s_f64_const 1] then [s_f64_const 1] else [s_f64_const 0])
+    _ -> return $
+      if s_e1 == [s_i32_const 1] then [s_i32_const 1] else (if s_e2 == [s_i32_const 1] then [s_i32_const 1] else [s_i32_const 0])
 
 compileExp n (EAss (EId i) e) = do
   s_i <- getVarName i
   s_e <- compileExp Nested e
   return $
     s_e ++
-    [s_local_set s_i]
-    --[s_local_tee s_i]
+    [s_local_set s_i] ++
+    if n == Nested then [s_local_tee s_i] else []
 
 compileExp n (ETyped e _) = compileExp n e
 

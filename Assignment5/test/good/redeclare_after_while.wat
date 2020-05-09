@@ -11,6 +11,23 @@
   (local $im$0 i32)
   (i32.const 0)
   (local.set $in$0)
+  (block
+   (loop
+    (local.get $in$0)
+    (i32.const 1)
+    i32.add
+    (local.set $in$0)
+    (local.get $in$0)
+    (i32.const 10)
+    i32.lt_s
+    (f64.const 0.0)
+    f64.le
+    (br_if 1)
+    (i32.const 100)
+    (local.set $im$1)
+    (br 0)
+   )
+  )
   (local.get $in$0)
   (local.set $im$0)
   (local.get $im$0)

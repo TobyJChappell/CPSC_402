@@ -15,6 +15,12 @@
   (local.set $ir$1)
   (block
    (loop
+    (local.get $in$1)
+    (i32.const 0)
+    i32.gt_s
+    (f64.const 0.0)
+    f64.le
+    (br_if 2)
     (local.get $ir$1)
     (local.get $in$1)
     i32.mul
@@ -23,11 +29,7 @@
     (i32.const 1)
     i32.sub
     (local.set $in$1)
-    (local.get $in$1)
-    (i32.const 0)
-    i32.gt_s
-    (br_if 1)
-    (br 2)
+    (br 1)
    )
   )
   (local.get $ir$1)

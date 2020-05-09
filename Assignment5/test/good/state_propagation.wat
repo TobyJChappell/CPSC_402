@@ -56,8 +56,39 @@
   (call $printInt)
   (local.get $iz$0)
   (call $printInt)
+  (block
+   (loop
+    (local.get $iz$0)
+    (i32.const 1)
+    i32.add
+    (local.set $iz$0)
+    (i32.const 9)
+    i32.eq
+    (f64.const 0.0)
+    f64.le
+    (br_if 1)
+    (local.get $iz$0)
+    (call $printInt)
+    (br 0)
+   )
+  )
   (local.get $iz$0)
   (call $printInt)
+  (block
+   (loop
+    (local.get $iz$0)
+    (i32.const 1)
+    i32.add
+    (local.set $iz$0)
+    (local.get $iz$0)
+    (i32.const 11)
+    i32.eq
+    (f64.const 0.0)
+    f64.le
+    (br_if 1)
+    (br 0)
+   )
+  )
   (local.get $iz$0)
   (call $printInt)
   (i32.const 0)

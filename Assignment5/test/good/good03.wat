@@ -18,6 +18,14 @@
   (block
    (loop
     (local.get $ii$0)
+    (local.get $iarg$0)
+    (i32.const 1)
+    i32.add
+    i32.lt_s
+    (f64.const 0.0)
+    f64.le
+    (br_if 1)
+    (local.get $ii$0)
     (local.get $iret$0)
     i32.mul
     (local.set $iret$0)
@@ -25,13 +33,7 @@
     (i32.const 1)
     i32.add
     (local.set $ii$0)
-    (local.get $ii$0)
-    (local.get $iarg$0)
-    (i32.const 1)
-    i32.add
-    i32.lt_s
-    (br_if 0)
-    (br 1)
+    (br 0)
    )
   )
   (local.get $iret$0)

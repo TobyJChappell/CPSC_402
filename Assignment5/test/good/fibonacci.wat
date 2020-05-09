@@ -20,6 +20,12 @@
   (block
    (loop
     (local.get $ihi$0)
+    (local.get $imx$0)
+    i32.lt_s
+    (f64.const 0.0)
+    f64.le
+    (br_if 1)
+    (local.get $ihi$0)
     (call $printInt)
     (local.get $ilo$0)
     (local.get $ihi$0)
@@ -29,11 +35,7 @@
     (local.get $ilo$0)
     i32.sub
     (local.set $ilo$0)
-    (local.get $ihi$0)
-    (local.get $imx$0)
-    i32.lt_s
-    (br_if 0)
-    (br 1)
+    (br 0)
    )
   )
   (i32.const 0)

@@ -12,14 +12,16 @@
   (block
    (loop
     (local.get $iy$0)
+    (i32.const 0)
+    i32.gt_s
+    (f64.const 0.0)
+    f64.le
+    (br_if 1)
+    (local.get $iy$0)
     (i32.const 2)
     i32.sub
     (local.set $iy$0)
-    (local.get $iy$0)
-    (i32.const 0)
-    i32.gt_s
-    (br_if 0)
-    (br 1)
+    (br 0)
    )
   )
  )
