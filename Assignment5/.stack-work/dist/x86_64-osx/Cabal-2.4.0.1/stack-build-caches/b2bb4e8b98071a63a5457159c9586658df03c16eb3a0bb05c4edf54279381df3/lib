@@ -10,10 +10,6 @@
   hash: c3cc8a92e6fda78ffc0c555f5f25008d9d097e65fe51da4ac826a665754e4a21
   size: 183
   modtime: 1588709462
-? /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment5/.stack-work/dist/x86_64-osx/Cabal-2.4.0.1/build/autogen/cabal_macros.h
-: hash: 4f51d4414e9e498b9d808c0ca5e4da01584f82ef880ef57eb7663d1089cb12fa
-  size: 5288
-  modtime: 1589051646
 /Users/tobychappell/.stack/programs/x86_64-osx/ghc-8.6.4/lib/ghc-8.6.4/include/ghcversion.h:
   hash: 529291d4a255ef1c3ec99116d8dca391f2db7bad8b5eab6dcbf9a70354c6eedf
   size: 524
@@ -47,9 +43,9 @@
   size: 1171
   modtime: 1588709462
 /Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment5/src/Compiler.hs:
-  hash: a3029604aea4585990232be97aff54d4dd4d62cd6df16b6bd0dc0df289ad8eda
-  size: 15506
-  modtime: 1589053517
+  hash: e72a5b74bd1dd8f346fb0d819a4765db74e51bad4495d9c6490192cb042912ce
+  size: 15587
+  modtime: 1589055316
 /Users/tobychappell/.stack/programs/x86_64-osx/ghc-8.6.4/lib/ghc-8.6.4/include/ghcplatform.h:
   hash: 1549d9c64c43be2e2b2f756146f102c311441a9d63e1a1cd3b33e34c67e39688
   size: 903

@@ -434,13 +434,16 @@ compileExp _ (ENEq e1 e2)   = compileArith e1 e2 s_i32_ne s_f64_ne
 compileExp _ (EAnd e1 e2) = do
   s_e1 <- compileExp Nested e1
   s_e2 <- compileExp Nested e2
-  return $ if s_e1 == [s_i32_const 0] then s_e1 ++ [s_i32_const 0]
-      else (if s_e2 == [s_i32_const 0] then s_e2 ++ [s_i32_const 0] else s_e2 ++ [s_i32_const 1])
+  let inner = s_e2 ++ [s_if_then_else (compileType Type_int) [s_i32_const 1] [s_i32_const 0]]
+  let outer = s_e1 ++ [s_if_then_else (compileType Type_int) inner [s_i32_const 0]]
+  return $ outer
 
 compileExp _ (EOr e1 e2) = do
   s_e1 <- compileExp Nested e1
   s_e2 <- compileExp Nested e2
-  return $ s_e1 ++ [s_i32_const 0] ++ [s_i32_gt_s] ++ s_e2 ++ [s_i32_const 0] ++ [s_i32_gt_s] ++ [s_i32_add] ++ [s_i32_const 0] ++ [s_i32_gt_s]
+  let inner = s_e2 ++ [s_if_then_else (compileType Type_int) [s_i32_const 1] [s_i32_const 0]]
+  let outer = s_e1 ++ [s_if_then_else (compileType Type_int) [s_i32_const 1] inner]
+  return $ outer
 
 compileExp n (EAss (EId i) e) = do
   s_i <- getVarName i

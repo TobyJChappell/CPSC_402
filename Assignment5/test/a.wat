@@ -18,31 +18,33 @@
   (local.set $bt$0)
   (i32.const 0)
   (local.set $bf$0)
-  (call $ff)
-  (i32.const 1)
+  (local.get $bf$0)
+  (if
+   (result i32)
+   (then (call $ff) (if (result i32) (then (i32.const 1)) (else (i32.const 0))))
+   (else (i32.const 0))
+  )
   (local.set $bsilent1$0)
   (local.get $bt$0)
-  (i32.const 0)
-  i32.gt_s
-  (call $ff)
-  (i32.const 0)
-  i32.gt_s
-  i32.add
-  (i32.const 0)
-  i32.gt_s
+  (if
+   (result i32)
+   (then (i32.const 1))
+   (else (call $ff) (if (result i32) (then (i32.const 1)) (else (i32.const 0))))
+  )
   (local.set $bsilent2$0)
-  (call $tt)
-  (i32.const 1)
+  (local.get $bt$0)
+  (if
+   (result i32)
+   (then (call $tt) (if (result i32) (then (i32.const 1)) (else (i32.const 0))))
+   (else (i32.const 0))
+  )
   (local.set $bnoisy1$0)
   (local.get $bf$0)
-  (i32.const 0)
-  i32.gt_s
-  (call $tt)
-  (i32.const 0)
-  i32.gt_s
-  i32.add
-  (i32.const 0)
-  i32.gt_s
+  (if
+   (result i32)
+   (then (i32.const 1))
+   (else (call $tt) (if (result i32) (then (i32.const 1)) (else (i32.const 0))))
+  )
   (local.set $bnoisy2$0)
   (i32.const 0)
   return
