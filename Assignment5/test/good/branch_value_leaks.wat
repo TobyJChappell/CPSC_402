@@ -16,8 +16,9 @@
   (local.get $ix0$0)
   (i32.const 1)
   i32.sub
-  (local.set $ix0$0)
-  (local.get $ix0$0)
+  (local.tee $ix0$0)
+  (i32.const 1)
+  i32.add
   (local.set $ix1$0)
   (i32.const 0)
   return

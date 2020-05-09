@@ -12,8 +12,9 @@
   (local.get $iuw$0)
   (i32.const 1)
   i32.sub
-  (local.set $iuw$0)
-  (local.get $iuw$0)
+  (local.tee $iuw$0)
+  (i32.const 1)
+  i32.add
   (i32.const 0)
   i32.ge_s
   (if (then) (else))

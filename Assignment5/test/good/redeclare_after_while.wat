@@ -16,8 +16,9 @@
     (local.get $in$0)
     (i32.const 1)
     i32.add
-    (local.set $in$0)
-    (local.get $in$0)
+    (local.tee $in$0)
+    (i32.const 1)
+    i32.sub
     (i32.const 10)
     i32.lt_s
     (i32.const 0)

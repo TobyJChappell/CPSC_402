@@ -30,7 +30,6 @@
     i32.sub
     (local.set $ii$0)
     (local.get $ii$0)
-    (local.get $ii$0)
     (call $printInt)
     (i32.const 7)
     (local.set $ii$2)

@@ -16,13 +16,11 @@
   f64.add
   (local.set $dd$0)
   (local.get $dd$0)
-  (local.get $dd$0)
   (call $printDouble)
   (local.get $dd$0)
   (f64.const 1.0)
   f64.sub
   (local.set $dd$0)
-  (local.get $dd$0)
   (local.get $dd$0)
   (call $printDouble)
   (i32.const 0)

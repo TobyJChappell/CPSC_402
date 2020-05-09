@@ -34,7 +34,6 @@
     (i32.const 1)
     i32.sub
     (local.set $id$0)
-    (local.get $id$0)
     (br 0)
    )
   )

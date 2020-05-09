@@ -30,7 +30,6 @@
     (i32.const 1)
     i32.add
     (local.set $inum$0)
-    (local.get $inum$0)
     (br 0)
    )
   )

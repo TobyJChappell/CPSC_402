@@ -12,12 +12,13 @@
   (local.get $ix$0)
   (i32.const 1)
   i32.add
-  (local.set $ix$0)
+  (local.tee $ix$0)
   (local.get $ix$0)
   (i32.const 1)
   i32.add
-  (local.set $ix$0)
-  (local.get $ix$0)
+  (local.tee $ix$0)
+  (i32.const 1)
+  i32.sub
   i32.eq
   (if (then (local.get $ix$0) (call $printInt)) (else (i32.const 0) (call $printInt)))
   (i32.const 0)

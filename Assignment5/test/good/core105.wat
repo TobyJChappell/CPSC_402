@@ -20,8 +20,9 @@
     (local.get $ix$0)
     (i32.const 1)
     i32.sub
-    (local.set $ix$0)
-    (local.get $ix$0)
+    (local.tee $ix$0)
+    (i32.const 1)
+    i32.add
     (call $printInt)
     (br 0)
    )

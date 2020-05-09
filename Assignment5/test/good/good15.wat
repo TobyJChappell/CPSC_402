@@ -18,8 +18,9 @@
   (local.get $ii$0)
   (i32.const 1)
   i32.add
-  (local.set $ii$0)
-  (local.get $ii$0)
+  (local.tee $ii$0)
+  (i32.const 1)
+  i32.sub
   (i32.const 45)
   i32.ne
   (i32.const 0)
@@ -35,8 +36,9 @@
   (local.get $ii$0)
   (i32.const 1)
   i32.add
-  (local.set $ii$0)
-  (local.get $ii$0)
+  (local.tee $ii$0)
+  (i32.const 1)
+  i32.sub
   (i32.const 0)
   i32.ge_s
   (i32.const 0)
@@ -52,8 +54,9 @@
   (local.get $ii$0)
   (i32.const 1)
   i32.add
-  (local.set $ii$0)
-  (local.get $ii$0)
+  (local.tee $ii$0)
+  (i32.const 1)
+  i32.sub
   (i32.const 0)
   i32.lt_s
   (i32.const 0)
@@ -69,8 +72,9 @@
   (local.get $ii$0)
   (i32.const 1)
   i32.add
-  (local.set $ii$0)
-  (local.get $ii$0)
+  (local.tee $ii$0)
+  (i32.const 1)
+  i32.sub
   (i32.const 0)
   i32.gt_s
   (i32.const 0)

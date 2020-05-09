@@ -56,7 +56,6 @@
       (i32.const 1)
       i32.add
       (local.set $ij$2)
-      (local.get $ij$2)
       (br 2)
      )
     )
@@ -77,7 +76,7 @@
     i32.eq
     (if
      (then (local.get $ii$0) (call $printInt) (local.get $in$0) (local.get $ii$0) i32.div_s (local.set $in$0))
-     (else (local.get $ii$0) (i32.const 1) i32.add (local.set $ii$0) (local.get $ii$0))
+     (else (local.get $ii$0) (i32.const 1) i32.add (local.set $ii$0))
     )
     (br 0)
    )
