@@ -30,7 +30,7 @@ version = Version [0,1,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
 bindir     = "/Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment5/.stack-work/install/x86_64-osx/b2bb4e8b98071a63a5457159c9586658df03c16eb3a0bb05c4edf54279381df3/8.6.4/bin"
-libdir     = "/Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment5/.stack-work/install/x86_64-osx/b2bb4e8b98071a63a5457159c9586658df03c16eb3a0bb05c4edf54279381df3/8.6.4/lib/x86_64-osx-ghc-8.6.4/CPPCompiler-0.1.0.0-DplpX4Wrb1M2e5SmkUIF3M"
+libdir     = "/Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment5/.stack-work/install/x86_64-osx/b2bb4e8b98071a63a5457159c9586658df03c16eb3a0bb05c4edf54279381df3/8.6.4/lib/x86_64-osx-ghc-8.6.4/CPPCompiler-0.1.0.0-CrSpE0jcHU620Zd1DDgk25"
 dynlibdir  = "/Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment5/.stack-work/install/x86_64-osx/b2bb4e8b98071a63a5457159c9586658df03c16eb3a0bb05c4edf54279381df3/8.6.4/lib/x86_64-osx-ghc-8.6.4"
 datadir    = "/Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment5/.stack-work/install/x86_64-osx/b2bb4e8b98071a63a5457159c9586658df03c16eb3a0bb05c4edf54279381df3/8.6.4/share/x86_64-osx-ghc-8.6.4/CPPCompiler-0.1.0.0"
 libexecdir = "/Users/tobychappell/Documents/CPSC_Courses/CPSC_402/Assignment5/.stack-work/install/x86_64-osx/b2bb4e8b98071a63a5457159c9586658df03c16eb3a0bb05c4edf54279381df3/8.6.4/libexec/x86_64-osx-ghc-8.6.4/CPPCompiler-0.1.0.0"
