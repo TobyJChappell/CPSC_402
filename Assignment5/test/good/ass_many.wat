@@ -10,7 +10,6 @@
   (local $ij$0 i32)
   (local $ii$0 i32)
   (i32.const 6)
-  (local.set $ii$0)
   (local.tee $ii$0)
   (local.set $ij$0)
   (local.get $ii$0)

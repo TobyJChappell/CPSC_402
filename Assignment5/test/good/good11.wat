@@ -16,7 +16,6 @@
   (block
    (loop
     (call $readInt)
-    (local.set $ix$0)
     (local.tee $ix$0)
     (i32.const 0)
     i32.ne

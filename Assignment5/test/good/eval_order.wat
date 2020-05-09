@@ -73,8 +73,28 @@
   (i32.const 21)
   (call $printIntInt)
   i32.ne
-  (i32.const 1)
+  (i32.const 22)
+  (call $printIntBool)
   (i32.const 0)
+  i32.gt_s
+  (i32.const 23)
+  (call $printIntBool)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (i32.const 24)
+  (call $printIntBool)
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 25)
+  (call $printIntBool)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 0)
+  i32.gt_s
   (i32.const 0)
   return
  )

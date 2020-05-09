@@ -6,13 +6,77 @@
  (func
   $main
   (result i32)
+  (i32.const 0)
   (i32.const 1)
+  i32.sub
+  (call $test)
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 0)
+  (call $test)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
   (call $printBool)
   (i32.const 0)
-  (call $printBool)
+  (i32.const 2)
+  i32.sub
+  (call $test)
+  (i32.const 0)
+  i32.gt_s
   (i32.const 1)
+  (call $test)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 0)
+  i32.gt_s
   (call $printBool)
+  (i32.const 3)
+  (call $test)
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 0)
+  (i32.const 5)
+  i32.sub
+  (call $test)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (i32.const 0)
+  i32.gt_s
   (i32.const 1)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (call $printBool)
+  (i32.const 3)
+  (call $test)
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 0)
+  (i32.const 5)
+  i32.sub
+  (call $test)
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 1)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 0)
+  i32.gt_s
   (call $printBool)
   (i32.const 1)
   (call $printBool)

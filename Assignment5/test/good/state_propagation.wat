@@ -21,7 +21,6 @@
   (local.get $iz$0)
   (i32.const 1)
   i32.add
-  (local.set $iz$0)
   (local.tee $iz$0)
   (call $id)
   drop

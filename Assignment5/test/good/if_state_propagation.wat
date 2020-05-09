@@ -8,7 +8,6 @@
   (result i32)
   (local $ix$0 i32)
   (i32.const 1)
-  (local.set $ix$0)
   (local.tee $ix$0)
   (i32.const 1)
   i32.eq

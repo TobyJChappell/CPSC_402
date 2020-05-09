@@ -18,13 +18,45 @@
   (local.set $bt$0)
   (i32.const 0)
   (local.set $bf$0)
-  (i32.const 1)
+  (local.get $bf$0)
+  (i32.const 0)
+  i32.gt_s
+  (call $ff)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
   (local.set $bsilent1$0)
+  (local.get $bt$0)
   (i32.const 0)
+  i32.gt_s
+  (call $ff)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 0)
+  i32.gt_s
   (local.set $bsilent2$0)
-  (i32.const 1)
-  (local.set $bnoisy1$0)
+  (local.get $bt$0)
   (i32.const 0)
+  i32.gt_s
+  (call $tt)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (local.set $bnoisy1$0)
+  (local.get $bf$0)
+  (i32.const 0)
+  i32.gt_s
+  (call $tt)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 0)
+  i32.gt_s
   (local.set $bnoisy2$0)
   (i32.const 0)
   return

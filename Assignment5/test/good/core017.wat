@@ -9,13 +9,75 @@
   (local $ix$0 i32)
   (i32.const 4)
   (local.set $ix$0)
-  (i32.const 1)
-  (if (then (i32.const 1) (call $printBool)) (else))
+  (i32.const 3)
+  (local.get $ix$0)
+  i32.le_s
   (i32.const 0)
-  (call $printBool)
+  i32.gt_s
+  (i32.const 4)
+  (i32.const 2)
+  i32.ne
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (i32.const 0)
+  i32.gt_s
   (i32.const 1)
-  (call $printBool)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (if (then (i32.const 1) (call $printBool)) (else))
   (i32.const 1)
+  (i32.const 1)
+  (call $eq_bool)
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 1)
+  (call $dontCallMe)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 0)
+  i32.gt_s
+  (call $printBool)
+  (i32.const 4)
+  (i32.const 50)
+  i32.gt_s
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 2)
+  (call $dontCallMe)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (call $printBool)
+  (i32.const 4)
+  (local.get $ix$0)
+  i32.eq
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 1)
+  (i32.const 0)
+  (call $eq_bool)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
+  (i32.const 0)
+  i32.gt_s
+  (i32.const 1)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 2)
+  i32.eq
   (call $printBool)
   (i32.const 0)
   (i32.const 0)
@@ -43,7 +105,25 @@
   (local.get $bb$0)
   (if (then (i32.const 1) (call $printInt)) (else (i32.const 0) (call $printInt)))
  )
- (func $implies (param $bx$0 i32) (param $by$0 i32) (result i32) (i32.const 0) return)
+ (func
+  $implies
+  (param $bx$0 i32)
+  (param $by$0 i32)
+  (result i32)
+  (local.get $bx$0)
+  (call $not)
+  (i32.const 0)
+  i32.gt_s
+  (local.get $bx$0)
+  (local.get $by$0)
+  (call $eq_bool)
+  (i32.const 0)
+  i32.gt_s
+  i32.add
+  (i32.const 0)
+  i32.gt_s
+  return
+ )
  (func
   $not
   (param $bx$0 i32)

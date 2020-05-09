@@ -341,6 +341,8 @@ compileExp :: MonadState Env m => Nesting -> Exp -> m [SExp]
 
 compileExp n EFalse = return $ if n == Nested then [s_i32_const 0] else []
 
+compileExp n ETrue = return $ if n == Nested then [s_i32_const 1] else []
+
 compileExp n (EInt i) = return $ if n == Nested then [s_i32_const i] else []
 
 compileExp n (EDouble i) = return $ if n == Nested then [s_f64_const i] else []
@@ -437,30 +439,19 @@ compileExp _ (ENEq e1 e2)   = compileArith e1 e2 s_i32_ne s_f64_ne
 compileExp _ (EAnd e1 e2) = do
   s_e1 <- compileExp Nested e1
   s_e2 <- compileExp Nested e2
-  t <- getType e1
-  case t of
-    Type_double -> return $
-      if s_e1 == [s_f64_const 0] then [s_f64_const 0] else (if s_e2 == [s_f64_const 0] then [s_f64_const 0] else [s_f64_const 1])
-    _ -> return $
-      if s_e1 == [s_i32_const 0] then [s_i32_const 0] else (if s_e2 == [s_i32_const 0] then [s_i32_const 0] else [s_i32_const 1])
+  return $ s_e1 ++ [s_i32_const 0] ++ [s_i32_gt_s] ++ s_e2 ++ [s_i32_const 0] ++ [s_i32_gt_s] ++ [s_i32_add] ++ [s_i32_const 2] ++ [s_i32_eq]
 
 compileExp _ (EOr e1 e2) = do
   s_e1 <- compileExp Nested e1
   s_e2 <- compileExp Nested e2
-  t <- getType e1
-  case t of
-    Type_double -> return $
-      if s_e1 == [s_f64_const 1] then [s_f64_const 1] else (if s_e2 == [s_f64_const 1] then [s_f64_const 1] else [s_f64_const 0])
-    _ -> return $
-      if s_e1 == [s_i32_const 1] then [s_i32_const 1] else (if s_e2 == [s_i32_const 1] then [s_i32_const 1] else [s_i32_const 0])
+  return $ s_e1 ++ [s_i32_const 0] ++ [s_i32_gt_s] ++ s_e2 ++ [s_i32_const 0] ++ [s_i32_gt_s] ++ [s_i32_add] ++ [s_i32_const 0] ++ [s_i32_gt_s]
 
 compileExp n (EAss (EId i) e) = do
   s_i <- getVarName i
   s_e <- compileExp Nested e
   return $
     s_e ++
-    [s_local_set s_i] ++
-    if n == Nested then [s_local_tee s_i] else []
+    if n == Nested then [s_local_tee s_i] else [s_local_set s_i]
 
 compileExp n (ETyped e _) = compileExp n e
 
