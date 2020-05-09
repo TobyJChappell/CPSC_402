@@ -31,6 +31,11 @@
   (i32.const 0)
   return
  )
- (func $printBool (param $bb$0 i32))
+ (func
+  $printBool
+  (param $bb$0 i32)
+  (local.get $bb$0)
+  (if (then (i32.const 1) (call $printInt)) (else (i32.const 0) (call $printInt)))
+ )
  (export "main" (func $main))
 )

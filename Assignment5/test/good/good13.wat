@@ -19,8 +19,8 @@
     (local.get $ii$0)
     (local.get $in$0)
     i32.le_s
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 1)
     (i32.const 1)
     (local.set $biPrime$2)
@@ -29,9 +29,17 @@
     (block
      (loop
       (i32.const 1)
-      (f64.const 0.0)
-      f64.le
+      (i32.const 0)
+      i32.le_s
       (br_if 3)
+      (local.get $ii$0)
+      (local.get $ij$2)
+      i32.div_s
+      (local.get $ij$2)
+      i32.mul
+      (local.get $ii$0)
+      i32.eq
+      (if (then (i32.const 0) (local.set $biPrime$2)) (else))
       (local.get $ij$2)
       (i32.const 1)
       i32.add
@@ -39,6 +47,11 @@
       (local.get $ij$2)
       (br 2)
      )
+    )
+    (i32.const 1)
+    (if
+     (then (local.get $ii$0) (call $printInt) (local.get $in$0) (local.get $ii$0) i32.div_s (local.set $in$0))
+     (else (local.get $ii$0) (i32.const 1) i32.add (local.set $ii$0) (local.get $ii$0))
     )
     (br 0)
    )

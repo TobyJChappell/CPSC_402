@@ -22,8 +22,8 @@
     (local.get $ii$0)
     (i32.const 76)
     i32.gt_s
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 1)
     (local.get $ii$0)
     (i32.const 1)
@@ -41,6 +41,10 @@
   )
   (local.get $ii$0)
   (call $printInt)
+  (local.get $ii$0)
+  (i32.const 4)
+  i32.gt_s
+  (if (then (i32.const 4) (local.set $ii$2) (local.get $ii$2) (call $printInt)) (else))
   (local.get $ii$0)
   (call $printInt)
   (i32.const 0)

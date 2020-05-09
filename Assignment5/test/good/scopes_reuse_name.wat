@@ -13,12 +13,20 @@
   (local $ix$1 i32)
   (i32.const 0)
   (local.set $ix$0)
+  (i32.const 1)
+  (if (then (i32.const 1) (local.set $ix$2)) (else))
   (local.get $ix$0)
   (call $printInt)
+  (i32.const 1)
+  (if (then (i32.const 2) (local.set $ix$2)) (else))
   (local.get $ix$0)
   (call $printInt)
+  (i32.const 0)
+  (if (then) (else (i32.const 3) (local.set $ix$2)))
   (local.get $ix$0)
   (call $printInt)
+  (i32.const 0)
+  (if (then) (else (i32.const 4) (local.set $ix$2)))
   (local.get $ix$0)
   (call $printInt)
   (i32.const 0)
@@ -32,8 +40,8 @@
     (local.get $ii$1)
     (i32.const 1)
     i32.lt_s
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 2)
     (i32.const 5)
     (local.set $ix$3)
@@ -53,8 +61,8 @@
     (local.get $ii$1)
     (i32.const 1)
     i32.lt_s
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 2)
     (i32.const 6)
     (local.set $ix$3)

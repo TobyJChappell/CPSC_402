@@ -9,6 +9,8 @@
   (local $ix$0 i32)
   (i32.const 4)
   (local.set $ix$0)
+  (i32.const 1)
+  (if (then (i32.const 1) (call $printBool)) (else))
   (i32.const 0)
   (call $printBool)
   (i32.const 1)
@@ -35,9 +37,33 @@
   return
  )
  (func $dontCallMe (param $ix$0 i32) (result i32) (local.get $ix$0) (call $printInt) (i32.const 1) return)
- (func $printBool (param $bb$0 i32))
+ (func
+  $printBool
+  (param $bb$0 i32)
+  (local.get $bb$0)
+  (if (then (i32.const 1) (call $printInt)) (else (i32.const 0) (call $printInt)))
+ )
  (func $implies (param $bx$0 i32) (param $by$0 i32) (result i32) (i32.const 0) return)
- (func $not (param $bx$0 i32) (result i32) (local $br$0 i32) (local.get $br$0) return)
- (func $eq_bool (param $bx$0 i32) (param $by$0 i32) (result i32) (local $br$0 i32) (local.get $br$0) return)
+ (func
+  $not
+  (param $bx$0 i32)
+  (result i32)
+  (local $br$0 i32)
+  (local.get $bx$0)
+  (if (then (i32.const 0) (local.set $br$0)) (else (i32.const 1) (local.set $br$0)))
+  (local.get $br$0)
+  return
+ )
+ (func
+  $eq_bool
+  (param $bx$0 i32)
+  (param $by$0 i32)
+  (result i32)
+  (local $br$0 i32)
+  (local.get $bx$0)
+  (if (then (local.get $by$0) (local.set $br$0)) (else (local.get $by$0) (call $not) (local.set $br$0)))
+  (local.get $br$0)
+  return
+ )
  (export "main" (func $main))
 )

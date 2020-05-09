@@ -9,6 +9,10 @@
   (local $bx0$1 i32)
   (local $ix0$0 i32)
   (i32.const 0)
+  (i32.const 2)
+  i32.le_s
+  (if (then (i32.const 1) (local.set $bx0$1)) (else))
+  (i32.const 0)
   (local.set $ix0$0)
   (i32.const 1)
   (call $printInt)

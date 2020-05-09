@@ -22,6 +22,7 @@
   (i32.const 1)
   i32.add
   (local.set $iz$0)
+  (local.tee $iz$0)
   (call $id)
   drop
   (local.get $iz$0)
@@ -53,7 +54,22 @@
   (local.get $iz$0)
   (call $printInt)
   (local.get $iz$0)
+  (i32.const 1)
+  i32.add
+  (local.set $iz$0)
+  (i32.const 7)
+  i32.eq
+  (if (then (local.get $iz$0) (call $printInt)) (else))
+  (local.get $iz$0)
   (call $printInt)
+  (local.get $iz$0)
+  (i32.const 1)
+  i32.add
+  (local.set $iz$0)
+  (local.get $iz$0)
+  (i32.const 8)
+  i32.eq
+  (if (then) (else (local.get $iz$0) (call $printInt)))
   (local.get $iz$0)
   (call $printInt)
   (block
@@ -64,8 +80,8 @@
     (local.set $iz$0)
     (i32.const 9)
     i32.eq
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 1)
     (local.get $iz$0)
     (call $printInt)
@@ -83,8 +99,8 @@
     (local.get $iz$0)
     (i32.const 11)
     i32.eq
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 1)
     (br 0)
    )

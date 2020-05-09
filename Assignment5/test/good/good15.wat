@@ -26,6 +26,8 @@
   (call $printInt)
   (i32.const 0)
   (local.set $ij$0)
+  (i32.const 1)
+  (if (then (local.get $ii$0) (call $printInt)) (else (i32.const 42) (call $printInt)))
   (i32.const 0)
   return
  )

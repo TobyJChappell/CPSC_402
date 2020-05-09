@@ -17,10 +17,11 @@
    (loop
     (call $readInt)
     (local.set $ix$0)
+    (local.tee $ix$0)
     (i32.const 0)
     i32.ne
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 1)
     (local.get $isum$0)
     (local.get $ix$0)

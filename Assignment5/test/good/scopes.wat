@@ -11,6 +11,10 @@
   (i32.const 2)
   (local.set $in$0)
   (local.get $in$0)
+  (i32.const 3)
+  i32.lt_s
+  (if (then (i32.const 3) (local.set $in$2) (local.get $in$2) return) (else))
+  (local.get $in$0)
   return
  )
  (func

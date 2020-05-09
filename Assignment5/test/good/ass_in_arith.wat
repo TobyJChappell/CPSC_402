@@ -28,6 +28,7 @@
   (call $printInt)
   (i32.const 10)
   (local.set $ix$0)
+  (local.tee $ix$0)
   (local.get $ix$0)
   (i32.const 1)
   i32.add

@@ -18,8 +18,8 @@
     (local.get $in$1)
     (i32.const 0)
     i32.gt_s
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 2)
     (local.get $ir$1)
     (local.get $in$1)
@@ -40,6 +40,20 @@
   (i32.const 0)
   return
  )
- (func $dfac (param $dn$0 f64) (result f64) (local $df$0 f64) (local.get $df$0) return)
+ (func
+  $dfac
+  (param $dn$0 f64)
+  (result f64)
+  (local $df$0 f64)
+  (local.get $dn$0)
+  (f64.const 0.0)
+  f64.eq
+  (if
+   (then (f64.const 1.0) (local.set $df$0))
+   (else (local.get $dn$0) (local.get $dn$0) (f64.const 1.0) f64.sub (call $dfac) f64.mul (local.set $df$0))
+  )
+  (local.get $df$0)
+  return
+ )
  (export "main" (func $main))
 )

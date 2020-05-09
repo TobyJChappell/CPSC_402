@@ -6,40 +6,26 @@
  (func
   $main
   (result i32)
-  (local $ix$0 i32)
-  (local $iy$0 i32)
-  (i32.const 50)
-  (local.set $ix$0)
-  (local.get $ix$0)
-  (i32.const 1)
-  i32.add
-  (local.set $ix$0)
-  (local.get $ix$0)
-  (local.get $ix$0)
-  (i32.const 1)
-  i32.sub
-  (local.set $ix$0)
-  (local.get $ix$0)
-  i32.add
-  (local.set $iy$0)
-  (i32.const 1)
-  (local.set $ix$0)
-  (local.get $iy$0)
-  (call $printInt)
-  (local.get $ix$0)
-  (call $printInt)
-  (local.get $ix$0)
-  (local.get $ix$0)
-  (i32.const 1)
-  i32.add
-  (local.set $ix$0)
-  (local.get $ix$0)
-  i32.add
-  (local.get $ix$0)
-  i32.add
-  (call $printInt)
-  (local.get $ix$0)
-  (call $printInt)
+  (local $dx$0 f64)
+  (f64.const 0.0)
+  (local.set $dx$0)
+  (block
+   (loop
+    (local.get $dx$0)
+    (f64.const 5.0)
+    f64.lt
+    (i32.const 0)
+    i32.le_s
+    (br_if 1)
+    (local.get $dx$0)
+    (call $printDouble)
+    (local.get $dx$0)
+    (f64.const 1.0)
+    f64.add
+    (local.set $dx$0)
+    (br 0)
+   )
+  )
   (i32.const 0)
   return
  )

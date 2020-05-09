@@ -8,6 +8,10 @@
   (param $ix$0 i32)
   (result i32)
   (local $bb$0 i32)
+  (local.get $ix$0)
+  (i32.const 0)
+  i32.eq
+  (if (then (i32.const 0) return) (else))
   (i32.const 1)
   (local.set $bb$0)
   (local.get $ix$0)
@@ -15,7 +19,18 @@
   (local.get $bb$0)
   return
  )
- (func $printBool (param $bb$0 i32))
+ (func
+  $printBool
+  (param $bb$0 i32)
+  (i32.const 0)
+  (if
+   (then)
+   (else
+    (local.get $bb$0)
+    (if (then (i32.const 0) (call $printInt)) (else (i32.const 1) (call $printInt)))
+   )
+  )
+ )
  (func
   $main
   (result i32)

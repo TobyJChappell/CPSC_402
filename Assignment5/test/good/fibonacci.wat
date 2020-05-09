@@ -22,8 +22,8 @@
     (local.get $ihi$0)
     (local.get $imx$0)
     i32.lt_s
-    (f64.const 0.0)
-    f64.le
+    (i32.const 0)
+    i32.le_s
     (br_if 1)
     (local.get $ihi$0)
     (call $printInt)

@@ -11,6 +11,8 @@
   (local $ix1$0 i32)
   (i32.const 0)
   (local.set $ix0$0)
+  (i32.const 0)
+  (if (then) (else (i32.const 1) (local.set $bx0$1)))
   (local.get $ix0$0)
   (i32.const 1)
   i32.sub
