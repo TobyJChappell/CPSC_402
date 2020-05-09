@@ -3,7 +3,7 @@ int main () {
   while (x < 5.0)
   {
     printDouble(x);
-    ++x;
+    x++;
   }
   return 0;
 }

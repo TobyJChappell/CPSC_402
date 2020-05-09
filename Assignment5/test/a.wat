@@ -23,6 +23,7 @@
     (f64.const 1.0)
     f64.add
     (local.set $dx$0)
+    (local.get $dx$0)
     (br 0)
    )
   )

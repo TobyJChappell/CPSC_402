@@ -266,26 +266,22 @@ compileStm SReturnVoid = return []
 compileStm (SWhile cond s) = do
   s' <- pushPop $ compileStm s
   (m, c) <- get
-  bl <- compileExp Nested cond
-  ty <- getType cond
-  let evl = if ty == Type_int then (bl ++ [s_i32_const 0] ++ [s_i32_le_s]) else (bl ++ [s_f64_const 0] ++ [s_f64_le])
-  let val = evl ++ [s_br_if (c+1)] ++ s' ++ [s_br c]
-  return $ [s_block $ [s_loop $ val]]
+  s_cond <- compileExp Nested cond
+  let stms = s_cond ++ [s_i32_const 0] ++ [s_i32_le_s] ++ [s_br_if (c+1)] ++ s' ++ [s_br c]
+  return $ [s_block $ [s_loop $ stms]]
 
 compileStm (SBlock stms) = do
   s_stms <- pushPop $ mapM (compileStm) stms
   return $ concat s_stms
-{-
+
 compileStm s@(SIfElse cond s1 s2) = do
-  c <- compileExp Nested cond
-  cty <- getType cond
+  s_cond <- compileExp Nested cond
   ty <- getReturn s
-  c1 <- compileStm s1
-  c2 <- compileStm s2
-  let res = if cty == Type_int then ([s_i32_const 0] ++ [s_i32_gt_s]) else ([s_f64_const 0] ++ [s_f64_gt])
-  return $ c ++ res ++ [s_if_then_else (compileType ty) c1 c2]
--}
-compileStm _ = return []
+  c1 <- pushPop $ compileStm s1
+  c2 <- pushPop $ compileStm s2
+  return $ s_cond ++ [s_if_then_else (compileType ty) c1 c2]
+
+-- compileStm _ = return []
 
 -- computes the return type of the given statement.
 -- if a return x statement occurs, getReturn returns the type of x
@@ -342,7 +338,6 @@ getType (ETyped e _) = getType e
 data Nesting = TopLevel | Nested deriving Eq
 
 compileExp :: MonadState Env m => Nesting -> Exp -> m [SExp]
-compileExp n ETrue = return $ if n == Nested then [s_i32_const 1] else []
 
 compileExp n EFalse = return $ if n == Nested then [s_i32_const 0] else []
 
