@@ -9,8 +9,7 @@
   (local $ij$0 i32)
   (i32.const 4)
   (local.set $ij$0)
-  (local.get $ij$0)
-  (call $printInt)
+  (block (local.get $ij$0) (call $printInt) (br 0))
   (local.get $ij$0)
   return
  )

@@ -22,7 +22,7 @@
    (then (i32.const 1) (if (result i32) (then (i32.const 1)) (else (i32.const 0))))
    (else (i32.const 0))
   )
-  (if (then (i32.const 1) (call $printBool)) (else))
+  (if (then (block (i32.const 1) (call $printBool) (br 1))) (else (block (br 1))))
   (i32.const 1)
   (i32.const 1)
   (call $eq_bool)
@@ -84,7 +84,10 @@
   $printBool
   (param $bb$0 i32)
   (local.get $bb$0)
-  (if (then (i32.const 1) (call $printInt)) (else (i32.const 0) (call $printInt)))
+  (if
+   (then (block (i32.const 1) (call $printInt) (br 1)))
+   (else (block (i32.const 0) (call $printInt) (br 1)))
+  )
  )
  (func
   $implies

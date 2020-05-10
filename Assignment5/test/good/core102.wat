@@ -22,6 +22,7 @@
     (i32.const 0)
     i32.le_s
     (br_if 1)
+    (block (br 1))
     (br 0)
    )
   )

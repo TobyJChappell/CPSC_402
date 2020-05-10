@@ -29,8 +29,8 @@
   i32.lt_s
   (if
    (result i32)
-   (then (i32.const 0) (call $printInt) (i32.const 0) return)
-   (else (i32.const 1) (call $printInt) (i32.const 0) return)
+   (then (block (i32.const 0) (call $printInt) (i32.const 0) return (br 1)))
+   (else (block (i32.const 1) (call $printInt) (i32.const 0) return (br 1)))
   )
  )
  (export "main" (func $main))
