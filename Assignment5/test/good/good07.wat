@@ -19,24 +19,20 @@
     (local.get $id$0)
     (i32.const 1)
     i32.gt_s
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
-    (block
-     (local.get $id$0)
-     (local.get $ix$0)
-     (local.get $id$0)
-     i32.div_s
-     i32.mul
-     (local.get $ix$0)
-     i32.eq
-     (if (then (local.get $id$0) (call $printInt)) (else (block (br 3))))
-     (local.get $id$0)
-     (i32.const 1)
-     i32.sub
-     (local.set $id$0)
-     (br 1)
-    )
+    (local.get $id$0)
+    (local.get $ix$0)
+    (local.get $id$0)
+    i32.div_s
+    i32.mul
+    (local.get $ix$0)
+    i32.eq
+    (if (then (local.get $id$0) (call $printInt)) (else))
+    (local.get $id$0)
+    (i32.const 1)
+    i32.sub
+    (local.set $id$0)
     (br 0)
    )
   )

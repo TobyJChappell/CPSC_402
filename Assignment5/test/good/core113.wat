@@ -25,8 +25,8 @@
   (i32.const 100)
   i32.lt_s
   (if
-   (then (block (i32.const 91) (local.set $ix$2) (local.get $ix$2) (local.set $iy$0) (br 1)))
-   (else (block (local.get $ix$0) (local.set $iy$0) (br 1)))
+   (then (i32.const 91) (local.set $ix$2) (local.get $ix$2) (local.set $iy$0))
+   (else (local.get $ix$0) (local.set $iy$0))
   )
   (local.get $iy$0)
   return

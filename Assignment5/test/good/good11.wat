@@ -19,19 +19,16 @@
     (local.tee $ix$0)
     (i32.const 0)
     i32.ne
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
-    (block
-     (local.get $isum$0)
-     (local.get $ix$0)
-     i32.add
-     (local.set $isum$0)
-     (local.get $inum$0)
-     (i32.const 1)
-     i32.add
-     (local.set $inum$0)
-    )
+    (local.get $isum$0)
+    (local.get $ix$0)
+    i32.add
+    (local.set $isum$0)
+    (local.get $inum$0)
+    (i32.const 1)
+    i32.add
+    (local.set $inum$0)
     (br 0)
    )
   )

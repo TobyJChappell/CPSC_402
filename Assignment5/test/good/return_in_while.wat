@@ -19,8 +19,7 @@
     i32.sub
     (i32.const 5)
     i32.lt_s
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
     (i32.const 71)
     return

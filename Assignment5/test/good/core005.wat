@@ -15,10 +15,7 @@
   i32.add
   (i32.const 2)
   i32.le_s
-  (if
-   (then (block (i32.const 1) (local.set $ix$0) (br 1)))
-   (else (block (i32.const 2) (local.set $ix$0) (br 1)))
-  )
+  (if (then (i32.const 1) (local.set $ix$0)) (else (i32.const 2) (local.set $ix$0)))
   (local.get $ix$0)
   (call $printInt)
   (i32.const 0)

@@ -35,10 +35,7 @@
   $printBool
   (param $bb$0 i32)
   (local.get $bb$0)
-  (if
-   (then (block (i32.const 1) (call $printInt) (br 1)))
-   (else (block (i32.const 0) (call $printInt) (br 1)))
-  )
+  (if (then (i32.const 1) (call $printInt)) (else (i32.const 0) (call $printInt)))
  )
  (export "main" (func $main))
 )

@@ -41,12 +41,11 @@
     i32.sub
     (i32.const 1)
     i32.lt_s
-    (i32.const 0)
-    i32.le_s
-    (br_if 2)
+    i32.eqz
+    (br_if 1)
     (i32.const 5)
     (local.set $ix$3)
-    (br 1)
+    (br 0)
    )
   )
   (local.get $ix$0)
@@ -63,12 +62,11 @@
     i32.sub
     (i32.const 1)
     i32.lt_s
-    (i32.const 0)
-    i32.le_s
-    (br_if 2)
+    i32.eqz
+    (br_if 1)
     (i32.const 6)
     (local.set $ix$3)
-    (br 1)
+    (br 0)
    )
   )
   (local.get $ix$0)

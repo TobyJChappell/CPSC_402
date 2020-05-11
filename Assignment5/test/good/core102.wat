@@ -19,10 +19,8 @@
     i32.sub
     (i32.const 5)
     i32.gt_s
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
-    (block (br 1))
     (br 0)
    )
   )

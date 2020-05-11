@@ -12,7 +12,7 @@
   (local.get $ij$0)
   (i32.const 6)
   i32.lt_s
-  (if (then (block (local.get $ij$0) (call $printInt) (br 1))) (else (block (br 1))))
+  (if (then (local.get $ij$0) (call $printInt)) (else))
   (local.get $ij$0)
   return
  )

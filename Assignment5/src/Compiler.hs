@@ -265,15 +265,13 @@ compileStm SReturnVoid = return []
 
 compileStm (SWhile cond s) = do
   s' <- pushPop $ compileStm s
-  (m, c) <- get
   s_cond <- compileExp Nested cond
-  let stms = s_cond ++ [s_i32_eqz] ++ [s_br_if (c+1)] ++ s' ++ [s_br c]
+  let stms = s_cond ++ [s_i32_eqz] ++ [s_br_if 1] ++ s' ++ [s_br 0]
   return $ [s_block $ [s_loop $ stms]]
 
 compileStm (SBlock stms) = do
   s_stms <- pushPop $ mapM (compileStm) stms
-  (m, c) <- get
-  return $ [s_block $ (concat s_stms) ++ [s_br c]]
+  return $ concat s_stms
 
 compileStm s@(SIfElse cond s1 s2) = do
   s_cond <- compileExp Nested cond

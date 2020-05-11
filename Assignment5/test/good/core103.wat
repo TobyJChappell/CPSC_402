@@ -15,24 +15,20 @@
     (local.get $ij$0)
     (i32.const 6)
     i32.lt_s
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
-    (block
-     (i32.const 0)
-     (local.set $ii$2)
-     (local.get $ii$2)
-     (i32.const 1)
-     i32.add
-     (local.set $ii$2)
-     (local.get $ii$2)
-     (call $printInt)
-     (local.get $ij$0)
-     (i32.const 1)
-     i32.add
-     (local.set $ij$0)
-     (br 1)
-    )
+    (i32.const 0)
+    (local.set $ii$2)
+    (local.get $ii$2)
+    (i32.const 1)
+    i32.add
+    (local.set $ii$2)
+    (local.get $ii$2)
+    (call $printInt)
+    (local.get $ij$0)
+    (i32.const 1)
+    i32.add
+    (local.set $ij$0)
     (br 0)
    )
   )
@@ -41,7 +37,7 @@
   i32.lt_s
   (if
    (then (local.get $ij$0) (i32.const 1) i32.add (local.set $ij$0))
-   (else (block (local.get $ij$0) (i32.const 1) i32.sub (local.set $ij$0) (br 1)))
+   (else (local.get $ij$0) (i32.const 1) i32.sub (local.set $ij$0))
   )
   (local.get $ij$0)
   (call $printInt)

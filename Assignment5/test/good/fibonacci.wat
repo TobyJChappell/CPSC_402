@@ -22,22 +22,18 @@
     (local.get $ihi$0)
     (local.get $imx$0)
     i32.lt_s
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
-    (block
-     (local.get $ihi$0)
-     (call $printInt)
-     (local.get $ilo$0)
-     (local.get $ihi$0)
-     i32.add
-     (local.set $ihi$0)
-     (local.get $ihi$0)
-     (local.get $ilo$0)
-     i32.sub
-     (local.set $ilo$0)
-     (br 1)
-    )
+    (local.get $ihi$0)
+    (call $printInt)
+    (local.get $ilo$0)
+    (local.get $ihi$0)
+    i32.add
+    (local.set $ihi$0)
+    (local.get $ihi$0)
+    (local.get $ilo$0)
+    i32.sub
+    (local.set $ilo$0)
     (br 0)
    )
   )

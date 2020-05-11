@@ -84,8 +84,7 @@
     (local.tee $iz$0)
     (i32.const 9)
     i32.eq
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
     (local.get $iz$0)
     (call $printInt)
@@ -104,8 +103,7 @@
     i32.sub
     (i32.const 11)
     i32.eq
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
     (br 0)
    )

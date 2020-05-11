@@ -14,8 +14,7 @@
     (local.get $iy$0)
     (i32.const 0)
     i32.gt_s
-    (i32.const 0)
-    i32.le_s
+    i32.eqz
     (br_if 1)
     (local.get $iy$0)
     (i32.const 2)
@@ -29,8 +28,8 @@
   i32.lt_s
   (if
    (result i32)
-   (then (block (i32.const 0) (call $printInt) (i32.const 0) return (br 1)))
-   (else (block (i32.const 1) (call $printInt) (i32.const 0) return (br 1)))
+   (then (i32.const 0) (call $printInt) (i32.const 0) return)
+   (else (i32.const 1) (call $printInt) (i32.const 0) return)
   )
  )
  (export "main" (func $main))
