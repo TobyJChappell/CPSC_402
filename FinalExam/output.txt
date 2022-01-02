@@ -1,3 +1,0 @@
-Output: 25
-
-Linearized Abstract Syntax Tree: PDefs [DFun Type_int (Id "main") [] [SDecls Type_int [Id "x",Id "y"],SBlock [SExp (EAss (EId (Id "y")) (EInt 9)),SDecls Type_int [Id "y"],SExp (EAss (EId (Id "y")) (EInt 0))],SExp (EAss (EId (Id "x")) (EDiv (EIncr (EId (Id "y"))) (EInt 2))),SWhile (EGt (EId (Id "x")) (EInt 0)) (SExp (EAss (EId (Id "y")) (EPlus (EId (Id "y")) (EPDecr (EId (Id "x")))))),SExp (EApp (Id "printInt") [EId (Id "y")]),SReturn (EInt 0)]]
